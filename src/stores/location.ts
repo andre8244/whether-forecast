@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { locationId, searchLocations } from '../api/geocoding'
+import { UNNAMED_POSITION, locationId, reverseGeocode, searchLocations } from '../api/geocoding'
 import { readJson, writeJson } from '../lib/storage'
 import type { GeoLocation } from '../types/weather'
 
@@ -94,11 +94,28 @@ export const useLocationStore = defineStore('location', () => {
   }
 
   /**
+   * Names a geolocated position once the forecast is already on its way.
+   *
+   * The label is cosmetic, so it must never delay the data: the coordinates
+   * are selected first and the name is patched in when it arrives. If the user
+   * has moved on to another place in the meantime, the answer is discarded.
+   */
+  async function nameCurrentPosition(latitude: number, longitude: number): Promise<void> {
+    const id = locationId(latitude, longitude)
+    const named = await reverseGeocode(latitude, longitude)
+    if (!named || current.value.id !== id) return
+
+    // Patched in place: replacing the object would look like a new location.
+    Object.assign(current.value, named)
+    writeJson(LAST_KEY, current.value)
+  }
+
+  /**
    * Browser geolocation.
    *
-   * No lookup call is made: the geocoding API has no reverse endpoint, and the
-   * forecast request that follows already reports the authoritative timezone
-   * for these coordinates. Asking for it here would duplicate that request.
+   * The timezone is left empty on purpose. The forecast request that follows
+   * reports the authoritative one for these coordinates, so asking any
+   * endpoint for it here would duplicate that call.
    */
   async function locate(): Promise<void> {
     locationError.value = null
@@ -121,13 +138,16 @@ export const useLocationStore = defineStore('location', () => {
       const { latitude, longitude } = position.coords
       select({
         id: locationId(latitude, longitude),
-        name: 'Posizione attuale',
+        name: UNNAMED_POSITION,
         country: '',
         latitude,
         longitude,
         // Filled in from the forecast response; see `ForecastViewModel.timezone`.
         timezone: '',
       })
+
+      // Deliberately not awaited: the forecast is already loading.
+      void nameCurrentPosition(latitude, longitude)
     } catch (error) {
       locationError.value =
         error && typeof error === 'object' && 'code' in error

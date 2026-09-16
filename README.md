@@ -72,6 +72,12 @@ All from [Open-Meteo](https://open-meteo.com/), CC BY 4.0, no key required:
 | Air quality | `air-quality-api.open-meteo.com/v1/air-quality` |
 | City search | `geocoding-api.open-meteo.com/v1/search` |
 
+One request goes elsewhere. Open-Meteo's geocoding API is forward-only, so naming the coordinates
+the browser returns uses BigDataCloud's keyless, CORS-open
+`api.bigdatacloud.net/data/reverse-geocode-client`. It fires only when the locate button is pressed,
+and the label is cosmetic: a failure there leaves the position shown as *Posizione attuale* and
+costs nothing else.
+
 Upstream models come from ECMWF, DWD and NOAA. Metric units are Open-Meteo's default, so no unit
 parameters are sent.
 
@@ -91,6 +97,10 @@ parameters are sent.
 
 Locations come from city search, browser geolocation, or saved favourites. Everything persists in
 `localStorage`.
+
+Geolocation does not wait to be named: the coordinates are selected and the forecast starts
+immediately, then the city name is patched in when the reverse lookup answers. The location's
+identity is its rounded coordinates, so that rename costs no extra forecast requests.
 
 ## Development
 

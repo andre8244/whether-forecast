@@ -112,7 +112,9 @@ export function useForecast(location: Ref<GeoLocation>) {
     writeJson(CACHE_KEY, payload)
   }
 
-  watch(location, (target) => void load(target), { immediate: true })
+  // Keyed on the id, which is the coordinates: a place being renamed after a
+  // reverse lookup must not cost three more requests.
+  watch(() => location.value.id, () => void load(location.value), { immediate: true })
 
   return {
     model,

@@ -3,9 +3,14 @@ import { createPinia, setActivePinia } from 'pinia'
 import type { GeoLocation } from '../types/weather'
 
 const searchLocations = vi.fn()
+const reverseGeocode = vi.fn()
 vi.mock('../api/geocoding', async () => {
   const actual = await vi.importActual<typeof import('../api/geocoding')>('../api/geocoding')
-  return { ...actual, searchLocations: (...a: unknown[]) => searchLocations(...a) }
+  return {
+    ...actual,
+    searchLocations: (...a: unknown[]) => searchLocations(...a),
+    reverseGeocode: (...a: unknown[]) => reverseGeocode(...a),
+  }
 })
 
 const { DEFAULT_LOCATION, useLocationStore } = await import('./location')
@@ -22,16 +27,37 @@ function place(name: string, latitude: number, longitude: number): GeoLocation {
 }
 
 const MILANO = place('Milano', 45.4643, 9.1895)
+
+/** Lets the un-awaited naming promise settle. */
+function flush() {
+  return new Promise((resolve) => setTimeout(resolve, 0))
+}
+
+function stubGeolocation(latitude: number, longitude: number) {
+  vi.stubGlobal('navigator', {
+    geolocation: {
+      getCurrentPosition: (ok: PositionCallback) =>
+        ok({ coords: { latitude, longitude } } as GeolocationPosition),
+    },
+  })
+}
 const NAPOLI = place('Napoli', 40.8518, 14.2681)
 
 beforeEach(() => {
   localStorage.clear()
   searchLocations.mockReset()
+  reverseGeocode.mockReset()
+  reverseGeocode.mockResolvedValue(null)
   // A fresh Pinia per test: the previous module-level refs leaked between them.
   setActivePinia(createPinia())
 })
 
-afterEach(() => localStorage.clear())
+afterEach(() => {
+  localStorage.clear()
+  // Several tests stub navigator; leaving one in place would make a later
+  // test think the browser has geolocation when it is asserting it does not.
+  vi.unstubAllGlobals()
+})
 
 describe('initial state', () => {
   it('starts from the default location with nothing stored', () => {
@@ -210,25 +236,95 @@ describe('locate', () => {
     expect(store.locating).toBe(false)
   })
 
-  it('selects the coordinates without any lookup request', async () => {
-    vi.stubGlobal('navigator', {
-      geolocation: {
-        getCurrentPosition: (ok: PositionCallback) =>
-          ok({ coords: { latitude: 25.7743, longitude: -80.1937 } } as GeolocationPosition),
-      },
-    })
+  it('selects the coordinates immediately, before any naming', async () => {
+    stubGeolocation(25.7743, -80.1937)
 
     const store = useLocationStore()
     await store.locate()
 
     expect(store.current.latitude).toBeCloseTo(25.7743)
-    expect(store.current.name).toBe('Posizione attuale')
     // The timezone arrives with the forecast; no extra call is made for it.
     expect(store.current.timezone).toBe('')
     expect(store.locationError).toBeNull()
     expect(store.locating).toBe(false)
 
-    vi.unstubAllGlobals()
+  })
+
+  it('fills in the city name once the reverse lookup answers', async () => {
+    stubGeolocation(25.7743, -80.1937)
+    reverseGeocode.mockResolvedValue({
+      name: 'Miami',
+      admin1: 'Florida',
+      country: 'Stati Uniti',
+      countryCode: 'US',
+    })
+
+    const store = useLocationStore()
+    await store.locate()
+    await flush()
+
+    expect(store.current.name).toBe('Miami')
+    expect(store.current.admin1).toBe('Florida')
+    expect(store.current.country).toBe('Stati Uniti')
+
+  })
+
+  it('keeps the coordinates identity so the forecast is not refetched', async () => {
+    stubGeolocation(25.7743, -80.1937)
+    reverseGeocode.mockResolvedValue({ name: 'Miami', country: 'Stati Uniti' })
+
+    const store = useLocationStore()
+    await store.locate()
+    const idBefore = store.current.id
+
+    await flush()
+
+    // The forecast watcher keys on the id, so renaming must not change it.
+    expect(store.current.id).toBe(idBefore)
+  })
+
+  it('persists the name once it arrives', async () => {
+    stubGeolocation(25.7743, -80.1937)
+    reverseGeocode.mockResolvedValue({ name: 'Miami', country: 'Stati Uniti' })
+
+    const store = useLocationStore()
+    await store.locate()
+    await flush()
+
+    expect(JSON.parse(localStorage.getItem('meteo:last-location')!).name).toBe('Miami')
+  })
+
+  it('stays on the placeholder when the position cannot be named', async () => {
+    stubGeolocation(0, -40)
+    reverseGeocode.mockResolvedValue(null)
+
+    const store = useLocationStore()
+    await store.locate()
+    await flush()
+
+    expect(store.current.name).toBe('Posizione attuale')
+  })
+
+  it('discards a name that arrives after the user moved on', async () => {
+    stubGeolocation(25.7743, -80.1937)
+    let release: (value: unknown) => void = () => {}
+    reverseGeocode.mockImplementation(() => new Promise((resolve) => (release = resolve)))
+
+    const store = useLocationStore()
+    await store.locate()
+
+    store.select(MILANO)
+    release({ name: 'Miami', country: 'Stati Uniti' })
+    await flush()
+
+    expect(store.current.name).toBe('Milano')
+  })
+
+  it('does not name a position the browser never gave', async () => {
+    const store = useLocationStore()
+    await store.locate()
+
+    expect(reverseGeocode).not.toHaveBeenCalled()
   })
 
   it('reports a denied permission', async () => {
@@ -239,12 +335,12 @@ describe('locate', () => {
       },
     })
 
+
     const store = useLocationStore()
     await store.locate()
 
     expect(store.locationError).toMatch(/Permesso negato/)
     expect(store.locating).toBe(false)
 
-    vi.unstubAllGlobals()
   })
 })
