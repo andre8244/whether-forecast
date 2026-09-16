@@ -46,7 +46,10 @@ function dayBreak(hour: HourPoint, i: number): boolean {
         <span class="glyph" aria-hidden="true">{{ iconFor(hour.weatherCode, !isNight(hour)) }}</span>
         <span class="temp numeric">{{ temperature(hour.temperature) }}</span>
         <span class="apparent numeric">perc. {{ temperature(hour.apparentTemperature) }}</span>
-        <span class="precip numeric">{{ percent(hour.precipitationProbability) }}</span>
+        <!-- Matches the droplet the daily rows already use for this value. -->
+        <span class="precip numeric" title="Probabilità di pioggia">
+          <span aria-hidden="true">💧</span>{{ percent(hour.precipitationProbability) }}
+        </span>
         <!--
           Only shown when there is something to show. The probability comes
           from the ensemble and the depth from the deterministic run, so a
@@ -173,6 +176,12 @@ h2 {
 .mm {
   font-size: 0.7rem;
   color: var(--text-muted);
+}
+
+.precip {
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
 /* Holds the row height so the columns stay aligned across hours. */
