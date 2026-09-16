@@ -78,6 +78,17 @@ the browser returns uses BigDataCloud's keyless, CORS-open
 and the label is cosmetic: a failure there leaves the position shown as *Posizione attuale* and
 costs nothing else.
 
+That endpoint's [fair use
+policy](https://www.bigdatacloud.com/support/fair-use-policy-for-free-client-side-reverse-geocoding-api)
+requires the call to come from the user's own device, for that device's live position, with
+consent. This app's single call site sits immediately after `getCurrentPosition` resolves and is
+never issued for a stored or searched coordinate, so it stays inside those terms. Server-side or
+bulk use of the same endpoint is not permitted and would need their paid server API instead.
+
+Worth knowing what pays for it: BigDataCloud's stated reason the endpoint is free is that a
+consented GPS fix lets them validate the IP network it came from, refining their IP-geolocation
+database. The coordinates are the price.
+
 Upstream models come from ECMWF, DWD and NOAA. Metric units are Open-Meteo's default, so no unit
 parameters are sent.
 
