@@ -26,9 +26,44 @@ describe('minutesOfDay', () => {
 })
 
 describe('skyColorAt', () => {
-  it('is deep night in the small hours', () => {
-    expect(skyColorAt(3 * 60, SUNRISE, SUNSET)).toBe(SKY_COLORS.night)
-    expect(skyColorAt(0, SUNRISE, SUNSET)).toBe(SKY_COLORS.night)
+  it('is at its deepest at solar midnight', () => {
+    // Sunrise 07:10 and sunset 19:36 put the trough near 01:23.
+    expect(skyColorAt(83, SUNRISE, SUNSET)).toBe(SKY_COLORS.nightDeep)
+  })
+
+  it('keeps moving through the small hours', () => {
+    // A flat night would make the theme look frozen for a third of the day.
+    const samples = [22 * 60, 23 * 60, 0, 60, 2 * 60, 3 * 60, 5 * 60]
+      .map((m) => skyColorAt(m, SUNRISE, SUNSET))
+
+    expect(new Set(samples).size).toBe(samples.length)
+  })
+
+  it('lifts again on both sides of the trough', () => {
+    const trough = relativeLuminance(parseHex(skyColorAt(83, SUNRISE, SUNSET)))
+    const before = relativeLuminance(parseHex(skyColorAt(22 * 60, SUNRISE, SUNSET)))
+    const after = relativeLuminance(parseHex(skyColorAt(5 * 60, SUNRISE, SUNSET)))
+
+    expect(before).toBeGreaterThan(trough)
+    expect(after).toBeGreaterThan(trough)
+  })
+
+  it('stays visibly apart from the plain dark theme, not just numerically', () => {
+    // The two sat on the same #0b1220 all night, so the sky theme looked
+    // identical to dark for a third of the day. A couple of levels per
+    // channel would fix that on paper only, so the gap is measured.
+    const dark = parseHex('#0b1220')
+    let closest = Infinity
+
+    for (const minute of EVERY_MINUTE) {
+      const sky = parseHex(skyColorAt(minute, SUNRISE, SUNSET))
+      closest = Math.min(
+        closest,
+        Math.abs(sky.r - dark.r) + Math.abs(sky.g - dark.g) + Math.abs(sky.b - dark.b),
+      )
+    }
+
+    expect(closest).toBeGreaterThanOrEqual(20)
   })
 
   it('is the dawn colour exactly at sunrise', () => {
@@ -44,8 +79,11 @@ describe('skyColorAt', () => {
     expect(skyColorAt(15 * 60, SUNRISE, SUNSET)).toBe(SKY_COLORS.day)
   })
 
-  it('returns to deep night well after sunset', () => {
-    expect(skyColorAt(23 * 60, SUNRISE, SUNSET)).toBe(SKY_COLORS.night)
+  it('is back to a night colour well after sunset', () => {
+    const atNight = relativeLuminance(parseHex(skyColorAt(23 * 60, SUNRISE, SUNSET)))
+    const atDusk = relativeLuminance(parseHex(skyColorAt(SUNSET + 35, SUNRISE, SUNSET)))
+
+    expect(atNight).toBeLessThan(atDusk)
   })
 
   it('moves in small steps, never jumping', () => {
@@ -113,7 +151,8 @@ describe('skyPalette mode', () => {
   })
 
   it('asks for the dark token set under a night sky', () => {
-    expect(skyPalette(SKY_COLORS.night).mode).toBe('dark')
+    expect(skyPalette(SKY_COLORS.nightDeep).mode).toBe('dark')
+    expect(skyPalette(SKY_COLORS.nightEdge).mode).toBe('dark')
     expect(skyPalette(SKY_COLORS.twilight).mode).toBe('dark')
     expect(skyPalette(SKY_COLORS.sunset).mode).toBe('dark')
   })

@@ -121,11 +121,22 @@ describe('sky theme', () => {
   })
 
   it('paints a dark sky at night and uses the dark token set', async () => {
-    skyStore(2)
+    const store = skyStore(2)
     await nextTick()
 
     expect(attribute()).toBe('dark')
-    expect(inline('--bg')).toBe('#0b1220')
+    expect(inline('--bg')).toBe(store.skyPalette.background)
+    expect(store.skyPalette.mode).toBe('dark')
+  })
+
+  it('stays distinguishable from the plain dark theme all night', async () => {
+    // The two shared #0b1220 before the night was given a trough, so the sky
+    // theme was indistinguishable from dark for a third of the day.
+    for (const hour of [21, 23, 0, 2, 4, 6]) {
+      const store = skyStore(hour)
+      await nextTick()
+      expect(store.skyPalette.background, `${hour}:00`).not.toBe('#0b1220')
+    }
   })
 
   it('drives the card surfaces as well as the page', async () => {

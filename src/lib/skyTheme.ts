@@ -17,9 +17,24 @@ import {
   relativeLuminance,
 } from './color'
 
-/** Keyframes of the sky, from deep night through to deep night. */
+/**
+ * Keyframes of the sky.
+ *
+ * Night is two colours, not one. A flat night would sit on the dark theme's
+ * own `#0b1220` for a third of the day, leaving the sky theme indistinguishable
+ * from it and apparently frozen. Real night is not flat either: it deepens
+ * toward solar midnight and lifts again before dawn.
+ *
+ * Both night colours carry more blue than the dark theme does. Matching its
+ * luminance and differing only by a couple of levels per channel would be a
+ * difference on paper and not one on screen, so the separation is in the hue
+ * where the eye can actually find it.
+ */
 export const SKY_COLORS = {
-  night: '#0b1220',
+  /** Just after dusk and just before first light. */
+  nightEdge: '#1b2a5e',
+  /** Solar midnight. */
+  nightDeep: '#060d30',
   twilight: '#38325e',
   dawn: '#e0876b',
   morning: '#bfdcef',
@@ -70,7 +85,7 @@ export function skyStops(sunrise: number, sunset: number): Stop[] {
   const dayEnd = Math.max(sunset - 105, noon)
 
   return [
-    { at: sunrise - 75, color: SKY_COLORS.night },
+    { at: sunrise - 75, color: SKY_COLORS.nightEdge },
     { at: sunrise - 35, color: SKY_COLORS.twilight },
     { at: sunrise, color: SKY_COLORS.dawn },
     { at: Math.min(sunrise + 45, dayStart), color: SKY_COLORS.morning },
@@ -79,22 +94,14 @@ export function skyStops(sunrise: number, sunset: number): Stop[] {
     { at: Math.max(sunset - 45, dayEnd), color: SKY_COLORS.golden },
     { at: sunset, color: SKY_COLORS.sunset },
     { at: sunset + 35, color: SKY_COLORS.twilight },
-    { at: sunset + 75, color: SKY_COLORS.night },
+    { at: sunset + 75, color: SKY_COLORS.nightEdge },
   ]
 }
 
-/** The sky colour at a moment, interpolated between the surrounding stops. */
-export function skyColorAt(
-  minutes: number,
-  sunrise = FALLBACK_SUNRISE_MINUTES,
-  sunset = FALLBACK_SUNSET_MINUTES,
-): string {
-  const stops = skyStops(sunrise, sunset)
+const MINUTES_PER_DAY = 1440
 
-  if (minutes <= stops[0].at) return stops[0].color
-  const last = stops[stops.length - 1]
-  if (minutes >= last.at) return last.color
-
+/** Colour between two adjacent stops of the lit window. */
+function litColorAt(minutes: number, stops: Stop[]): string {
   for (let i = 1; i < stops.length; i += 1) {
     const from = stops[i - 1]
     const to = stops[i]
@@ -106,7 +113,41 @@ export function skyColorAt(
     return mixHex(from.color, to.color, (minutes - from.at) / span)
   }
 
-  return last.color
+  return stops[stops.length - 1].color
+}
+
+/**
+ * The sky colour at a moment.
+ *
+ * The lit window runs from 75 minutes before sunrise to 75 minutes after
+ * sunset and is interpolated between its stops. Everything outside it is
+ * night, which deepens to a trough at solar midnight and lifts back toward
+ * the edges, so the colour keeps moving through the small hours instead of
+ * parking on a single value until dawn.
+ *
+ * Working in minutes since the window opened handles the wrap without special
+ * cases, including sun times that fall either side of midnight.
+ */
+export function skyColorAt(
+  minutes: number,
+  sunrise = FALLBACK_SUNRISE_MINUTES,
+  sunset = FALLBACK_SUNSET_MINUTES,
+): string {
+  const stops = skyStops(sunrise, sunset)
+  const windowStart = stops[0].at
+  const windowEnd = stops[stops.length - 1].at
+
+  // A midnight sun leaves no night to draw; keep a minute of it so the
+  // arithmetic below never divides by zero.
+  const litSpan = Math.min(windowEnd - windowStart, MINUTES_PER_DAY - 1)
+  const offset = (((minutes - windowStart) % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY
+
+  if (offset <= litSpan) return litColorAt(windowStart + offset, stops)
+
+  const through = (offset - litSpan) / (MINUTES_PER_DAY - litSpan)
+  // 0 at either edge of the night, 1 at solar midnight.
+  const depth = 1 - Math.abs(2 * through - 1)
+  return mixHex(SKY_COLORS.nightEdge, SKY_COLORS.nightDeep, depth)
 }
 
 export interface SkyPalette {

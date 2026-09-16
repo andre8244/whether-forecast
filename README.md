@@ -139,10 +139,17 @@ runs under a prefix is how base-path bugs reach a deploy unnoticed, so `pnpm dev
 Four, cycled from one button: **system**, **light**, **dark** and **sky**.
 
 The sky theme colours the page by the time of day, anchored to the day's real sunrise and sunset
-rather than to fixed hours: deep blue at night, indigo at first light, coral at sunrise, pale blue
-through the morning into full `#9ed2f0` daylight, amber and then red at sunset, back through indigo
-to night. It repaints every minute, and no step moves more than 15 of 765 RGB units, so it reads as
-a fade rather than a sequence of jumps.
+rather than to fixed hours: indigo at first light, coral at sunrise, pale blue through the morning
+into full `#9ed2f0` daylight, amber and then red at sunset, back through indigo to night. It
+repaints every minute, and no step moves more than 15 of 765 RGB units, so it reads as a fade
+rather than a sequence of jumps.
+
+Night is not one colour. A flat night would sit on the dark theme's own `#0b1220` for a third of
+the day, leaving the sky theme indistinguishable from dark and apparently frozen until dawn.
+Instead it deepens to a trough at solar midnight and lifts again toward dawn, and both night
+colours carry markedly more blue than the dark theme does. Matching its luminance and differing by
+a couple of levels per channel would be a difference on paper and not one on screen, so the test
+measures the gap rather than merely asserting the two are not equal.
 
 ### Contrast is enforced, not eyeballed
 
