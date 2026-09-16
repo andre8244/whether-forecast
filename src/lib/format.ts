@@ -18,8 +18,20 @@ export function speed(value: number | null | undefined): string {
   return nullable(value, (v) => `${Math.round(v)} km/h`)
 }
 
+/**
+ * Precipitation depth.
+ *
+ * Anything under 0.05 mm would round to "0.0 mm", which reads as "no rain"
+ * when the model actually forecast a trace of it. Those hours are reported as
+ * a trace instead, and a true zero drops the decimal so the two never look
+ * alike.
+ */
 export function millimetres(value: number | null | undefined): string {
-  return nullable(value, (v) => `${v.toFixed(1)} mm`)
+  return nullable(value, (v) => {
+    if (v === 0) return '0 mm'
+    if (v < 0.05) return '< 0.1 mm'
+    return `${v.toFixed(1)} mm`
+  })
 }
 
 export function percent(value: number | null | undefined): string {

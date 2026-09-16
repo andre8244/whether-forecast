@@ -126,6 +126,9 @@ const hovered = computed(() => (isActive.value ? props.hours[active.value] : nul
             <dt>Accumulo</dt>
             <dd>{{ millimetres(hovered.precipitation) }}</dd>
           </div>
+          <div v-else-if="(hovered.precipitationProbability ?? 0) >= 50" class="note">
+            <dd>Nessun accumulo nella previsione principale</dd>
+          </div>
           <div v-if="hovered.stormProbability !== null && hovered.stormProbability >= 5">
             <dt>Temporale</dt>
             <dd>{{ percent(hovered.stormProbability) }}</dd>
@@ -216,6 +219,14 @@ dd {
   margin: 0;
   font-size: 0.78rem;
   font-weight: 600;
+}
+
+/* A caveat, not a value: it must not read as loudly as the figures above it. */
+.note dd {
+  font-weight: 400;
+  font-size: 0.7rem;
+  line-height: 1.3;
+  color: var(--text-muted);
 }
 
 .axis {

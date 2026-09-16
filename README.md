@@ -45,6 +45,24 @@ hour's mean rather than counting as zero.
 and warns explicitly when the spread between the highest and lowest model exceeds 30 percentage
 points.
 
+### Rain probability and rain depth are different numbers
+
+`precipitation_probability` comes from the ensemble — the share of scenarios with more than 0.1 mm
+in that hour. `precipitation` comes from the single deterministic run. They answer different
+questions from different sources, so an hour can legitimately read 85% with no accumulation: most
+scenarios produce rain, the main forecast does not.
+
+This is real Open-Meteo output, not a bug. Checked against live data: of Turin's hours above 50%
+probability, 8 of 9 had zero deterministic precipitation; London, 4 of 5. In a wet regime the two
+agree much more often — Bergen, 41 of 62.
+
+The UI stops presenting that as a contradiction. The hourly strip shows a depth only when there is
+one, and the chart tooltip says *nessun accumulo nella previsione principale* for a high-probability
+hour with none.
+
+Depths below 0.05 mm are reported as `< 0.1 mm` rather than rounded to `0.0 mm`, which would read
+as a dry hour when the model forecast a trace.
+
 ### Convective indices
 
 CAPE, lifted index and convective inhibition from the deterministic run appear in the expandable

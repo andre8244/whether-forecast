@@ -82,6 +82,12 @@ const degradedStorm = computed(
         modelli che prevedono un temporale in quell’ora, non una stima del
         singolo modello.
       </p>
+      <p class="method">
+        Anche la probabilità di pioggia viene dagli scenari ensemble, mentre i
+        millimetri vengono dalla singola previsione deterministica. Per questo
+        un’ora può avere alta probabilità e nessun accumulo: molti scenari
+        prevedono pioggia, la previsione principale no.
+      </p>
       <p v-if="model" class="updated">
         Previsione delle
         {{ fullTimeLabelIn(model.observedAt, model.timezone) }} ora locale,

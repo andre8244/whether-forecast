@@ -42,7 +42,7 @@ describe('metric formatting', () => {
 
   it('keeps a real zero distinct from a missing value', () => {
     expect(percent(0)).toBe('0%')
-    expect(millimetres(0)).toBe('0.0 mm')
+    expect(millimetres(0)).toBe('0 mm')
   })
 })
 
@@ -163,5 +163,26 @@ describe('relativeDayLabel', () => {
 
   it('handles a month boundary', () => {
     expect(relativeDayLabel('2026-10-01T09:00', new Date('2026-09-30T20:00:00'))).toBe('domani')
+  })
+})
+
+describe('millimetres trace amounts', () => {
+  it('distinguishes no rain from a trace of it', () => {
+    // 0.04 mm would round to "0.0 mm" and read as a dry hour.
+    expect(millimetres(0)).toBe('0 mm')
+    expect(millimetres(0.04)).toBe('< 0.1 mm')
+    expect(millimetres(0.049)).toBe('< 0.1 mm')
+  })
+
+  it('reports measurable amounts to a tenth', () => {
+    expect(millimetres(0.05)).toBe('0.1 mm')
+    expect(millimetres(0.1)).toBe('0.1 mm')
+    expect(millimetres(2.35)).toBe('2.4 mm')
+    expect(millimetres(12)).toBe('12.0 mm')
+  })
+
+  it('still reports missing data as missing', () => {
+    expect(millimetres(null)).toBe('—')
+    expect(millimetres(undefined)).toBe('—')
   })
 })

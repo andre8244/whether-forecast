@@ -47,7 +47,16 @@ function dayBreak(hour: HourPoint, i: number): boolean {
         <span class="temp numeric">{{ temperature(hour.temperature) }}</span>
         <span class="apparent numeric">perc. {{ temperature(hour.apparentTemperature) }}</span>
         <span class="precip numeric">{{ percent(hour.precipitationProbability) }}</span>
-        <span class="mm numeric">{{ millimetres(hour.precipitation) }}</span>
+        <!--
+          Only shown when there is something to show. The probability comes
+          from the ensemble and the depth from the deterministic run, so a
+          high percentage beside a flat "0 mm" reads as a contradiction rather
+          than as the two different quantities they are.
+        -->
+        <span v-if="hour.precipitation" class="mm numeric">
+          {{ millimetres(hour.precipitation) }}
+        </span>
+        <span v-else class="mm placeholder" aria-hidden="true"></span>
         <span class="wind numeric">{{ speed(hour.windSpeed) }}</span>
         <span
           v-if="hour.stormProbability !== null && hour.stormProbability >= 5"
@@ -166,6 +175,11 @@ h2 {
 .wind {
   font-size: 0.7rem;
   color: var(--text-muted);
+}
+
+/* Holds the row height so the columns stay aligned across hours. */
+.placeholder {
+  min-height: 1lh;
 }
 
 .storm {
