@@ -134,6 +134,42 @@ The app is served from a subdirectory on GitHub Pages, so Vite's `base` is set t
 runs under a prefix is how base-path bugs reach a deploy unnoticed, so `pnpm dev` also serves at
 `http://localhost:5173/whether-forecast/`.
 
+## Themes
+
+Four, cycled from one button: **system**, **light**, **dark** and **sky**.
+
+The sky theme colours the page by the time of day, anchored to the day's real sunrise and sunset
+rather than to fixed hours: deep blue at night, indigo at first light, coral at sunrise, pale blue
+through the morning into full `#9ed2f0` daylight, amber and then red at sunset, back through indigo
+to night. It repaints every minute, and no step moves more than 15 of 765 RGB units, so it reads as
+a fade rather than a sequence of jumps.
+
+### Contrast is enforced, not eyeballed
+
+A background that moves cannot have its foregrounds chosen by hand, so they are derived:
+
+- The sky's luminance selects which of the two existing token sets applies, so everything inside a
+  card keeps the contrast those sets were already built with. Card surfaces take a tenth of the sky
+  so the app still reads as one piece.
+- Text sitting directly on the sky starts from whichever token set reads better against it — which
+  is not always the one the cards use — and is then pushed toward black or white until it clears
+  WCAG AA at 4.5:1.
+
+The push direction is chosen by which extreme the background can actually reach, not by which one
+the text already leans toward. Those differ exactly where it matters: a sky around 18% luminance
+tops out at 4.50:1 against white while clearing 4.67:1 against black. Following the text's lean
+missed AA by 0.0015 at one minute of the day, and the test caught it.
+
+The suite checks every one of the 1440 minutes — page text, muted text, and card text against the
+sky-tinted card surface — for an ordinary day, a polar winter and a midsummer day.
+
+### Which clock
+
+The viewer's own, since it is their room the screen is lighting. The displayed location's sunrise
+and sunset are used only when that location keeps the viewer's timezone; anywhere else falls back
+to civil hours, because pairing a European clock with Miami's sunrise would put dawn colours on the
+screen at midday.
+
 ## Deployment
 
 Pushing to `main` runs `.github/workflows/deploy.yml`: typecheck, tests, build, then publish to

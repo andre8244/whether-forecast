@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import LocationBar from "./components/LocationBar.vue";
 import CurrentCard from "./components/CurrentCard.vue";
@@ -23,6 +23,18 @@ const theme = useThemeStore();
 // Silent background refresh; the visible data is replaced only on success.
 useAutoRefresh(() => void refresh(true));
 
+// The sky theme redraws on the minute. Cheap, and paused while the tab is
+// hidden by the same helper.
+useAutoRefresh(() => theme.tick(), 60_000);
+
+watch(
+  model,
+  (loaded) => {
+    if (loaded) theme.setSunTimes(loaded.sunrise, loaded.sunset, loaded.timezone);
+  },
+  { immediate: true },
+);
+
 const degradedStorm = computed(
   () => model.value?.degraded.includes("ensemble") ?? false,
 );
@@ -30,7 +42,11 @@ const degradedStorm = computed(
 
 <template>
   <div class="page">
-    <LocationBar :theme-label="theme.label" @cycle-theme="theme.cycle()" />
+    <LocationBar
+      :theme-label="theme.label"
+      :theme-glyph="theme.glyph"
+      @cycle-theme="theme.cycle()"
+    />
 
     <p v-if="stale && model" class="banner stale">
       Dati non aggiornati: previsione delle
@@ -139,7 +155,8 @@ const degradedStorm = computed(
 footer {
   margin-top: 8px;
   font-size: 0.75rem;
-  color: var(--text-faint);
+  /* Directly on the page background, so it follows the on-sky token. */
+  color: var(--on-bg-muted);
   display: grid;
   gap: 4px;
 }
@@ -149,7 +166,8 @@ footer p {
 }
 
 footer a {
-  color: var(--accent);
+  color: var(--on-bg);
+  text-decoration-color: var(--on-bg-muted);
 }
 
 .method {

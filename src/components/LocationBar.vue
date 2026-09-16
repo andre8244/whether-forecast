@@ -9,7 +9,7 @@ const { current, favorites, results, searching, searchError, locating, locationE
   storeToRefs(store)
 const { select, toggleFavorite, removeFavorite, search, clearResults, locate } = store
 
-defineProps<{ themeLabel: string }>()
+defineProps<{ themeLabel: string; themeGlyph: string }>()
 const emit = defineEmits<{ cycleTheme: [] }>()
 
 const query = ref('')
@@ -93,7 +93,7 @@ function describe(location: GeoLocation): string {
         :aria-label="`Tema: ${themeLabel}`"
         @click="emit('cycleTheme')"
       >
-        {{ themeLabel === 'chiaro' ? '☀️' : themeLabel === 'scuro' ? '🌙' : '🖥️' }}
+        {{ themeGlyph }}
       </button>
     </div>
 
