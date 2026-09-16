@@ -1,5 +1,7 @@
 # Whether Forecast
 
+**[andre8244.github.io/whether-forecast](https://andre8244.github.io/whether-forecast/)**
+
 Most forecasts tell you *what* the weather will be. This one tells you **whether** — a real
 probability, counted from 119 ensemble members across three models, instead of a storm icon that
 means whatever you want it to.
@@ -102,6 +104,16 @@ pnpm typecheck  # vue-tsc
 pnpm build      # production build into dist/
 pnpm preview    # serve the production build
 ```
+
+The app is served from a subdirectory on GitHub Pages, so Vite's `base` is set to
+`/whether-forecast/` — in development as well as in the build. Running dev at `/` while production
+runs under a prefix is how base-path bugs reach a deploy unnoticed, so `pnpm dev` also serves at
+`http://localhost:5173/whether-forecast/`.
+
+## Deployment
+
+Pushing to `main` runs `.github/workflows/deploy.yml`: typecheck, tests, build, then publish to
+GitHub Pages. A failing typecheck or test stops the deploy.
 
 ## Structure
 

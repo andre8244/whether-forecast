@@ -2,7 +2,17 @@ import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vitest/config'
 import { VitePWA } from 'vite-plugin-pwa'
 
+/**
+ * GitHub Pages serves a project site from a subdirectory, so every asset,
+ * the manifest and the service worker scope have to be prefixed with it.
+ *
+ * It is applied in development too. Running dev at `/` while production runs
+ * under a prefix is exactly how base-path bugs reach the deploy unnoticed.
+ */
+const BASE = '/whether-forecast/'
+
 export default defineConfig({
+  base: BASE,
   plugins: [
     vue(),
     VitePWA({
@@ -17,7 +27,9 @@ export default defineConfig({
         theme_color: '#0b1220',
         background_color: '#0b1220',
         display: 'standalone',
-        start_url: '/',
+        id: BASE,
+        start_url: BASE,
+        scope: BASE,
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
