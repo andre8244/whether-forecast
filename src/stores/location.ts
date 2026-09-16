@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { UNNAMED_POSITION, locationId, reverseGeocode, searchLocations } from '../api/geocoding'
+import { UNNAMED_POSITION, locationId, searchLocations } from '../api/geocoding'
 import { readJson, writeJson } from '../lib/storage'
 import type { GeoLocation } from '../types/weather'
 
@@ -94,24 +94,11 @@ export const useLocationStore = defineStore('location', () => {
   }
 
   /**
-   * Names a geolocated position once the forecast is already on its way.
-   *
-   * The label is cosmetic, so it must never delay the data: the coordinates
-   * are selected first and the name is patched in when it arrives. If the user
-   * has moved on to another place in the meantime, the answer is discarded.
-   */
-  async function nameCurrentPosition(latitude: number, longitude: number): Promise<void> {
-    const id = locationId(latitude, longitude)
-    const named = await reverseGeocode(latitude, longitude)
-    if (!named || current.value.id !== id) return
-
-    // Patched in place: replacing the object would look like a new location.
-    Object.assign(current.value, named)
-    writeJson(LAST_KEY, current.value)
-  }
-
-  /**
    * Browser geolocation.
+   *
+   * The position is not named. Open-Meteo has no reverse geocoding, and the
+   * only keyless providers that do would mean sending the user's GPS fix to a
+   * third party, so it is labelled generically instead.
    *
    * The timezone is left empty on purpose. The forecast request that follows
    * reports the authoritative one for these coordinates, so asking any
@@ -145,9 +132,6 @@ export const useLocationStore = defineStore('location', () => {
         // Filled in from the forecast response; see `ForecastViewModel.timezone`.
         timezone: '',
       })
-
-      // Deliberately not awaited: the forecast is already loading.
-      void nameCurrentPosition(latitude, longitude)
     } catch (error) {
       locationError.value =
         error && typeof error === 'object' && 'code' in error

@@ -72,25 +72,11 @@ All from [Open-Meteo](https://open-meteo.com/), CC BY 4.0, no key required:
 | Air quality | `air-quality-api.open-meteo.com/v1/air-quality` |
 | City search | `geocoding-api.open-meteo.com/v1/search` |
 
-One request goes elsewhere. Open-Meteo's geocoding API is forward-only, so naming the coordinates
-the browser returns uses BigDataCloud's keyless, CORS-open
-`api.bigdatacloud.net/data/reverse-geocode-client`. It fires only when the locate button is pressed,
-and the label is cosmetic: a failure there leaves the position shown as *Posizione attuale* and
-costs nothing else.
-
-That endpoint's [fair use
-policy](https://www.bigdatacloud.com/support/fair-use-policy-for-free-client-side-reverse-geocoding-api)
-requires the call to come from the user's own device, for that device's live position, with
-consent. This app's single call site sits immediately after `getCurrentPosition` resolves and is
-never issued for a stored or searched coordinate, so it stays inside those terms. Server-side or
-bulk use of the same endpoint is not permitted and would need their paid server API instead.
-
-Worth knowing what pays for it: BigDataCloud's stated reason the endpoint is free is that a
-consented GPS fix lets them validate the IP network it came from, refining their IP-geolocation
-database. The coordinates are the price.
-
-Upstream models come from ECMWF, DWD and NOAA. Metric units are Open-Meteo's default, so no unit
-parameters are sent.
+Nothing else is contacted. Open-Meteo's geocoding API is forward-only, so a position from the
+browser is labelled *Posizione attuale* rather than sent to a third-party reverse geocoder to be
+named. The keyless providers that offer that are free because a consented GPS fix is worth
+something to them, and a place name is not worth handing the user's coordinates to one more
+company.
 
 ## What it shows
 
@@ -109,9 +95,8 @@ parameters are sent.
 Locations come from city search, browser geolocation, or saved favourites. Everything persists in
 `localStorage`.
 
-Geolocation does not wait to be named: the coordinates are selected and the forecast starts
-immediately, then the city name is patched in when the reverse lookup answers. The location's
-identity is its rounded coordinates, so that rename costs no extra forecast requests.
+A location's identity is its rounded coordinates, so relabelling one never costs extra forecast
+requests.
 
 ## Development
 

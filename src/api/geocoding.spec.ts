@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { locationId, reverseGeocode, searchLocations } from './geocoding'
+import { locationId, searchLocations } from './geocoding'
 
 let fetchMock: ReturnType<typeof vi.fn>
 
@@ -78,60 +78,5 @@ describe('searchLocations', () => {
   it('treats a response with no results as empty', async () => {
     fetchMock.mockResolvedValue(jsonResponse({}))
     expect(await searchLocations('qwertyuiop')).toEqual([])
-  })
-})
-
-describe('reverseGeocode', () => {
-  it('names a coordinate pair in Italian', async () => {
-    fetchMock.mockResolvedValue(
-      jsonResponse({
-        city: 'Miami',
-        locality: 'Miami',
-        principalSubdivision: 'Florida',
-        countryName: 'Stati Uniti',
-        countryCode: 'US',
-      }),
-    )
-
-    expect(await reverseGeocode(25.7743, -80.1937)).toEqual({
-      name: 'Miami',
-      admin1: 'Florida',
-      country: 'Stati Uniti',
-      countryCode: 'US',
-    })
-    expect(lastUrl().searchParams.get('localityLanguage')).toBe('it')
-  })
-
-  it('falls back to the locality where there is no city', async () => {
-    // Out at sea: no city, but a named body of water.
-    fetchMock.mockResolvedValue(
-      jsonResponse({
-        city: '',
-        locality: 'Brazilian jurisdictional waters',
-        principalSubdivision: '',
-        countryName: '',
-        countryCode: '',
-      }),
-    )
-
-    const named = await reverseGeocode(0, -40)
-    expect(named?.name).toBe('Brazilian jurisdictional waters')
-    expect(named?.admin1).toBeUndefined()
-    expect(named?.countryCode).toBeUndefined()
-  })
-
-  it('returns nothing when there is no name at all', async () => {
-    fetchMock.mockResolvedValue(jsonResponse({ city: '', locality: '' }))
-    expect(await reverseGeocode(0, 0)).toBeNull()
-  })
-
-  it('swallows a failure rather than costing the user their forecast', async () => {
-    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'))
-    await expect(reverseGeocode(45, 7)).resolves.toBeNull()
-  })
-
-  it('swallows an error status too', async () => {
-    fetchMock.mockResolvedValue(jsonResponse({ reason: 'rate limited' }, 429))
-    await expect(reverseGeocode(45, 7)).resolves.toBeNull()
   })
 })
