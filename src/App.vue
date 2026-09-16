@@ -51,13 +51,9 @@ const degradedStorm = computed(
         :sunset="model.sunset"
       />
 
-      <HourlyStrip class="span-2" :hours="model.hourly" />
+      <StormPanel class="span-2" :hours="model.hourly" :degraded="degradedStorm" />
 
-      <StormPanel
-        class="span-2"
-        :hours="model.hourly"
-        :degraded="degradedStorm"
-      />
+      <HourlyStrip class="span-2" :hours="model.hourly" />
 
       <DailyList class="span-2" :days="model.daily" />
 
