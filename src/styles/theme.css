@@ -1,0 +1,176 @@
+/*
+ * Design tokens. Light is the base; dark is redefined twice — once for the
+ * system preference (guarded so a manual light override wins) and once for the
+ * explicit `data-theme="dark"` attribute.
+ */
+
+:root {
+  color-scheme: light;
+
+  --bg: #f4f6fb;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #e8ecf5;
+  --border: #d7deeb;
+  --border-strong: #b9c4d8;
+
+  --text: #16202f;
+  --text-muted: #5b6880;
+  --text-faint: #8794a8;
+
+  --accent: #2563eb;
+  --accent-soft: #dbe5ff;
+  --accent-text: #ffffff;
+
+  --risk-none: #94a3b8;
+  --risk-low: #10b981;
+  --risk-moderate: #eab308;
+  --risk-high: #f97316;
+  --risk-extreme: #dc2626;
+
+  --aqi-1: #10b981;
+  --aqi-2: #84cc16;
+  --aqi-3: #eab308;
+  --aqi-4: #f97316;
+  --aqi-5: #dc2626;
+  --aqi-6: #7c2d12;
+
+  --temp-line: #f97316;
+  --temp-line-apparent: #8b5cf6;
+  --precip-bar: #38bdf8;
+
+  --shadow: 0 1px 2px rgb(16 32 47 / 6%), 0 8px 24px rgb(16 32 47 / 6%);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --gutter: 16px;
+
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-numeric: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --bg: #0b1220;
+    --bg-elevated: #151e30;
+    --bg-sunken: #0e1626;
+    --border: #253147;
+    --border-strong: #35435e;
+
+    --text: #e8edf7;
+    --text-muted: #9aa8c0;
+    --text-faint: #6b7a94;
+
+    --accent: #60a5fa;
+    --accent-soft: #1e335c;
+    --accent-text: #0b1220;
+
+    --risk-none: #64748b;
+    --risk-low: #34d399;
+    --risk-moderate: #facc15;
+    --risk-high: #fb923c;
+    --risk-extreme: #f87171;
+
+    --aqi-1: #34d399;
+    --aqi-2: #a3e635;
+    --aqi-3: #facc15;
+    --aqi-4: #fb923c;
+    --aqi-5: #f87171;
+    --aqi-6: #c2410c;
+
+    --temp-line: #fb923c;
+    --temp-line-apparent: #a78bfa;
+    --precip-bar: #38bdf8;
+
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 30%);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0b1220;
+  --bg-elevated: #151e30;
+  --bg-sunken: #0e1626;
+  --border: #253147;
+  --border-strong: #35435e;
+
+  --text: #e8edf7;
+  --text-muted: #9aa8c0;
+  --text-faint: #6b7a94;
+
+  --accent: #60a5fa;
+  --accent-soft: #1e335c;
+  --accent-text: #0b1220;
+
+  --risk-none: #64748b;
+  --risk-low: #34d399;
+  --risk-moderate: #facc15;
+  --risk-high: #fb923c;
+  --risk-extreme: #f87171;
+
+  --aqi-1: #34d399;
+  --aqi-2: #a3e635;
+  --aqi-3: #facc15;
+  --aqi-4: #fb923c;
+  --aqi-5: #f87171;
+  --aqi-6: #c2410c;
+
+  --temp-line: #fb923c;
+  --temp-line-apparent: #a78bfa;
+  --precip-bar: #38bdf8;
+
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 30%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+:where(button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

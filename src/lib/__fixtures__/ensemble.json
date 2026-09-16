@@ -1,0 +1,988 @@
+{
+ "hourly": {
+  "time": [
+   "2026-09-16T00:00",
+   "2026-09-16T01:00",
+   "2026-09-16T02:00",
+   "2026-09-16T03:00",
+   "2026-09-16T04:00",
+   "2026-09-16T05:00"
+  ],
+  "weather_code_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member01_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member02_ecmwf_ifs025_ensemble": [
+   0,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member03_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member04_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member05_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   0
+  ],
+  "weather_code_member06_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member07_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member08_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member09_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member10_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   0
+  ],
+  "weather_code_member11_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   1,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member12_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member13_ecmwf_ifs025_ensemble": [
+   1,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member14_ecmwf_ifs025_ensemble": [
+   0,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member15_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member16_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member17_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   1,
+   1
+  ],
+  "weather_code_member18_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member19_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   1,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member20_ecmwf_ifs025_ensemble": [
+   0,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member21_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member22_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member23_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member24_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member25_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member26_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member27_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member28_ecmwf_ifs025_ensemble": [
+   0,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member29_ecmwf_ifs025_ensemble": [
+   1,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member30_ecmwf_ifs025_ensemble": [
+   0,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member31_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   1,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member32_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member33_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member34_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   2,
+   2
+  ],
+  "weather_code_member35_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member36_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member37_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member38_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member39_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member40_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   0
+  ],
+  "weather_code_member41_ecmwf_ifs025_ensemble": [
+   0,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member42_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member43_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member44_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member45_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member46_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member47_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member48_ecmwf_ifs025_ensemble": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member49_ecmwf_ifs025_ensemble": [
+   1,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "weather_code_member50_ecmwf_ifs025_ensemble": [
+   0,
+   1,
+   1,
+   0,
+   0,
+   0
+  ],
+  "weather_code_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member01_icon_global_eps": [
+   2,
+   2,
+   2,
+   2,
+   1,
+   1
+  ],
+  "weather_code_member02_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member03_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member04_icon_global_eps": [
+   2,
+   2,
+   3,
+   3,
+   2,
+   2
+  ],
+  "weather_code_member05_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   2,
+   3
+  ],
+  "weather_code_member06_icon_global_eps": [
+   2,
+   3,
+   2,
+   3,
+   2,
+   2
+  ],
+  "weather_code_member07_icon_global_eps": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "weather_code_member08_icon_global_eps": [
+   2,
+   2,
+   3,
+   3,
+   3,
+   2
+  ],
+  "weather_code_member09_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   2
+  ],
+  "weather_code_member10_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member11_icon_global_eps": [
+   3,
+   2,
+   2,
+   3,
+   3,
+   2
+  ],
+  "weather_code_member12_icon_global_eps": [
+   2,
+   2,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member13_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   2
+  ],
+  "weather_code_member14_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member15_icon_global_eps": [
+   2,
+   2,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member16_icon_global_eps": [
+   2,
+   2,
+   3,
+   3,
+   3,
+   2
+  ],
+  "weather_code_member17_icon_global_eps": [
+   3,
+   3,
+   3,
+   2,
+   2,
+   2
+  ],
+  "weather_code_member18_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member19_icon_global_eps": [
+   3,
+   3,
+   2,
+   2,
+   3,
+   3
+  ],
+  "weather_code_member20_icon_global_eps": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "weather_code_member21_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   2,
+   2
+  ],
+  "weather_code_member22_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   2,
+   2
+  ],
+  "weather_code_member23_icon_global_eps": [
+   3,
+   2,
+   3,
+   3,
+   2,
+   2
+  ],
+  "weather_code_member24_icon_global_eps": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "weather_code_member25_icon_global_eps": [
+   2,
+   2,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member26_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member27_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   2,
+   3
+  ],
+  "weather_code_member28_icon_global_eps": [
+   2,
+   2,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member29_icon_global_eps": [
+   2,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member30_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member31_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member32_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   2
+  ],
+  "weather_code_member33_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member34_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member35_icon_global_eps": [
+   3,
+   3,
+   2,
+   3,
+   2,
+   2
+  ],
+  "weather_code_member36_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member37_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member38_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_member39_icon_global_eps": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ],
+  "weather_code_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member01_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member02_ncep_gefs025": [
+   51,
+   51,
+   51,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member03_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member04_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member05_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member06_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member07_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member08_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member09_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member10_ncep_gefs025": [
+   1,
+   1,
+   0,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member11_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member12_ncep_gefs025": [
+   1,
+   1,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member13_ncep_gefs025": [
+   51,
+   51,
+   51,
+   1,
+   1,
+   1
+  ],
+  "weather_code_member14_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member15_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member16_ncep_gefs025": [
+   51,
+   51,
+   51,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member17_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member18_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   1,
+   1
+  ],
+  "weather_code_member19_ncep_gefs025": [
+   1,
+   1,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member20_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member21_ncep_gefs025": [
+   1,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member22_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "weather_code_member23_ncep_gefs025": [
+   51,
+   51,
+   51,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member24_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member25_ncep_gefs025": [
+   51,
+   51,
+   51,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member26_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member27_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member28_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member29_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "weather_code_member30_ncep_gefs025": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ]
+ }
+}
