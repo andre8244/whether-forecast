@@ -20,12 +20,17 @@ const place = computed(() => {
   return [name, admin1, country].filter(Boolean).join(', ')
 })
 
-/** Feels-like only earns a qualifier when it differs enough to notice. */
+/**
+ * Feels-like only earns a qualifier when it differs enough to notice.
+ *
+ * Saying "in linea con il reale" beside two numbers that already read the
+ * same spends a line to tell the reader what they can see.
+ */
 const feelsNote = computed(() => {
   const delta = props.current.apparentTemperature - props.current.temperature
   if (delta >= 2) return 'più caldo del reale'
   if (delta <= -2) return 'più freddo del reale'
-  return 'in linea con il reale'
+  return null
 })
 </script>
 
@@ -44,7 +49,7 @@ const feelsNote = computed(() => {
 
     <p class="feels">
       Percepita <strong class="numeric">{{ temperature(current.apparentTemperature) }}</strong>
-      <span class="feels-note">— {{ feelsNote }}</span>
+      <span v-if="feelsNote" class="feels-note">— {{ feelsNote }}</span>
     </p>
 
     <ul class="quick numeric">

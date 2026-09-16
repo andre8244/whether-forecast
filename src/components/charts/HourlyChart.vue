@@ -147,7 +147,8 @@ const hovered = computed(() => (isActive.value ? props.hours[active.value] : nul
 
 <style scoped>
 .chart {
-  margin: 0;
+  /* Clears the axis labels before whatever follows the chart. */
+  margin: 0 0 14px;
 }
 
 .plot {

@@ -2,7 +2,7 @@
 import HourlyChart from './charts/HourlyChart.vue'
 import { iconFor } from '../lib/wmo'
 import { probabilityToken } from '../lib/stormRisk'
-import { hourLabel, isToday, millimetres, percent, speed, temperature } from '../lib/format'
+import { hourLabel, isToday, millimetres, percent, temperature } from '../lib/format'
 import type { HourPoint } from '../types/weather'
 
 defineProps<{ hours: HourPoint[] }>()
@@ -57,7 +57,6 @@ function dayBreak(hour: HourPoint, i: number): boolean {
           {{ millimetres(hour.precipitation) }}
         </span>
         <span v-else class="mm placeholder" aria-hidden="true"></span>
-        <span class="wind numeric">{{ speed(hour.windSpeed) }}</span>
         <span
           v-if="hour.stormProbability !== null && hour.stormProbability >= 5"
           class="storm numeric"
@@ -171,8 +170,7 @@ h2 {
 
 .apparent,
 .precip,
-.mm,
-.wind {
+.mm {
   font-size: 0.7rem;
   color: var(--text-muted);
 }
