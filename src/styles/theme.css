@@ -1,100 +1,6 @@
-/*
- * Design tokens. Light is the base; dark is redefined twice — once for the
- * system preference (guarded so a manual light override wins) and once for the
- * explicit `data-theme="dark"` attribute.
- */
+/* Design tokens. The app is dark only. */
 
 :root {
-  color-scheme: light;
-
-  --bg: #f4f6fb;
-  --bg-elevated: #ffffff;
-  --bg-sunken: #e8ecf5;
-  --border: #d7deeb;
-  --border-strong: #b9c4d8;
-
-  --text: #16202f;
-  --text-muted: #5b6880;
-  --text-faint: #8794a8;
-
-  --accent: #2563eb;
-  --accent-soft: #dbe5ff;
-  --accent-text: #ffffff;
-
-  --risk-none: #94a3b8;
-  --risk-low: #10b981;
-  --risk-moderate: #eab308;
-  --risk-high: #f97316;
-  --risk-extreme: #dc2626;
-
-  --aqi-1: #10b981;
-  --aqi-2: #84cc16;
-  --aqi-3: #eab308;
-  --aqi-4: #f97316;
-  --aqi-5: #dc2626;
-  --aqi-6: #7c2d12;
-
-  --temp-line: #f97316;
-  --temp-line-apparent: #8b5cf6;
-  --precip-bar: #38bdf8;
-
-  /*
-   * Text sitting directly on the page background rather than on a card. The
-   * sky theme overrides these with values it has checked against the current
-   * sky; every other theme just follows the token set.
-   */
-  --on-bg: var(--text-muted);
-  --on-bg-muted: var(--text-faint);
-
-  --shadow: 0 1px 2px rgb(16 32 47 / 6%), 0 8px 24px rgb(16 32 47 / 6%);
-  --radius: 14px;
-  --radius-sm: 8px;
-  --gutter: 16px;
-
-  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  --font-numeric: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-
-    --bg: #0b1220;
-    --bg-elevated: #151e30;
-    --bg-sunken: #0e1626;
-    --border: #253147;
-    --border-strong: #35435e;
-
-    --text: #e8edf7;
-    --text-muted: #9aa8c0;
-    --text-faint: #6b7a94;
-
-    --accent: #60a5fa;
-    --accent-soft: #1e335c;
-    --accent-text: #0b1220;
-
-    --risk-none: #64748b;
-    --risk-low: #34d399;
-    --risk-moderate: #facc15;
-    --risk-high: #fb923c;
-    --risk-extreme: #f87171;
-
-    --aqi-1: #34d399;
-    --aqi-2: #a3e635;
-    --aqi-3: #facc15;
-    --aqi-4: #fb923c;
-    --aqi-5: #f87171;
-    --aqi-6: #c2410c;
-
-    --temp-line: #fb923c;
-    --temp-line-apparent: #a78bfa;
-    --precip-bar: #38bdf8;
-
-    --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 30%);
-  }
-}
-
-:root[data-theme='dark'] {
   color-scheme: dark;
 
   --bg: #0b1220;
@@ -129,6 +35,12 @@
   --precip-bar: #38bdf8;
 
   --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 24px rgb(0 0 0 / 30%);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --gutter: 16px;
+
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-numeric: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
 }
 
 *,
@@ -150,8 +62,6 @@ body {
   font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  /* Smooths the sky theme's minute-by-minute steps. */
-  transition: background-color 1.2s linear;
 }
 
 button {
@@ -170,7 +80,6 @@ button {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  transition: background-color 1.2s linear;
 }
 
 .numeric {

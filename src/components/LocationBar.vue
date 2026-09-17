@@ -9,9 +9,6 @@ const { current, favorites, results, searching, searchError, locating, locationE
   storeToRefs(store)
 const { select, toggleFavorite, removeFavorite, search, clearResults, locate } = store
 
-defineProps<{ themeLabel: string; themeGlyph: string }>()
-const emit = defineEmits<{ cycleTheme: [] }>()
-
 const query = ref('')
 const open = ref(false)
 let debounce: ReturnType<typeof setTimeout> | undefined
@@ -84,16 +81,6 @@ function describe(location: GeoLocation): string {
         @click="toggleFavorite()"
       >
         {{ isFavorite ? '★' : '☆' }}
-      </button>
-
-      <button
-        type="button"
-        class="icon"
-        :title="`Tema: ${themeLabel}`"
-        :aria-label="`Tema: ${themeLabel}`"
-        @click="emit('cycleTheme')"
-      >
-        {{ themeGlyph }}
       </button>
     </div>
 

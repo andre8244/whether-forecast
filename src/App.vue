@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import LocationBar from "./components/LocationBar.vue";
 import CurrentCard from "./components/CurrentCard.vue";
@@ -11,29 +11,14 @@ import AirQualityCard from "./components/AirQualityCard.vue";
 import { useForecast } from "./composables/useForecast";
 import { useAutoRefresh } from "./composables/useAutoRefresh";
 import { useLocationStore } from "./stores/location";
-import { useThemeStore } from "./stores/theme";
 import { fullTimeLabel, fullTimeLabelIn } from "./lib/format";
 
 const locationStore = useLocationStore();
 const { current: location } = storeToRefs(locationStore);
 const { model, loading, error, stale, refresh } = useForecast(location);
 
-const theme = useThemeStore();
-
 // Silent background refresh; the visible data is replaced only on success.
 useAutoRefresh(() => void refresh(true));
-
-// The sky theme redraws on the minute. Cheap, and paused while the tab is
-// hidden by the same helper.
-useAutoRefresh(() => theme.tick(), 60_000);
-
-watch(
-  model,
-  (loaded) => {
-    if (loaded) theme.setSunTimes(loaded.sunrise, loaded.sunset, loaded.timezone);
-  },
-  { immediate: true },
-);
 
 const degradedStorm = computed(
   () => model.value?.degraded.includes("ensemble") ?? false,
@@ -42,11 +27,7 @@ const degradedStorm = computed(
 
 <template>
   <div class="page">
-    <LocationBar
-      :theme-label="theme.label"
-      :theme-glyph="theme.glyph"
-      @cycle-theme="theme.cycle()"
-    />
+    <LocationBar />
 
     <p v-if="stale && model" class="banner stale">
       Dati non aggiornati: previsione delle
@@ -155,8 +136,7 @@ const degradedStorm = computed(
 footer {
   margin-top: 8px;
   font-size: 0.75rem;
-  /* Directly on the page background, so it follows the on-sky token. */
-  color: var(--on-bg-muted);
+  color: var(--text-faint);
   display: grid;
   gap: 4px;
 }
@@ -166,8 +146,8 @@ footer p {
 }
 
 footer a {
-  color: var(--on-bg);
-  text-decoration-color: var(--on-bg-muted);
+  color: var(--text-muted);
+  text-decoration-color: var(--text-faint);
 }
 
 .method {
