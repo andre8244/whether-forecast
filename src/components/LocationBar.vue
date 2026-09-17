@@ -87,13 +87,12 @@ function describe(location: GeoLocation): string {
     <p v-if="locationError" class="error line">{{ locationError }}</p>
 
     <ul v-if="favorites.length" class="favorites">
-      <li v-for="favorite in favorites" :key="favorite.id">
-        <button
-          type="button"
-          class="chip"
-          :class="{ active: favorite.id === current.id }"
-          @click="select(favorite)"
-        >
+      <li
+        v-for="favorite in favorites"
+        :key="favorite.id"
+        :class="{ active: favorite.id === current.id }"
+      >
+        <button type="button" class="chip" @click="select(favorite)">
           {{ favorite.name }}
         </button>
         <button
@@ -231,33 +230,45 @@ input::placeholder {
   gap: 6px;
 }
 
+/*
+ * The pill is one surface with two buttons inside it, rather than two bordered
+ * buttons pushed together: that earlier shape put a seam down the middle and,
+ * once selected, left the two halves on different backgrounds and borders.
+ */
 .favorites li {
   display: flex;
   align-items: stretch;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.favorites li.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.chip,
+.chip-remove {
+  background: none;
+  border: 0;
+  /* So the focus ring follows the pill rather than boxing a half of it. */
+  border-radius: 999px;
+  font-size: 0.8rem;
 }
 
 .chip {
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-right: 0;
-  border-radius: 999px 0 0 999px;
-}
-
-.chip.active {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: var(--text);
+  padding: 5px 4px 5px 10px;
 }
 
 .chip-remove {
-  padding: 5px 9px;
+  padding: 5px 10px 5px 4px;
   font-size: 0.85rem;
   line-height: 1;
   color: var(--text-muted);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 0 999px 999px 0;
+}
+
+.chip-remove:hover {
+  color: var(--text);
 }
 </style>
