@@ -15,9 +15,32 @@ let debounce: ReturnType<typeof setTimeout> | undefined
 
 watch(query, (value) => {
   if (debounce !== undefined) clearTimeout(debounce)
-  debounce = setTimeout(() => void search(value), 250)
+  debounce = setTimeout(() => {
+    debounce = undefined
+    void search(value)
+  }, 250)
   open.value = true
 })
+
+/**
+ * Enter picks the first result.
+ *
+ * The list on screen can lag the box by a keystroke: the search is debounced,
+ * and the request itself takes a moment. Acting on what is displayed would
+ * then select a match for a shorter query than the one just typed, so a
+ * pending or in-flight search is resolved first — `search` aborts the older
+ * request, so the extra call replaces it rather than racing it.
+ */
+async function submit(): Promise<void> {
+  if (debounce !== undefined || searching.value) {
+    if (debounce !== undefined) clearTimeout(debounce)
+    debounce = undefined
+    await search(query.value)
+  }
+
+  const first = results.value[0]
+  if (first) choose(first)
+}
 
 function choose(location: GeoLocation): void {
   select(location)
@@ -44,6 +67,7 @@ function describe(location: GeoLocation): string {
         aria-label="Cerca una località"
         autocomplete="off"
         @focus="open = true"
+        @keydown.enter="submit()"
         @keydown.escape="open = false"
       />
 
