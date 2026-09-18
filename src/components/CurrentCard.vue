@@ -148,12 +148,15 @@ const modelDetail = computed(() => {
         <span>Nuvolosità</span>
         <strong>{{ percent(current.cloudCover) }}</strong>
       </li>
+      <li>
+        <span>Alba</span>
+        <strong>{{ hourLabel(sunrise) }}</strong>
+      </li>
+      <li>
+        <span>Tramonto</span>
+        <strong>{{ hourLabel(sunset) }}</strong>
+      </li>
     </ul>
-
-    <p class="sun numeric">
-      <span aria-hidden="true">🌅</span> {{ hourLabel(sunrise) }}
-      <span aria-hidden="true">🌇</span> {{ hourLabel(sunset) }}
-    </p>
 
     <p v-if="rainAhead" class="next-rain">
       <span aria-hidden="true">🌧</span> Pioggia prevista tra {{ rainAhead.inHours }} h ({{
@@ -207,7 +210,7 @@ const modelDetail = computed(() => {
   color: var(--text-muted);
 }
 
-/* Sits with the sun times: both say what the rest of the day holds. */
+/* Follows the readings row, where the sun times now sit. */
 .next-rain {
   margin: 6px 0 0;
   font-size: 0.85rem;
@@ -265,12 +268,4 @@ const modelDetail = computed(() => {
   font-weight: 600;
 }
 
-.sun {
-  margin: 16px 0 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
 </style>
