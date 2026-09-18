@@ -122,10 +122,6 @@ const modelDetail = computed(() => {
       <span class="condition">{{ condition.label }}</span>
     </div>
 
-    <p v-if="rainAhead" class="next-rain">
-      🌧 Pioggia prevista tra {{ rainAhead.inHours }} h ({{ hourLabel(rainAhead.hour.time) }})
-    </p>
-
     <p v-if="disagreement" class="disagreement" :title="modelDetail">
       💧 Pioggia nel {{ percent(disagreement.share) }} degli scenari.
     </p>
@@ -157,6 +153,12 @@ const modelDetail = computed(() => {
     <p class="sun numeric">
       <span aria-hidden="true">🌅</span> {{ hourLabel(sunrise) }}
       <span aria-hidden="true">🌇</span> {{ hourLabel(sunset) }}
+    </p>
+
+    <p v-if="rainAhead" class="next-rain">
+      <span aria-hidden="true">🌧</span> Pioggia prevista tra {{ rainAhead.inHours }} h ({{
+        hourLabel(rainAhead.hour.time)
+      }})
     </p>
   </section>
 </template>
@@ -205,10 +207,14 @@ const modelDetail = computed(() => {
   color: var(--text-muted);
 }
 
+/* Sits with the sun times: both say what the rest of the day holds. */
 .next-rain {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   font-size: 0.85rem;
   color: var(--text-muted);
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .disagreement {
