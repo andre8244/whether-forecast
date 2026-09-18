@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 import {
   altitude,
   centimetres,
@@ -8,17 +8,17 @@ import {
   index,
   relativeDayLabel,
   uvLabel,
-} from '../lib/format'
-import { peakUv } from '../lib/uv'
-import type { HourPoint } from '../types/weather'
+} from "../lib/format";
+import { peakUv } from "../lib/uv";
+import type { HourPoint } from "../types/weather";
 
-const props = defineProps<{ hours: HourPoint[] }>()
+const props = defineProps<{ hours: HourPoint[] }>();
 
 /** The hour in progress, which the tiles below read their values from. */
-const hour = computed<HourPoint | null>(() => props.hours[0] ?? null)
+const hour = computed<HourPoint | null>(() => props.hours[0] ?? null);
 
 /** Not the current hour's UV, which is 0 all night; see `peakUv`. */
-const uv = computed(() => peakUv(props.hours))
+const uv = computed(() => peakUv(props.hours));
 
 /*
  * The last three tiles appear only when they have something to say.
@@ -28,13 +28,13 @@ const uv = computed(() => peakUv(props.hours))
  * places. A tile that is permanently a dash is the same dead weight as an
  * hourly UV index at midnight.
  */
-const visibility = computed(() => hour.value?.visibility ?? null)
-const freezingLevel = computed(() => hour.value?.freezingLevel ?? null)
+const visibility = computed(() => hour.value?.visibility ?? null);
+const freezingLevel = computed(() => hour.value?.freezingLevel ?? null);
 
 const snowfall = computed(() => {
-  const value = hour.value?.snowfall ?? null
-  return value !== null && value > 0 ? value : null
-})
+  const value = hour.value?.snowfall ?? null;
+  return value !== null && value > 0 ? value : null;
+});
 </script>
 
 <template>
@@ -46,16 +46,6 @@ const snowfall = computed(() => {
       not repeated here: this grid is for what that card does not already say.
     -->
     <dl>
-      <div v-if="uv">
-        <dt>UV massimo</dt>
-        <dd class="numeric">
-          {{ index(uv.value, 0) }}
-          <span class="dir">{{ uvLabel(uv.value) }}</span>
-          <span class="when">
-            {{ relativeDayLabel(uv.time) }} alle {{ hourLabel(uv.time) }}
-          </span>
-        </dd>
-      </div>
       <div v-if="visibility !== null">
         <dt>Visibilità</dt>
         <dd class="numeric">{{ distance(visibility) }}</dd>
@@ -67,6 +57,16 @@ const snowfall = computed(() => {
       <div v-if="snowfall !== null">
         <dt>Neve</dt>
         <dd class="numeric">{{ centimetres(snowfall) }}</dd>
+      </div>
+      <div v-if="uv">
+        <dt>UV massimo</dt>
+        <dd class="numeric">
+          {{ index(uv.value, 0) }}
+          <span class="dir">{{ uvLabel(uv.value) }}</span>
+          <span class="when">
+            {{ relativeDayLabel(uv.time) }} alle {{ hourLabel(uv.time) }}
+          </span>
+        </dd>
       </div>
     </dl>
   </section>
@@ -111,9 +111,7 @@ dd {
 }
 
 .dir {
-  font-weight: 400;
   font-size: 0.78rem;
-  color: var(--text-muted);
   margin-left: 4px;
 }
 

@@ -254,7 +254,7 @@ h2 {
 }
 
 .summary {
-  margin: 4px 0 0;
+  margin: 8px 0 0;
   font-size: 1.05rem;
   font-weight: 500;
 }

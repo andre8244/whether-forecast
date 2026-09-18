@@ -75,19 +75,6 @@ const degradedStorm = computed(
         >
         (CC BY 4.0) da ECMWF, DWD ICON e NOAA GFS. Unità metriche.
       </p>
-      <p class="method">
-        La probabilità di temporale è la quota di scenari ensemble con pioggia
-        convettiva in quell’ora — almeno 0.2 mm con CAPE di almeno 500 J/kg —
-        non una stima del singolo modello. È la media di ECMWF e GFS: ICON non
-        pubblica la CAPE per i suoi scenari e resta fuori da questo numero.
-      </p>
-      <p class="method">
-        La probabilità di pioggia e i millimetri vengono entrambi dalla
-        previsione deterministica, ma sono prodotti in modo diverso: per questo
-        un’ora può avere alta probabilità e nessun accumulo. Quando quella
-        previsione dà asciutto mentre altri modelli globali o la maggioranza
-        degli scenari ensemble prevedono pioggia, la scheda in alto lo segnala.
-      </p>
       <p v-if="model" class="updated">
         Previsione delle
         {{ fullTimeLabelIn(model.observedAt, model.timezone) }} ora locale,

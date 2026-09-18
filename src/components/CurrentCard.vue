@@ -245,7 +245,7 @@ const modelDetail = computed(() => {
 
 .quick {
   list-style: none;
-  margin: 18px 0 0;
+  margin: 24px 0 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
