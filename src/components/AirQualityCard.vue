@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { describeAqi } from '../lib/aqi'
-import { concentration } from '../lib/format'
 import type { AirQualityPoint } from '../types/weather'
 
 const props = defineProps<{ air: AirQualityPoint | null }>()
@@ -25,13 +24,6 @@ const description = computed(() => describeAqi(props.air?.europeanAqi))
           <p class="advice">{{ description.advice }}</p>
         </div>
       </div>
-
-      <dl class="numeric">
-        <div><dt>PM2.5</dt><dd>{{ concentration(air.pm2_5) }}</dd></div>
-        <div><dt>PM10</dt><dd>{{ concentration(air.pm10) }}</dd></div>
-        <div><dt>Ozono</dt><dd>{{ concentration(air.ozone) }}</dd></div>
-        <div><dt>NO₂</dt><dd>{{ concentration(air.nitrogenDioxide) }}</dd></div>
-      </dl>
 
       <p class="scale">Indice europeo EAQI</p>
     </template>
@@ -68,30 +60,6 @@ h2 {
   margin: 2px 0 0;
   font-size: 0.8rem;
   color: var(--text-muted);
-}
-
-dl {
-  margin: 16px 0 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 12px;
-}
-
-dl div {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-dt {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-
-dd {
-  margin: 0;
-  font-size: 0.92rem;
-  font-weight: 600;
 }
 
 .scale,
