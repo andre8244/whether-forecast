@@ -60,6 +60,13 @@ function valueFor(wrapper: ReturnType<typeof mountGrid>, label: string): string 
 }
 
 describe('DetailsGrid', () => {
+  it('does not repeat what the current card already shows', () => {
+    const wrapper = mountGrid()
+    for (const label of ['Vento', 'Raffiche', 'Umidità', 'Nuvolosità']) {
+      expect(valueFor(wrapper, label)).toBeNull()
+    }
+  })
+
   it('reports visibility in kilometres when the air is clear', () => {
     expect(valueFor(mountGrid(), 'Visibilità')).toBe('24 km')
   })

@@ -1,16 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import {
-  altitude,
-  centimetres,
-  distance,
-  index,
-  percent,
-  pressure,
-  speed,
-  uvLabel,
-  windDirection,
-} from '../lib/format'
+import { altitude, centimetres, distance, index, pressure, uvLabel } from '../lib/format'
 import type { CurrentConditions, HourPoint } from '../types/weather'
 
 const props = defineProps<{ current: CurrentConditions; hour: HourPoint | null }>()
@@ -38,29 +28,14 @@ const snowfall = computed(() => {
   <section class="card details">
     <h2>Dettagli</h2>
 
+    <!--
+      Wind, gusts, humidity and cloud cover live in the current card and are
+      not repeated here: this grid is for what that card does not already say.
+    -->
     <dl>
-      <div>
-        <dt>Vento</dt>
-        <dd class="numeric">
-          {{ speed(current.windSpeed) }}
-          <span class="dir">{{ windDirection(current.windDirection) }}</span>
-        </dd>
-      </div>
-      <div>
-        <dt>Raffiche</dt>
-        <dd class="numeric">{{ speed(current.windGusts) }}</dd>
-      </div>
-      <div>
-        <dt>Umidità</dt>
-        <dd class="numeric">{{ percent(current.humidity) }}</dd>
-      </div>
       <div>
         <dt>Pressione</dt>
         <dd class="numeric">{{ pressure(current.pressure) }}</dd>
-      </div>
-      <div>
-        <dt>Nuvolosità</dt>
-        <dd class="numeric">{{ percent(current.cloudCover) }}</dd>
       </div>
       <div>
         <dt>Indice UV</dt>
