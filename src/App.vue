@@ -46,7 +46,7 @@ const degradedStorm = computed(
         :elevation="model.elevation"
         :sunrise="model.sunrise"
         :sunset="model.sunset"
-        :hour="model.hourly[0] ?? null"
+        :hours="model.hourly"
       />
 
       <StormPanel

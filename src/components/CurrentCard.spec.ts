@@ -40,6 +40,7 @@ function conditions(temperature: number, apparentTemperature: number): CurrentCo
 function hour(
   rainProbability: number | null,
   modelConsensus: ModelConsensus | null = null,
+  overrides: Partial<HourPoint> = {},
 ): HourPoint {
   return {
     time: '2026-09-16T12:00',
@@ -57,6 +58,8 @@ function hour(
     windGusts: 21,
     windDirection: 200,
     uvIndex: 3,
+    visibility: 20_000,
+    freezingLevel: 3200,
     cape: 900,
     liftedIndex: -4,
     cin: 20,
@@ -65,14 +68,22 @@ function hour(
     stormSpread: null,
     rainProbability,
     modelConsensus,
+    ...overrides,
   }
 }
 
 function mountCard(
   temperature: number,
   apparent: number,
-  options: { current?: Partial<CurrentConditions>; hour?: HourPoint | null } = {},
+  options: {
+    current?: Partial<CurrentConditions>
+    hour?: HourPoint | null
+    hours?: HourPoint[]
+  } = {},
 ) {
+  const first = options.hour === undefined ? null : options.hour
+  const hours = options.hours ?? (first ? [first] : [])
+
   return mount(CurrentCard, {
     props: {
       current: { ...conditions(temperature, apparent), ...options.current },
@@ -80,7 +91,7 @@ function mountCard(
       elevation: 239,
       sunrise: '2026-09-16T07:08',
       sunset: '2026-09-16T19:38',
-      hour: options.hour ?? null,
+      hours,
     },
   })
 }
@@ -171,6 +182,32 @@ describe('CurrentCard', () => {
   it('keeps quiet without cross-check data at all', () => {
     expect(mountCard(24, 25, { hour: null }).find('.disagreement').exists()).toBe(false)
     expect(mountCard(24, 25, { hour: hour(null) }).find('.disagreement').exists()).toBe(false)
+  })
+
+  it('says when rain is next expected', () => {
+    const dry = hour(null, null, { precipitation: 0 })
+    const wet = hour(null, null, { precipitation: 0.8, time: '2026-09-16T16:00' })
+    const wrapper = mountCard(24, 25, { hours: [dry, dry, wet] })
+
+    expect(wrapper.find('.next-rain').text()).toContain('tra 2 h')
+    expect(wrapper.find('.next-rain').text()).toContain('16:00')
+  })
+
+  it('says nothing about rain ahead while it is already raining', () => {
+    // The condition itself reports the hour in progress.
+    const raining = hour(null, null, { precipitation: 1.5, weatherCode: 61 })
+    const wet = hour(null, null, { precipitation: 0.8 })
+    const wrapper = mountCard(24, 25, {
+      current: { weatherCode: 61, precipitation: 1.5 },
+      hours: [raining, wet],
+    })
+
+    expect(wrapper.find('.next-rain').exists()).toBe(false)
+  })
+
+  it('says nothing about rain ahead across a dry window', () => {
+    const dry = hour(null, null, { precipitation: 0 })
+    expect(mountCard(24, 25, { hours: [dry, dry, dry] }).find('.next-rain').exists()).toBe(false)
   })
 
   it('keeps quiet when the models dissent but there is no share to quote', () => {

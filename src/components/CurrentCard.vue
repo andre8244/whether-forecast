@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { describeCode, iconFor, isWetCode } from '../lib/wmo'
 import { modelsSeeRain } from '../lib/modelConsensus'
+import { nextRain, rainingNow } from '../lib/nextRain'
 import { hourLabel, percent, speed, temperature, windDirection } from '../lib/format'
 import type { CurrentConditions, GeoLocation, HourPoint } from '../types/weather'
 
@@ -11,12 +12,15 @@ const props = defineProps<{
   elevation: number
   sunrise: string
   sunset: string
-  /** The hour in progress, for the cross-checks. Null while degraded. */
-  hour: HourPoint | null
+  /** The 48-hour window, for the cross-checks and the next-rain line. */
+  hours: HourPoint[]
 }>()
 
 /** Below this share of members, the ensemble is not contradicting anything. */
 const RAIN_MAJORITY = 60
+
+/** The hour in progress; the window's first entry, empty while degraded. */
+const hour = computed<HourPoint | null>(() => props.hours[0] ?? null)
 
 const condition = computed(() => describeCode(props.current.weatherCode))
 const glyph = computed(() => iconFor(props.current.weatherCode, props.current.isDay))
@@ -68,12 +72,25 @@ const headlineIsDry = computed(
 const disagreement = computed(() => {
   if (!headlineIsDry.value) return null
 
-  const consensus = props.hour?.modelConsensus ?? null
-  const share = props.hour?.rainProbability ?? null
+  const consensus = hour.value?.modelConsensus ?? null
+  const share = hour.value?.rainProbability ?? null
   if (share === null) return null
   if (!modelsSeeRain(consensus) && share < RAIN_MAJORITY) return null
 
   return { share, consensus }
+})
+
+/**
+ * When rain is next expected, once it is not already falling.
+ *
+ * Saying "tra 2 h" while it rains would be answering a question nobody asked,
+ * and the condition above already reports the hour in progress. Nothing is
+ * shown when the whole window is dry: the seven-day list covers that, and a
+ * standing "nessuna pioggia" on a July week is a line that never earns itself.
+ */
+const rainAhead = computed(() => {
+  if (rainingNow(props.hours)) return null
+  return nextRain(props.hours)
 })
 
 /** Italian list: "ECMWF e GFS", "ICON, ECMWF e GFS". */
@@ -104,6 +121,10 @@ const modelDetail = computed(() => {
       <span class="temp numeric">{{ temperature(current.temperature) }}</span>
       <span class="condition">{{ condition.label }}</span>
     </div>
+
+    <p v-if="rainAhead" class="next-rain">
+      🌧 Pioggia prevista tra {{ rainAhead.inHours }} h ({{ hourLabel(rainAhead.hour.time) }})
+    </p>
 
     <p v-if="disagreement" class="disagreement" :title="modelDetail">
       💧 Pioggia nel {{ percent(disagreement.share) }} degli scenari.
@@ -181,6 +202,12 @@ const modelDetail = computed(() => {
 
 .condition {
   font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+.next-rain {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 

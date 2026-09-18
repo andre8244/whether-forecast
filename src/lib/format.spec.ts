@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
+  altitude,
+  centimetres,
   concentration,
+  distance,
   energy,
   fullTimeLabelIn,
   hourLabel,
@@ -184,5 +187,50 @@ describe('millimetres trace amounts', () => {
   it('still reports missing data as missing', () => {
     expect(millimetres(null)).toBe('—')
     expect(millimetres(undefined)).toBe('—')
+  })
+})
+
+describe('distance', () => {
+  it('keeps metres below a kilometre, where fog and haze differ', () => {
+    expect(distance(300)).toBe('300 m')
+    expect(distance(944)).toBe('940 m')
+  })
+
+  it('switches to kilometres, with a decimal only while it matters', () => {
+    expect(distance(1000)).toBe('1.0 km')
+    expect(distance(2450)).toBe('2.5 km')
+    expect(distance(10_000)).toBe('10 km')
+    expect(distance(35_420)).toBe('35 km')
+  })
+
+  it('reports missing data as missing', () => {
+    expect(distance(null)).toBe('—')
+  })
+})
+
+describe('altitude', () => {
+  it('rounds to the nearest ten metres', () => {
+    expect(altitude(3614)).toBe('3610 m')
+    expect(altitude(0)).toBe('0 m')
+  })
+
+  it('reports missing data as missing', () => {
+    expect(altitude(null)).toBe('—')
+  })
+})
+
+describe('centimetres', () => {
+  it('distinguishes no snow from a trace of it', () => {
+    expect(centimetres(0)).toBe('0 cm')
+    expect(centimetres(0.04)).toBe('< 0.1 cm')
+  })
+
+  it('reports measurable amounts to a tenth', () => {
+    expect(centimetres(0.1)).toBe('0.1 cm')
+    expect(centimetres(4)).toBe('4.0 cm')
+  })
+
+  it('reports missing data as missing', () => {
+    expect(centimetres(undefined)).toBe('—')
   })
 })

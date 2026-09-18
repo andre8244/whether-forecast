@@ -86,6 +86,8 @@ function forecast(hoursAgo = 0): ForecastResponse {
       wind_gusts_10m: series(20),
       wind_direction_10m: series(45),
       uv_index: series(0),
+      visibility: series(20_000),
+      freezing_level_height: series(3000),
       cape: series(0),
       lifted_index: series(2),
       convective_inhibition: series(0),
@@ -241,6 +243,36 @@ describe('useForecast', () => {
     expect(error.value).toBeNull()
     expect(model.value?.degraded).toEqual(['aria'])
     expect(model.value?.airQuality).toBeNull()
+    dispose()
+  })
+
+  it('drops a cached payload it cannot render and still fetches', async () => {
+    // What an app update looks like from the cache's side: the stored payload
+    // is shaped for the previous build. Rendering it must not strand the page,
+    // because this runs before the network call.
+    localStorage.setItem(
+      'meteo:last-forecast',
+      JSON.stringify({
+        location: LOCATION,
+        forecast: { hourly: null, daily: null, current: null },
+        ensemble: null,
+        comparison: null,
+        airQuality: null,
+        degraded: [],
+        fetchedAt: Date.now(),
+      }),
+    )
+
+    fetchForecast.mockResolvedValue(forecast())
+    fetchEnsemble.mockResolvedValue(ensemble())
+    fetchModelComparison.mockResolvedValue(comparison())
+    fetchAirQuality.mockResolvedValue(airQuality())
+
+    const { model, error, loading, dispose } = await run()
+
+    expect(loading.value).toBe(false)
+    expect(error.value).toBeNull()
+    expect(model.value?.current.temperature).toBe(22)
     dispose()
   })
 

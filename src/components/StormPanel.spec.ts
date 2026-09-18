@@ -49,6 +49,8 @@ function hour(overrides: Partial<HourPoint> = {}): HourPoint {
     windGusts: 18,
     windDirection: 200,
     uvIndex: 4,
+    visibility: 20_000,
+    freezingLevel: 3200,
     cape: 1200,
     liftedIndex: -1,
     cin: -20,

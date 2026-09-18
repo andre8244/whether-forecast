@@ -65,6 +65,8 @@ export interface ForecastHourly {
   wind_gusts_10m: (number | null)[]
   wind_direction_10m: (number | null)[]
   uv_index: (number | null)[]
+  visibility: (number | null)[]
+  freezing_level_height: (number | null)[]
   cape: (number | null)[]
   lifted_index: (number | null)[]
   convective_inhibition: (number | null)[]
@@ -192,6 +194,10 @@ export interface HourPoint {
   windGusts: number | null
   windDirection: number | null
   uvIndex: number | null
+  /** Horizontal visibility, metres. */
+  visibility: number | null
+  /** Height of the 0 °C isotherm, metres above sea level. */
+  freezingLevel: number | null
   cape: number | null
   liftedIndex: number | null
   cin: number | null

@@ -33,6 +33,8 @@ const HOURLY = [
   'wind_gusts_10m',
   'wind_direction_10m',
   'uv_index',
+  'visibility',
+  'freezing_level_height',
   'cape',
   'lifted_index',
   'convective_inhibition',

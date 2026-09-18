@@ -1,11 +1,37 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { index, percent, pressure, speed, uvLabel, windDirection } from '../lib/format'
+import {
+  altitude,
+  centimetres,
+  distance,
+  index,
+  percent,
+  pressure,
+  speed,
+  uvLabel,
+  windDirection,
+} from '../lib/format'
 import type { CurrentConditions, HourPoint } from '../types/weather'
 
 const props = defineProps<{ current: CurrentConditions; hour: HourPoint | null }>()
 
 const uv = computed(() => props.hour?.uvIndex ?? null)
+
+/*
+ * The last three tiles appear only when they have something to say.
+ *
+ * Not every model publishes them — the run behind a Norwegian forecast carries
+ * no freezing level at all — and snow reads 0 cm for most of the year in most
+ * places. A tile that is permanently a dash is the same dead weight as an
+ * hourly UV index at midnight.
+ */
+const visibility = computed(() => props.hour?.visibility ?? null)
+const freezingLevel = computed(() => props.hour?.freezingLevel ?? null)
+
+const snowfall = computed(() => {
+  const value = props.hour?.snowfall ?? null
+  return value !== null && value > 0 ? value : null
+})
 </script>
 
 <template>
@@ -42,6 +68,18 @@ const uv = computed(() => props.hour?.uvIndex ?? null)
           {{ index(uv, 0) }}
           <span class="dir">{{ uvLabel(uv) }}</span>
         </dd>
+      </div>
+      <div v-if="visibility !== null">
+        <dt>Visibilità</dt>
+        <dd class="numeric">{{ distance(visibility) }}</dd>
+      </div>
+      <div v-if="freezingLevel !== null">
+        <dt>Zero termico</dt>
+        <dd class="numeric">{{ altitude(freezingLevel) }}</dd>
+      </div>
+      <div v-if="snowfall !== null">
+        <dt>Neve</dt>
+        <dd class="numeric">{{ centimetres(snowfall) }}</dd>
       </div>
     </dl>
   </section>

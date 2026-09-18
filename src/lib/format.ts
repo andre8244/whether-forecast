@@ -34,6 +34,34 @@ export function millimetres(value: number | null | undefined): string {
   })
 }
 
+/** Snow depth, cm. Traces are named rather than rounded away, as for rain. */
+export function centimetres(value: number | null | undefined): string {
+  return nullable(value, (v) => {
+    if (v === 0) return '0 cm'
+    if (v < 0.05) return '< 0.1 cm'
+    return `${v.toFixed(1)} cm`
+  })
+}
+
+/**
+ * Visibility, given in metres by the API.
+ *
+ * Under a kilometre the metres are what matters — the difference between 300 m
+ * and 900 m is the difference between fog and haze — so they are kept.
+ */
+export function distance(value: number | null | undefined): string {
+  return nullable(value, (v) => {
+    if (v < 1000) return `${Math.round(v / 10) * 10} m`
+    if (v < 10_000) return `${(v / 1000).toFixed(1)} km`
+    return `${Math.round(v / 1000)} km`
+  })
+}
+
+/** Height above sea level, metres, rounded to the nearest ten. */
+export function altitude(value: number | null | undefined): string {
+  return nullable(value, (v) => `${Math.round(v / 10) * 10} m`)
+}
+
 export function percent(value: number | null | undefined): string {
   return nullable(value, (v) => `${Math.round(v)}%`)
 }

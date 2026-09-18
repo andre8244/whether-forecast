@@ -3,7 +3,7 @@ import { fetchAirQuality } from '../api/airQuality'
 import { fetchEnsemble } from '../api/ensemble'
 import { fetchForecast, fetchModelComparison } from '../api/forecast'
 import { buildViewModel } from '../lib/viewModel'
-import { readJson, writeJson } from '../lib/storage'
+import { readJson, remove, writeJson } from '../lib/storage'
 import type {
   AirQualityResponse,
   EnsembleResponse,
@@ -47,11 +47,27 @@ export function useForecast(location: Ref<GeoLocation>) {
 
   let controller: AbortController | undefined
 
+  /**
+   * Render the stored payload for this place, if there is one.
+   *
+   * The cache holds raw API responses, so a build that adds or renames a field
+   * reads back payloads written by the previous one. `buildViewModel` tolerates
+   * a missing series, but anything it cannot survive must not strand the page:
+   * this ran before the network call, so a throw here left the loading banner
+   * up with no request ever sent. A payload that cannot be rendered is dropped
+   * instead, and the fetch carries on.
+   */
   function renderCached(target: GeoLocation): boolean {
     const cached = readJson<CachedPayload | null>(CACHE_KEY, null)
     if (!cached || cached.location.id !== target.id) return false
 
-    model.value = buildViewModel({ ...cached, now: Date.now() })
+    try {
+      model.value = buildViewModel({ ...cached, now: Date.now() })
+    } catch {
+      remove(CACHE_KEY)
+      return false
+    }
+
     stale.value = true
     return true
   }

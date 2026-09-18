@@ -73,6 +73,8 @@ function forecastStub(hours: number): ForecastResponse {
       wind_gusts_10m: series(18),
       wind_direction_10m: series(210),
       uv_index: series(4),
+      visibility: series(24_000),
+      freezing_level_height: series(3400),
       cape: series(1200),
       lifted_index: series(-1),
       convective_inhibition: series(-20),
@@ -214,6 +216,32 @@ describe('buildViewModel', () => {
     // The second day is dry in the stub for all three.
     const later = model.hourly.find((hour) => hour.time.startsWith('2026-09-17'))
     expect(later?.modelConsensus).toEqual({ wet: [], dry: ['ICON', 'ECMWF', 'GFS'] })
+  })
+
+  it('survives a cached payload written before a variable existed', () => {
+    // The cache holds raw responses, so a new build reads back payloads with
+    // whole series missing. Indexing those directly threw and stranded the
+    // page on its loading banner.
+    const hours = 72
+    const base = forecastStub(hours)
+    const older = {
+      ...base,
+      hourly: { ...base.hourly, visibility: undefined, freezing_level_height: undefined },
+    } as unknown as ForecastResponse
+
+    const model = buildViewModel({
+      location: LOCATION,
+      forecast: older,
+      ensemble: null,
+      comparison: null,
+      airQuality: null,
+      degraded: [],
+      now: NOON,
+    })
+
+    expect(model.hourly[0].visibility).toBeNull()
+    expect(model.hourly[0].freezingLevel).toBeNull()
+    expect(model.hourly[0].temperature).not.toBeNull()
   })
 
   it('leaves the split null when the comparison call failed', () => {
