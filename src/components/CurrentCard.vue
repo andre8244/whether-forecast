@@ -49,26 +49,46 @@ const headlineIsDry = computed(
  * once read "Nuvoloso" during a thunderstorm because that model had 0.0 mm for
  * every hour of the day.
  *
- * Two separate cross-checks can contradict it, and they are not the same
- * claim. Other global models forecasting rain is a disagreement between runs
- * of the same kind — the strong signal, and the one that would have caught
- * that afternoon, when ECMWF and GFS both had rain. The ensemble share is a
- * probability rather than a state: worth reporting alongside, not on its own
- * terms.
+ * Two cross-checks can contradict it. Other global models forecasting rain is
+ * the stronger one — runs of the same kind as the headline, and what would
+ * have caught that afternoon, when ECMWF and GFS both had rain. The ensemble
+ * share is a probability rather than a state, and either one is enough to
+ * raise the line.
  *
- * Silent whenever the headline already says rain, so the line only appears
- * where it settles something.
+ * What the line *says* is always the ensemble share, because one number the
+ * reader can weigh beats a count of model names they would have to look up.
+ * The names go in the title for anyone who wants them. Measured over seven
+ * days, the models raise the line without an ensemble majority in a third to a
+ * half of the hours, so that number is often modest; it is still the honest
+ * one, and the alternative was a sentence about models nobody has heard of.
+ *
+ * Silent whenever the headline already says rain, and silent without an
+ * ensemble share to quote.
  */
 const disagreement = computed(() => {
   if (!headlineIsDry.value) return null
 
   const consensus = props.hour?.modelConsensus ?? null
   const share = props.hour?.rainProbability ?? null
-  const models = modelsSeeRain(consensus) ? consensus : null
-  const scenarios = share !== null && share >= RAIN_MAJORITY ? share : null
-  if (!models && scenarios === null) return null
+  if (share === null) return null
+  if (!modelsSeeRain(consensus) && share < RAIN_MAJORITY) return null
 
-  return { models, scenarios }
+  return { share, consensus }
+})
+
+/** Italian list: "ECMWF e GFS", "ICON, ECMWF e GFS". */
+function nameList(models: string[]): string {
+  if (models.length <= 1) return models.join('')
+  return `${models.slice(0, -1).join(', ')} e ${models[models.length - 1]}`
+}
+
+/** The model split, for the hover title rather than the line itself. */
+const modelDetail = computed(() => {
+  const consensus = disagreement.value?.consensus
+  if (!consensus || consensus.wet.length === 0) return undefined
+
+  const wet = `Pioggia per ${nameList(consensus.wet)}`
+  return consensus.dry.length ? `${wet}; ${nameList(consensus.dry)} no` : wet
 })
 </script>
 
@@ -85,17 +105,8 @@ const disagreement = computed(() => {
       <span class="condition">{{ condition.label }}</span>
     </div>
 
-    <p v-if="disagreement" class="disagreement">
-      💧
-      <template v-if="disagreement.models">
-        Pioggia in quest’ora per {{ disagreement.models.wet.join(' e ') }}<template
-          v-if="disagreement.models.dry.length"
-        >, non per {{ disagreement.models.dry.join(' e ') }}</template
-        >.
-      </template>
-      <template v-if="disagreement.scenarios !== null">
-        Pioggia nel {{ percent(disagreement.scenarios) }} degli scenari d’insieme.
-      </template>
+    <p v-if="disagreement" class="disagreement" :title="modelDetail">
+      💧 Pioggia nel {{ percent(disagreement.share) }} degli scenari.
     </p>
 
     <p class="feels">

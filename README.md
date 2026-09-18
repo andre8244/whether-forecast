@@ -98,8 +98,12 @@ the card says anything: one dissenting model is ordinary spread.
 weight, reported when it reaches 60%.
 
 The card shows a line only when the headline is dry — no precipitation code, no accumulation — and at
-least one cross-check contradicts it, naming the models that disagree and the share of scenarios. It
-stays silent whenever they agree.
+least one cross-check contradicts it. What the line says is always the ensemble share: *pioggia nel
+76% degli scenari*. One number a reader can weigh beats a count of model names they would have to
+look up, so the names go in the hover title instead. Measured over seven days, the models raise the
+line without an ensemble majority in a third to a half of the hours, so the quoted share is often
+modest — it is still the honest number. Without an ensemble share there is nothing to quote and the
+line stays down.
 
 The ensemble is reported but does not drive the label, and measurement is the reason. Over 168 hours
 at Pesaro the deterministic run called 12 hours wet and the ensemble majority called 8 wet, and the

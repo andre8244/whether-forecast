@@ -113,41 +113,43 @@ describe('CurrentCard', () => {
     expect(wrapper.find('.place').text()).toContain('239 m')
   })
 
-  it('names the models that disagree with the dry headline', () => {
+  it('quotes the ensemble share when it contradicts the dry headline', () => {
     // The case that prompted this: overcast and 0 mm from the model behind the
-    // headline while two separate global models had rain in the same hour.
+    // headline while most of the ensemble it was fetched with was wet.
     const wrapper = mountCard(24, 25, {
       current: { weatherCode: 3 },
       hour: hour(82, TWO_MODELS_WET),
     })
-    const text = wrapper.find('.disagreement').text()
-
-    expect(text).toContain('ECMWF e GFS')
-    expect(text).toContain('non per ICON')
-    expect(text).toContain('82%')
+    expect(wrapper.find('.disagreement').text()).toContain('Pioggia nel 82% degli scenari')
   })
 
-  it('reports the ensemble share on its own when the models agree on dry', () => {
+  it('keeps the model names in the title rather than the line', () => {
     const wrapper = mountCard(24, 25, {
       current: { weatherCode: 3 },
-      hour: hour(82, { wet: ['ECMWF'], dry: ['ICON', 'GFS'] }),
+      hour: hour(82, TWO_MODELS_WET),
     })
-    const text = wrapper.find('.disagreement').text()
+    const line = wrapper.find('.disagreement')
 
-    // One dissenting model is ordinary spread, so it is not named.
-    expect(text).not.toContain('ECMWF')
-    expect(text).toContain('82%')
+    expect(line.text()).not.toContain('ECMWF')
+    expect(line.attributes('title')).toBe('Pioggia per ECMWF e GFS; ICON no')
   })
 
-  it('reports the models on their own when the ensemble is not a majority', () => {
+  it('speaks for a share below the majority when the models raise it', () => {
+    // Two separate models seeing rain is the stronger signal; the share is
+    // still what gets quoted, modest as it is.
     const wrapper = mountCard(24, 25, {
       current: { weatherCode: 3 },
       hour: hour(35, TWO_MODELS_WET),
     })
-    const text = wrapper.find('.disagreement').text()
+    expect(wrapper.find('.disagreement').text()).toContain('35%')
+  })
 
-    expect(text).toContain('ECMWF e GFS')
-    expect(text).not.toContain('35%')
+  it('stays quiet for a low share when only one model dissents', () => {
+    const wrapper = mountCard(24, 25, {
+      current: { weatherCode: 3 },
+      hour: hour(35, { wet: ['ECMWF'], dry: ['ICON', 'GFS'] }),
+    })
+    expect(wrapper.find('.disagreement').exists()).toBe(false)
   })
 
   it('keeps quiet when the headline already says it is raining', () => {
@@ -169,5 +171,15 @@ describe('CurrentCard', () => {
   it('keeps quiet without cross-check data at all', () => {
     expect(mountCard(24, 25, { hour: null }).find('.disagreement').exists()).toBe(false)
     expect(mountCard(24, 25, { hour: hour(null) }).find('.disagreement').exists()).toBe(false)
+  })
+
+  it('keeps quiet when the models dissent but there is no share to quote', () => {
+    // The line is a sentence about scenarios; without the ensemble it has no
+    // number, and a count of model names is what this wording replaced.
+    const wrapper = mountCard(24, 25, {
+      current: { weatherCode: 3 },
+      hour: hour(null, TWO_MODELS_WET),
+    })
+    expect(wrapper.find('.disagreement').exists()).toBe(false)
   })
 })
