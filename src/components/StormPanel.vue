@@ -3,6 +3,8 @@ import { computed, ref } from 'vue'
 import ProbabilityBars from './charts/ProbabilityBars.vue'
 import { useChartHover } from '../composables/useChartHover'
 import {
+  CONVECTIVE_CAPE_MIN,
+  CONVECTIVE_PRECIPITATION_MIN,
   capeReading,
   cinReading,
   labelForModel,
@@ -15,6 +17,7 @@ import {
   energy,
   hourLabel,
   index,
+  millimetres,
   percent,
   relativeDayLabel,
   sameDay,
@@ -184,9 +187,11 @@ const axis = computed(() => {
       <div v-if="expanded" class="details">
         <h3>Accordo tra i modelli</h3>
         <p class="hint">
-          Percentuale di scenari che prevedono un temporale, per ciascun modello, nell’ora
-          {{ hovered ? 'selezionata' : 'di picco' }}. La cifra grande è la media dei tre modelli,
-          ciascuno con lo stesso peso.
+          Percentuale di scenari con pioggia convettiva — almeno
+          {{ millimetres(CONVECTIVE_PRECIPITATION_MIN) }} con CAPE di almeno
+          {{ energy(CONVECTIVE_CAPE_MIN) }} — per ciascun modello, nell’ora
+          {{ hovered ? 'selezionata' : 'di picco' }}. La cifra grande è la media dei modelli che
+          pubblicano la CAPE, ciascuno con lo stesso peso: ICON non la pubblica e resta senza dato.
         </p>
         <ul class="models">
           <li v-for="row in modelRows" :key="row.id">
@@ -206,9 +211,9 @@ const axis = computed(() => {
 
         <h3>Indici convettivi ora</h3>
         <p class="hint">
-          Dal modello deterministico. Ogni indice ha la sua scala: descrivono quanta energia ha
-          l’atmosfera e se può liberarla, non quanto è probabile che lo faccia. La probabilità
-          resta quella dell’ensemble qui sopra.
+          Dal modello deterministico, per il punto e non per gli scenari. Ogni indice ha la sua
+          scala: descrivono quanta energia ha l’atmosfera e se può liberarla, non quanto è
+          probabile che lo faccia. La probabilità resta quella dell’ensemble qui sopra.
         </p>
         <dl class="indices">
           <div v-for="item in indices" :key="item.key">

@@ -94,19 +94,34 @@ function forecastStub(hours: number): ForecastResponse {
   }
 }
 
-/** Two models; on the first day member 1 of each is stormy, later none are. */
+/**
+ * Two models, two members each. On the first day the ECMWF control run is
+ * convective — rain with CAPE behind it — and every other member is dry.
+ */
 function ensembleStub(hours: number): EnsembleResponse {
   const time = hourTimes(hours)
-  const stormyFirstDay = time.map((t) => (t.startsWith('2026-09-16') ? 95 : 3))
-  const calm = time.map(() => 3)
+  const firstDay = (value: number, otherwise: number) =>
+    time.map((t) => (t.startsWith('2026-09-16') ? value : otherwise))
+  const flat = (value: number) => time.map(() => value)
 
   return {
     hourly: {
       time,
-      weather_code_ecmwf_ifs025_ensemble: stormyFirstDay,
-      weather_code_member01_ecmwf_ifs025_ensemble: calm,
-      weather_code_icon_global_eps: calm,
-      weather_code_member01_icon_global_eps: calm,
+      weather_code_ecmwf_ifs025_ensemble: flat(80),
+      cape_ecmwf_ifs025_ensemble: firstDay(1200, 0),
+      precipitation_ecmwf_ifs025_ensemble: flat(1.5),
+
+      weather_code_member01_ecmwf_ifs025_ensemble: flat(3),
+      cape_member01_ecmwf_ifs025_ensemble: flat(1200),
+      precipitation_member01_ecmwf_ifs025_ensemble: flat(0),
+
+      weather_code_icon_global_eps: flat(3),
+      cape_icon_global_eps: flat(1200),
+      precipitation_icon_global_eps: flat(0),
+
+      weather_code_member01_icon_global_eps: flat(3),
+      cape_member01_icon_global_eps: flat(1200),
+      precipitation_member01_icon_global_eps: flat(0),
     },
   }
 }
@@ -159,11 +174,17 @@ describe('buildViewModel', () => {
 
   it('attaches pooled and per-model storm probability to each hour', () => {
     const first = build().hourly[0]
-    // 1 of 4 pooled members is stormy; 1 of 2 for ECMWF, 0 of 2 for ICON.
+    // 1 of 2 ECMWF members is convective, 0 of 2 for ICON: the mean is 25.
     expect(first.stormProbability).toBe(25)
     expect(first.stormPerModel.ecmwf_ifs025_ensemble).toBe(50)
     expect(first.stormPerModel.icon_global_eps).toBe(0)
     expect(first.stormSpread).toBe(50)
+  })
+
+  it('attaches the ensemble rain share, which is not the storm share', () => {
+    const first = build().hourly[0]
+    // Only the ECMWF control run is wet: 50% of that model, 0% of ICON.
+    expect(first.rainProbability).toBe(25)
   })
 
   it('derives the daily storm peak from that day’s hours', () => {
@@ -183,6 +204,7 @@ describe('buildViewModel', () => {
     const model = build({ ensemble: null, degraded: ['ensemble'] })
     expect(model.hourly[0].stormProbability).toBeNull()
     expect(model.hourly[0].stormPerModel).toEqual({})
+    expect(model.hourly[0].rainProbability).toBeNull()
     expect(model.daily[0].stormProbabilityMax).toBeNull()
     expect(model.degraded).toEqual(['ensemble'])
     // Everything else still renders.

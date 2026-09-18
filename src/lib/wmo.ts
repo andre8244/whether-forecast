@@ -45,6 +45,14 @@ export function isThunderstormCode(code: number | null | undefined): boolean {
   return code === 95 || code === 96 || code === 99
 }
 
+/**
+ * Codes from 51 up describe falling precipitation: drizzle, rain, snow,
+ * showers and thunderstorms. Everything below is cloud, fog or clear sky.
+ */
+export function isWetCode(code: number | null | undefined): boolean {
+  return code !== null && code !== undefined && code >= 51
+}
+
 export function describeCode(code: number | null | undefined): WeatherCondition {
   if (code === null || code === undefined) {
     return { label: 'Dato non disponibile', icon: 'unknown', isThunderstorm: false }

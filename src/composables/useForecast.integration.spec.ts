@@ -104,7 +104,12 @@ function ensemble(): EnsembleResponse {
     hourly: {
       time,
       weather_code_ecmwf_ifs025_ensemble: time.map(() => 95),
+      cape_ecmwf_ifs025_ensemble: time.map(() => 1500),
+      precipitation_ecmwf_ifs025_ensemble: time.map(() => 2),
+
       weather_code_member01_ecmwf_ifs025_ensemble: time.map(() => 3),
+      cape_member01_ecmwf_ifs025_ensemble: time.map(() => 1500),
+      precipitation_member01_ecmwf_ifs025_ensemble: time.map(() => 0),
     },
   }
 }

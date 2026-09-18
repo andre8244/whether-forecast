@@ -1,6 +1,6 @@
 /** Pure merge of the three API responses into one hour-keyed view model. */
 
-import { groupMembers, thunderstormProbability } from './stormRisk'
+import { convectiveProbability, groupMembers } from './stormRisk'
 import { instantOf, timestampOf } from './format'
 import type {
   AirQualityPoint,
@@ -49,8 +49,8 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
   const utcOffset = forecast.utc_offset_seconds
 
   const storm = ensemble
-    ? thunderstormProbability(groupMembers(ensemble.hourly), hours)
-    : { combined: [], perModel: {}, spread: [] }
+    ? convectiveProbability(groupMembers(ensemble.hourly), hours)
+    : { combined: [], perModel: {}, spread: [], rain: [] }
 
   const models = Object.keys(storm.perModel)
 
@@ -84,6 +84,7 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
       stormProbability: storm.combined[i] ?? null,
       stormPerModel,
       stormSpread: storm.spread[i] ?? null,
+      rainProbability: storm.rain[i] ?? null,
     }
   })
 

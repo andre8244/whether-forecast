@@ -1,988 +1,2940 @@
 {
- "hourly": {
-  "time": [
-   "2026-09-16T00:00",
-   "2026-09-16T01:00",
-   "2026-09-16T02:00",
-   "2026-09-16T03:00",
-   "2026-09-16T04:00",
-   "2026-09-16T05:00"
-  ],
-  "weather_code_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member01_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member02_ecmwf_ifs025_ensemble": [
-   0,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member03_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member04_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member05_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   1,
-   0
-  ],
-  "weather_code_member06_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member07_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member08_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member09_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member10_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   1,
-   0
-  ],
-  "weather_code_member11_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   1,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member12_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member13_ecmwf_ifs025_ensemble": [
-   1,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member14_ecmwf_ifs025_ensemble": [
-   0,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member15_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member16_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member17_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   1,
-   1
-  ],
-  "weather_code_member18_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member19_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   1,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member20_ecmwf_ifs025_ensemble": [
-   0,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member21_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member22_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member23_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member24_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member25_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member26_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member27_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member28_ecmwf_ifs025_ensemble": [
-   0,
-   1,
-   1,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member29_ecmwf_ifs025_ensemble": [
-   1,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member30_ecmwf_ifs025_ensemble": [
-   0,
-   1,
-   1,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member31_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   1,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member32_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member33_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member34_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   2,
-   2
-  ],
-  "weather_code_member35_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member36_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member37_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member38_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member39_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member40_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   1,
-   0
-  ],
-  "weather_code_member41_ecmwf_ifs025_ensemble": [
-   0,
-   1,
-   1,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member42_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member43_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member44_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member45_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member46_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member47_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member48_ecmwf_ifs025_ensemble": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member49_ecmwf_ifs025_ensemble": [
-   1,
-   1,
-   1,
-   1,
-   0,
-   0
-  ],
-  "weather_code_member50_ecmwf_ifs025_ensemble": [
-   0,
-   1,
-   1,
-   0,
-   0,
-   0
-  ],
-  "weather_code_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member01_icon_global_eps": [
-   2,
-   2,
-   2,
-   2,
-   1,
-   1
-  ],
-  "weather_code_member02_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member03_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member04_icon_global_eps": [
-   2,
-   2,
-   3,
-   3,
-   2,
-   2
-  ],
-  "weather_code_member05_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   2,
-   3
-  ],
-  "weather_code_member06_icon_global_eps": [
-   2,
-   3,
-   2,
-   3,
-   2,
-   2
-  ],
-  "weather_code_member07_icon_global_eps": [
-   2,
-   2,
-   2,
-   2,
-   2,
-   2
-  ],
-  "weather_code_member08_icon_global_eps": [
-   2,
-   2,
-   3,
-   3,
-   3,
-   2
-  ],
-  "weather_code_member09_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   2
-  ],
-  "weather_code_member10_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member11_icon_global_eps": [
-   3,
-   2,
-   2,
-   3,
-   3,
-   2
-  ],
-  "weather_code_member12_icon_global_eps": [
-   2,
-   2,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member13_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   2
-  ],
-  "weather_code_member14_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member15_icon_global_eps": [
-   2,
-   2,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member16_icon_global_eps": [
-   2,
-   2,
-   3,
-   3,
-   3,
-   2
-  ],
-  "weather_code_member17_icon_global_eps": [
-   3,
-   3,
-   3,
-   2,
-   2,
-   2
-  ],
-  "weather_code_member18_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member19_icon_global_eps": [
-   3,
-   3,
-   2,
-   2,
-   3,
-   3
-  ],
-  "weather_code_member20_icon_global_eps": [
-   2,
-   2,
-   2,
-   2,
-   2,
-   2
-  ],
-  "weather_code_member21_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   2,
-   2
-  ],
-  "weather_code_member22_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   2,
-   2
-  ],
-  "weather_code_member23_icon_global_eps": [
-   3,
-   2,
-   3,
-   3,
-   2,
-   2
-  ],
-  "weather_code_member24_icon_global_eps": [
-   2,
-   2,
-   2,
-   2,
-   2,
-   2
-  ],
-  "weather_code_member25_icon_global_eps": [
-   2,
-   2,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member26_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member27_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   2,
-   3
-  ],
-  "weather_code_member28_icon_global_eps": [
-   2,
-   2,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member29_icon_global_eps": [
-   2,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member30_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member31_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member32_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   2
-  ],
-  "weather_code_member33_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member34_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member35_icon_global_eps": [
-   3,
-   3,
-   2,
-   3,
-   2,
-   2
-  ],
-  "weather_code_member36_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member37_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member38_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_member39_icon_global_eps": [
-   3,
-   3,
-   3,
-   3,
-   3,
-   3
-  ],
-  "weather_code_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member01_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member02_ncep_gefs025": [
-   51,
-   51,
-   51,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member03_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member04_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member05_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member06_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member07_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member08_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member09_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member10_ncep_gefs025": [
-   1,
-   1,
-   0,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member11_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member12_ncep_gefs025": [
-   1,
-   1,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member13_ncep_gefs025": [
-   51,
-   51,
-   51,
-   1,
-   1,
-   1
-  ],
-  "weather_code_member14_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member15_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member16_ncep_gefs025": [
-   51,
-   51,
-   51,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member17_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member18_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   1,
-   1
-  ],
-  "weather_code_member19_ncep_gefs025": [
-   1,
-   1,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member20_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member21_ncep_gefs025": [
-   1,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member22_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   1
-  ],
-  "weather_code_member23_ncep_gefs025": [
-   51,
-   51,
-   51,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member24_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member25_ncep_gefs025": [
-   51,
-   51,
-   51,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member26_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member27_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member28_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member29_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   0
-  ],
-  "weather_code_member30_ncep_gefs025": [
-   0,
-   0,
-   0,
-   0,
-   0,
-   1
-  ]
- }
+  "hourly": {
+    "time": [
+      "2026-09-18T00:00",
+      "2026-09-18T01:00",
+      "2026-09-18T02:00",
+      "2026-09-18T03:00",
+      "2026-09-18T04:00",
+      "2026-09-18T05:00"
+    ],
+    "weather_code_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member01_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member02_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member03_ecmwf_ifs025_ensemble": [
+      1,
+      2,
+      2,
+      3,
+      3,
+      3
+    ],
+    "weather_code_member04_ecmwf_ifs025_ensemble": [
+      2,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member05_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member06_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member07_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      2
+    ],
+    "weather_code_member08_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member09_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member10_ecmwf_ifs025_ensemble": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member11_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      1,
+      2,
+      2,
+      3
+    ],
+    "weather_code_member12_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member13_ecmwf_ifs025_ensemble": [
+      2,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member14_ecmwf_ifs025_ensemble": [
+      2,
+      1,
+      0,
+      0,
+      1,
+      1
+    ],
+    "weather_code_member15_ecmwf_ifs025_ensemble": [
+      1,
+      0,
+      0,
+      1,
+      2,
+      2
+    ],
+    "weather_code_member16_ecmwf_ifs025_ensemble": [
+      2,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "weather_code_member17_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member18_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member19_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    "weather_code_member20_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member21_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member22_ecmwf_ifs025_ensemble": [
+      2,
+      1,
+      0,
+      1,
+      1,
+      2
+    ],
+    "weather_code_member23_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    "weather_code_member24_ecmwf_ifs025_ensemble": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member25_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member26_ecmwf_ifs025_ensemble": [
+      0,
+      1,
+      2,
+      2,
+      3,
+      3
+    ],
+    "weather_code_member27_ecmwf_ifs025_ensemble": [
+      2,
+      1,
+      0,
+      0,
+      1,
+      1
+    ],
+    "weather_code_member28_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member29_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      2
+    ],
+    "weather_code_member30_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member31_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member32_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member33_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    "weather_code_member34_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member35_ecmwf_ifs025_ensemble": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member36_ecmwf_ifs025_ensemble": [
+      1,
+      2,
+      3,
+      3,
+      2,
+      1
+    ],
+    "weather_code_member37_ecmwf_ifs025_ensemble": [
+      0,
+      1,
+      1,
+      2,
+      2,
+      3
+    ],
+    "weather_code_member38_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1
+    ],
+    "weather_code_member39_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      1,
+      1,
+      0,
+      0
+    ],
+    "weather_code_member40_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member41_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "weather_code_member42_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member43_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member44_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member45_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      1,
+      1,
+      2,
+      2
+    ],
+    "weather_code_member46_ecmwf_ifs025_ensemble": [
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member47_ecmwf_ifs025_ensemble": [
+      0,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member48_ecmwf_ifs025_ensemble": [
+      2,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member49_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member50_ecmwf_ifs025_ensemble": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "cape_ecmwf_ifs025_ensemble": [
+      590.0,
+      610.0,
+      620.0,
+      580.0,
+      520.0,
+      530.0
+    ],
+    "cape_member01_ecmwf_ifs025_ensemble": [
+      980.0,
+      940.0,
+      880.0,
+      780.0,
+      650.0,
+      580.0
+    ],
+    "cape_member02_ecmwf_ifs025_ensemble": [
+      810.0,
+      770.0,
+      730.0,
+      700.0,
+      680.0,
+      680.0
+    ],
+    "cape_member03_ecmwf_ifs025_ensemble": [
+      1000.0,
+      980.0,
+      930.0,
+      810.0,
+      660.0,
+      580.0
+    ],
+    "cape_member04_ecmwf_ifs025_ensemble": [
+      790.0,
+      790.0,
+      760.0,
+      680.0,
+      560.0,
+      510.0
+    ],
+    "cape_member05_ecmwf_ifs025_ensemble": [
+      780.0,
+      790.0,
+      770.0,
+      690.0,
+      580.0,
+      520.0
+    ],
+    "cape_member06_ecmwf_ifs025_ensemble": [
+      670.0,
+      640.0,
+      610.0,
+      590.0,
+      570.0,
+      550.0
+    ],
+    "cape_member07_ecmwf_ifs025_ensemble": [
+      580.0,
+      670.0,
+      710.0,
+      650.0,
+      550.0,
+      490.0
+    ],
+    "cape_member08_ecmwf_ifs025_ensemble": [
+      770.0,
+      860.0,
+      890.0,
+      780.0,
+      620.0,
+      540.0
+    ],
+    "cape_member09_ecmwf_ifs025_ensemble": [
+      650.0,
+      660.0,
+      660.0,
+      630.0,
+      580.0,
+      560.0
+    ],
+    "cape_member10_ecmwf_ifs025_ensemble": [
+      540.0,
+      480.0,
+      390.0,
+      240.0,
+      70.0,
+      0.0
+    ],
+    "cape_member11_ecmwf_ifs025_ensemble": [
+      710.0,
+      630.0,
+      580.0,
+      590.0,
+      630.0,
+      670.0
+    ],
+    "cape_member12_ecmwf_ifs025_ensemble": [
+      740.0,
+      790.0,
+      800.0,
+      760.0,
+      700.0,
+      670.0
+    ],
+    "cape_member13_ecmwf_ifs025_ensemble": [
+      570.0,
+      570.0,
+      560.0,
+      500.0,
+      410.0,
+      370.0
+    ],
+    "cape_member14_ecmwf_ifs025_ensemble": [
+      520.0,
+      630.0,
+      690.0,
+      660.0,
+      580.0,
+      540.0
+    ],
+    "cape_member15_ecmwf_ifs025_ensemble": [
+      610.0,
+      590.0,
+      570.0,
+      540.0,
+      510.0,
+      490.0
+    ],
+    "cape_member16_ecmwf_ifs025_ensemble": [
+      660.0,
+      650.0,
+      620.0,
+      570.0,
+      510.0,
+      470.0
+    ],
+    "cape_member17_ecmwf_ifs025_ensemble": [
+      800.0,
+      740.0,
+      690.0,
+      640.0,
+      590.0,
+      560.0
+    ],
+    "cape_member18_ecmwf_ifs025_ensemble": [
+      710.0,
+      730.0,
+      720.0,
+      670.0,
+      580.0,
+      540.0
+    ],
+    "cape_member19_ecmwf_ifs025_ensemble": [
+      690.0,
+      700.0,
+      690.0,
+      640.0,
+      570.0,
+      520.0
+    ],
+    "cape_member20_ecmwf_ifs025_ensemble": [
+      680.0,
+      700.0,
+      690.0,
+      650.0,
+      580.0,
+      540.0
+    ],
+    "cape_member21_ecmwf_ifs025_ensemble": [
+      640.0,
+      720.0,
+      760.0,
+      710.0,
+      610.0,
+      560.0
+    ],
+    "cape_member22_ecmwf_ifs025_ensemble": [
+      750.0,
+      710.0,
+      650.0,
+      520.0,
+      370.0,
+      300.0
+    ],
+    "cape_member23_ecmwf_ifs025_ensemble": [
+      540.0,
+      620.0,
+      670.0,
+      660.0,
+      630.0,
+      610.0
+    ],
+    "cape_member24_ecmwf_ifs025_ensemble": [
+      720.0,
+      830.0,
+      890.0,
+      850.0,
+      770.0,
+      690.0
+    ],
+    "cape_member25_ecmwf_ifs025_ensemble": [
+      640.0,
+      800.0,
+      890.0,
+      840.0,
+      710.0,
+      620.0
+    ],
+    "cape_member26_ecmwf_ifs025_ensemble": [
+      940.0,
+      840.0,
+      750.0,
+      680.0,
+      620.0,
+      610.0
+    ],
+    "cape_member27_ecmwf_ifs025_ensemble": [
+      830.0,
+      780.0,
+      720.0,
+      650.0,
+      560.0,
+      520.0
+    ],
+    "cape_member28_ecmwf_ifs025_ensemble": [
+      570.0,
+      610.0,
+      640.0,
+      640.0,
+      630.0,
+      610.0
+    ],
+    "cape_member29_ecmwf_ifs025_ensemble": [
+      610.0,
+      600.0,
+      590.0,
+      550.0,
+      490.0,
+      470.0
+    ],
+    "cape_member30_ecmwf_ifs025_ensemble": [
+      590.0,
+      710.0,
+      770.0,
+      730.0,
+      630.0,
+      580.0
+    ],
+    "cape_member31_ecmwf_ifs025_ensemble": [
+      580.0,
+      550.0,
+      530.0,
+      510.0,
+      490.0,
+      490.0
+    ],
+    "cape_member32_ecmwf_ifs025_ensemble": [
+      530.0,
+      620.0,
+      670.0,
+      630.0,
+      550.0,
+      500.0
+    ],
+    "cape_member33_ecmwf_ifs025_ensemble": [
+      890.0,
+      820.0,
+      740.0,
+      680.0,
+      620.0,
+      570.0
+    ],
+    "cape_member34_ecmwf_ifs025_ensemble": [
+      460.0,
+      550.0,
+      610.0,
+      560.0,
+      480.0,
+      430.0
+    ],
+    "cape_member35_ecmwf_ifs025_ensemble": [
+      650.0,
+      750.0,
+      800.0,
+      760.0,
+      670.0,
+      610.0
+    ],
+    "cape_member36_ecmwf_ifs025_ensemble": [
+      930.0,
+      890.0,
+      840.0,
+      780.0,
+      710.0,
+      660.0
+    ],
+    "cape_member37_ecmwf_ifs025_ensemble": [
+      500.0,
+      580.0,
+      630.0,
+      610.0,
+      550.0,
+      520.0
+    ],
+    "cape_member38_ecmwf_ifs025_ensemble": [
+      590.0,
+      700.0,
+      760.0,
+      740.0,
+      680.0,
+      640.0
+    ],
+    "cape_member39_ecmwf_ifs025_ensemble": [
+      730.0,
+      680.0,
+      620.0,
+      550.0,
+      460.0,
+      400.0
+    ],
+    "cape_member40_ecmwf_ifs025_ensemble": [
+      190.0,
+      300.0,
+      370.0,
+      360.0,
+      310.0,
+      280.0
+    ],
+    "cape_member41_ecmwf_ifs025_ensemble": [
+      570.0,
+      630.0,
+      660.0,
+      620.0,
+      550.0,
+      510.0
+    ],
+    "cape_member42_ecmwf_ifs025_ensemble": [
+      490.0,
+      620.0,
+      710.0,
+      680.0,
+      610.0,
+      570.0
+    ],
+    "cape_member43_ecmwf_ifs025_ensemble": [
+      480.0,
+      500.0,
+      500.0,
+      450.0,
+      380.0,
+      340.0
+    ],
+    "cape_member44_ecmwf_ifs025_ensemble": [
+      600.0,
+      680.0,
+      730.0,
+      710.0,
+      650.0,
+      610.0
+    ],
+    "cape_member45_ecmwf_ifs025_ensemble": [
+      660.0,
+      680.0,
+      680.0,
+      630.0,
+      560.0,
+      530.0
+    ],
+    "cape_member46_ecmwf_ifs025_ensemble": [
+      880.0,
+      730.0,
+      580.0,
+      460.0,
+      340.0,
+      280.0
+    ],
+    "cape_member47_ecmwf_ifs025_ensemble": [
+      750.0,
+      830.0,
+      830.0,
+      690.0,
+      470.0,
+      320.0
+    ],
+    "cape_member48_ecmwf_ifs025_ensemble": [
+      760.0,
+      670.0,
+      590.0,
+      510.0,
+      430.0,
+      400.0
+    ],
+    "cape_member49_ecmwf_ifs025_ensemble": [
+      780.0,
+      850.0,
+      870.0,
+      820.0,
+      720.0,
+      660.0
+    ],
+    "cape_member50_ecmwf_ifs025_ensemble": [
+      750.0,
+      810.0,
+      820.0,
+      730.0,
+      600.0,
+      530.0
+    ],
+    "precipitation_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member01_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member02_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member03_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member04_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member05_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member06_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member07_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member08_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member09_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member10_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member11_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member12_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member13_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member14_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member15_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member16_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member17_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member18_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member19_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member20_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member21_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member22_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member23_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member24_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member25_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member26_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member27_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member28_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member29_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member30_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member31_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member32_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member33_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member34_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member35_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member36_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member37_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member38_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member39_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member40_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member41_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member42_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member43_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member44_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member45_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member46_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member47_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member48_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member49_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member50_ecmwf_ifs025_ensemble": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "weather_code_icon_global_eps": [
+      2,
+      1,
+      2,
+      2,
+      2,
+      2
+    ],
+    "weather_code_member01_icon_global_eps": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member02_icon_global_eps": [
+      3,
+      3,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member03_icon_global_eps": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member04_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1
+    ],
+    "weather_code_member05_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "weather_code_member06_icon_global_eps": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member07_icon_global_eps": [
+      0,
+      3,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member08_icon_global_eps": [
+      3,
+      2,
+      1,
+      2,
+      2,
+      2
+    ],
+    "weather_code_member09_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "weather_code_member10_icon_global_eps": [
+      3,
+      3,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member11_icon_global_eps": [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member12_icon_global_eps": [
+      3,
+      1,
+      0,
+      0,
+      1,
+      1
+    ],
+    "weather_code_member13_icon_global_eps": [
+      2,
+      2,
+      1,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member14_icon_global_eps": [
+      3,
+      3,
+      0,
+      0,
+      1,
+      0
+    ],
+    "weather_code_member15_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member16_icon_global_eps": [
+      3,
+      3,
+      0,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member17_icon_global_eps": [
+      2,
+      1,
+      1,
+      1,
+      1,
+      2
+    ],
+    "weather_code_member18_icon_global_eps": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2
+    ],
+    "weather_code_member19_icon_global_eps": [
+      3,
+      3,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member20_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member21_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member22_icon_global_eps": [
+      3,
+      3,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member23_icon_global_eps": [
+      3,
+      3,
+      1,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member24_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member25_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member26_icon_global_eps": [
+      3,
+      2,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member27_icon_global_eps": [
+      2,
+      1,
+      2,
+      2,
+      2,
+      2
+    ],
+    "weather_code_member28_icon_global_eps": [
+      2,
+      3,
+      0,
+      0,
+      1,
+      2
+    ],
+    "weather_code_member29_icon_global_eps": [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member30_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member31_icon_global_eps": [
+      2,
+      2,
+      0,
+      1,
+      1,
+      2
+    ],
+    "weather_code_member32_icon_global_eps": [
+      3,
+      3,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member33_icon_global_eps": [
+      3,
+      2,
+      1,
+      1,
+      2,
+      2
+    ],
+    "weather_code_member34_icon_global_eps": [
+      2,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "weather_code_member35_icon_global_eps": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member36_icon_global_eps": [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member37_icon_global_eps": [
+      1,
+      2,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member38_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member39_icon_global_eps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "cape_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member01_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member02_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member03_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member04_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member05_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member06_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member07_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member08_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member09_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member10_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member11_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member12_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member13_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member14_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member15_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member16_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member17_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member18_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member19_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member20_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member21_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member22_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member23_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member24_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member25_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member26_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member27_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member28_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member29_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member30_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member31_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member32_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member33_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member34_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member35_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member36_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member37_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member38_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cape_member39_icon_global_eps": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "precipitation_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member01_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member02_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member03_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member04_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member05_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member06_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member07_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member08_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member09_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member10_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member11_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member12_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member13_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member14_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member15_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member16_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member17_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member18_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member19_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member20_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member21_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member22_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member23_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member24_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member25_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member26_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member27_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member28_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member29_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member30_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member31_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member32_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member33_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member34_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member35_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member36_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member37_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member38_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member39_icon_global_eps": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "weather_code_ncep_gefs025": [
+      51,
+      51,
+      51,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member01_ncep_gefs025": [
+      0,
+      0,
+      0,
+      51,
+      51,
+      51
+    ],
+    "weather_code_member02_ncep_gefs025": [
+      51,
+      51,
+      51,
+      51,
+      51,
+      51
+    ],
+    "weather_code_member03_ncep_gefs025": [
+      51,
+      51,
+      51,
+      2,
+      1,
+      0
+    ],
+    "weather_code_member04_ncep_gefs025": [
+      51,
+      51,
+      51,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member05_ncep_gefs025": [
+      51,
+      51,
+      51,
+      51,
+      51,
+      51
+    ],
+    "weather_code_member06_ncep_gefs025": [
+      53,
+      53,
+      53,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member07_ncep_gefs025": [
+      51,
+      51,
+      51,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member08_ncep_gefs025": [
+      2,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member09_ncep_gefs025": [
+      51,
+      51,
+      51,
+      2,
+      1,
+      0
+    ],
+    "weather_code_member10_ncep_gefs025": [
+      3,
+      2,
+      1,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member11_ncep_gefs025": [
+      2,
+      1,
+      1,
+      51,
+      51,
+      51
+    ],
+    "weather_code_member12_ncep_gefs025": [
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member13_ncep_gefs025": [
+      51,
+      51,
+      51,
+      51,
+      51,
+      51
+    ],
+    "weather_code_member14_ncep_gefs025": [
+      51,
+      51,
+      51,
+      1,
+      1,
+      1
+    ],
+    "weather_code_member15_ncep_gefs025": [
+      51,
+      51,
+      51,
+      51,
+      51,
+      51
+    ],
+    "weather_code_member16_ncep_gefs025": [
+      2,
+      1,
+      0,
+      0,
+      1,
+      1
+    ],
+    "weather_code_member17_ncep_gefs025": [
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member18_ncep_gefs025": [
+      0,
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    "weather_code_member19_ncep_gefs025": [
+      2,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member20_ncep_gefs025": [
+      51,
+      51,
+      51,
+      1,
+      0,
+      0
+    ],
+    "weather_code_member21_ncep_gefs025": [
+      2,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member22_ncep_gefs025": [
+      51,
+      51,
+      51,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member23_ncep_gefs025": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member24_ncep_gefs025": [
+      2,
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "weather_code_member25_ncep_gefs025": [
+      51,
+      51,
+      51,
+      1,
+      0,
+      0
+    ],
+    "weather_code_member26_ncep_gefs025": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member27_ncep_gefs025": [
+      51,
+      51,
+      51,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member28_ncep_gefs025": [
+      2,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "weather_code_member29_ncep_gefs025": [
+      51,
+      51,
+      51,
+      2,
+      1,
+      0
+    ],
+    "weather_code_member30_ncep_gefs025": [
+      1,
+      1,
+      0,
+      51,
+      51,
+      51
+    ],
+    "cape_ncep_gefs025": [
+      40.0,
+      80.0,
+      110.0,
+      100.0,
+      70.0,
+      70.0
+    ],
+    "cape_member01_ncep_gefs025": [
+      70.0,
+      60.0,
+      60.0,
+      50.0,
+      40.0,
+      60.0
+    ],
+    "cape_member02_ncep_gefs025": [
+      60.0,
+      130.0,
+      170.0,
+      150.0,
+      110.0,
+      90.0
+    ],
+    "cape_member03_ncep_gefs025": [
+      50.0,
+      70.0,
+      90.0,
+      90.0,
+      90.0,
+      100.0
+    ],
+    "cape_member04_ncep_gefs025": [
+      40.0,
+      100.0,
+      130.0,
+      120.0,
+      80.0,
+      60.0
+    ],
+    "cape_member05_ncep_gefs025": [
+      110.0,
+      240.0,
+      330.0,
+      330.0,
+      280.0,
+      240.0
+    ],
+    "cape_member06_ncep_gefs025": [
+      210.0,
+      160.0,
+      120.0,
+      100.0,
+      90.0,
+      90.0
+    ],
+    "cape_member07_ncep_gefs025": [
+      50.0,
+      70.0,
+      80.0,
+      70.0,
+      50.0,
+      50.0
+    ],
+    "cape_member08_ncep_gefs025": [
+      90.0,
+      200.0,
+      270.0,
+      240.0,
+      160.0,
+      110.0
+    ],
+    "cape_member09_ncep_gefs025": [
+      110.0,
+      80.0,
+      60.0,
+      50.0,
+      40.0,
+      50.0
+    ],
+    "cape_member10_ncep_gefs025": [
+      50.0,
+      50.0,
+      50.0,
+      40.0,
+      40.0,
+      40.0
+    ],
+    "cape_member11_ncep_gefs025": [
+      40.0,
+      110.0,
+      150.0,
+      140.0,
+      100.0,
+      80.0
+    ],
+    "cape_member12_ncep_gefs025": [
+      30.0,
+      90.0,
+      120.0,
+      110.0,
+      80.0,
+      70.0
+    ],
+    "cape_member13_ncep_gefs025": [
+      160.0,
+      130.0,
+      100.0,
+      70.0,
+      50.0,
+      60.0
+    ],
+    "cape_member14_ncep_gefs025": [
+      60.0,
+      70.0,
+      70.0,
+      60.0,
+      60.0,
+      60.0
+    ],
+    "cape_member15_ncep_gefs025": [
+      70.0,
+      150.0,
+      200.0,
+      190.0,
+      150.0,
+      130.0
+    ],
+    "cape_member16_ncep_gefs025": [
+      50.0,
+      70.0,
+      80.0,
+      70.0,
+      60.0,
+      70.0
+    ],
+    "cape_member17_ncep_gefs025": [
+      70.0,
+      60.0,
+      60.0,
+      40.0,
+      30.0,
+      50.0
+    ],
+    "cape_member18_ncep_gefs025": [
+      40.0,
+      80.0,
+      100.0,
+      90.0,
+      60.0,
+      50.0
+    ],
+    "cape_member19_ncep_gefs025": [
+      40.0,
+      100.0,
+      140.0,
+      140.0,
+      120.0,
+      110.0
+    ],
+    "cape_member20_ncep_gefs025": [
+      40.0,
+      100.0,
+      140.0,
+      120.0,
+      80.0,
+      60.0
+    ],
+    "cape_member21_ncep_gefs025": [
+      50.0,
+      100.0,
+      130.0,
+      110.0,
+      70.0,
+      60.0
+    ],
+    "cape_member22_ncep_gefs025": [
+      80.0,
+      100.0,
+      120.0,
+      100.0,
+      80.0,
+      80.0
+    ],
+    "cape_member23_ncep_gefs025": [
+      30.0,
+      70.0,
+      100.0,
+      90.0,
+      60.0,
+      50.0
+    ],
+    "cape_member24_ncep_gefs025": [
+      70.0,
+      60.0,
+      50.0,
+      20.0,
+      0.0,
+      20.0
+    ],
+    "cape_member25_ncep_gefs025": [
+      150.0,
+      300.0,
+      390.0,
+      350.0,
+      250.0,
+      170.0
+    ],
+    "cape_member26_ncep_gefs025": [
+      60.0,
+      110.0,
+      140.0,
+      120.0,
+      70.0,
+      60.0
+    ],
+    "cape_member27_ncep_gefs025": [
+      60.0,
+      140.0,
+      200.0,
+      180.0,
+      120.0,
+      100.0
+    ],
+    "cape_member28_ncep_gefs025": [
+      250.0,
+      200.0,
+      150.0,
+      120.0,
+      100.0,
+      90.0
+    ],
+    "cape_member29_ncep_gefs025": [
+      20.0,
+      50.0,
+      60.0,
+      50.0,
+      30.0,
+      30.0
+    ],
+    "cape_member30_ncep_gefs025": [
+      40.0,
+      100.0,
+      140.0,
+      130.0,
+      110.0,
+      100.0
+    ],
+    "precipitation_ncep_gefs025": [
+      0.2,
+      0.2,
+      0.2,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member01_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "precipitation_member02_ncep_gefs025": [
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2
+    ],
+    "precipitation_member03_ncep_gefs025": [
+      0.4,
+      0.4,
+      0.4,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member04_ncep_gefs025": [
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member05_ncep_gefs025": [
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "precipitation_member06_ncep_gefs025": [
+      0.8,
+      0.8,
+      0.8,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member07_ncep_gefs025": [
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member08_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member09_ncep_gefs025": [
+      0.4,
+      0.4,
+      0.4,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member10_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member11_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "precipitation_member12_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member13_ncep_gefs025": [
+      0.3,
+      0.3,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+    ],
+    "precipitation_member14_ncep_gefs025": [
+      0.3,
+      0.3,
+      0.3,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member15_ncep_gefs025": [
+      0.2,
+      0.2,
+      0.2,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "precipitation_member16_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member17_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member18_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member19_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member20_ncep_gefs025": [
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member21_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member22_ncep_gefs025": [
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member23_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member24_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member25_ncep_gefs025": [
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member26_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member27_ncep_gefs025": [
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member28_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member29_ncep_gefs025": [
+      0.2,
+      0.2,
+      0.2,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_member30_ncep_gefs025": [
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.1,
+      0.1
+    ]
+  }
 }

@@ -107,8 +107,20 @@ export interface EnsembleResponse {
 /** Model ids as they appear in the response key suffixes, not as requested. */
 export type EnsembleModelId = 'ecmwf_ifs025_ensemble' | 'icon_global_eps' | 'ncep_gefs025'
 
-/** Member series grouped by model: `grouped[model][memberIndex][hourIndex]`. */
-export type GroupedMembers = Record<string, (number | null)[][]>
+/**
+ * The three hour-aligned series that describe one ensemble member.
+ *
+ * `cape` is absent from ICON global EPS, which publishes no convective energy
+ * at all: its entries are null for every hour.
+ */
+export interface MemberSeries {
+  weatherCode: (number | null)[]
+  cape: (number | null)[]
+  precipitation: (number | null)[]
+}
+
+/** Members grouped by model: `grouped[model][memberIndex]`. */
+export type GroupedMembers = Record<string, MemberSeries[]>
 
 export interface StormProbability {
   /**
@@ -120,6 +132,11 @@ export interface StormProbability {
   perModel: Record<string, (number | null)[]>
   /** max - min across models, per hour. `null` when fewer than 2 models report. */
   spread: (number | null)[]
+  /**
+   * Share of members forecasting any precipitation, on the same equal-weight
+   * mean. Every model publishes precipitation, so this one keeps all three.
+   */
+  rain: (number | null)[]
 }
 
 /* ------------------------------------------------------------- air quality */
@@ -160,12 +177,19 @@ export interface HourPoint {
   cape: number | null
   liftedIndex: number | null
   cin: number | null
-  /** Equal-weight ensemble thunderstorm probability across models, 0-100. */
+  /** Equal-weight ensemble convective-storm probability across models, 0-100. */
   stormProbability: number | null
-  /** Per-model thunderstorm probability, 0-100. */
+  /** Per-model convective-storm probability, 0-100. */
   stormPerModel: Record<string, number | null>
   /** Disagreement between models, in percentage points. */
   stormSpread: number | null
+  /**
+   * Share of ensemble members with any precipitation this hour, 0-100.
+   *
+   * Independent of `precipitationProbability`, which comes from the single
+   * deterministic model: the two disagreeing is the interesting case.
+   */
+  rainProbability: number | null
 }
 
 export interface DayPoint {

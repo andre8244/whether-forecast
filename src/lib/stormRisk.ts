@@ -1,14 +1,26 @@
 /**
- * Thunderstorm probability from the ensemble members, plus the deterministic
- * convective indices reported on their own published scales.
+ * Convective-storm probability from the ensemble members, plus the
+ * deterministic convective indices reported on their own published scales.
  *
  * The Open-Meteo `thunderstorm_probability` field is accepted by the API but
- * returns null for most models, so the probability here is computed from the
- * ensemble: the share of members forecasting a thunderstorm code at each hour.
+ * returns null for most models, so the probability is computed from the
+ * members. It used to be the share of members carrying a thunderstorm weather
+ * code, which measurement showed to be a dead metric: over seven days at one
+ * point, ICON global EPS produced code 95/96/99 in 0 of 6720 member-hours,
+ * GFS025 in 0 of 5208, ECMWF in 14 of 8568 (0.16%). The same check over the
+ * Amazon and over Singapore — thunderstorms most afternoons — returned zero
+ * from all three models. Global ensembles resolve no convection, so the code
+ * almost never survives their post-processing, and the panel read "unlikely"
+ * everywhere and always.
+ *
+ * A member now counts when it has the rain *and* the energy to have convected:
+ * precipitation at or above `CONVECTIVE_PRECIPITATION_MIN` together with CAPE
+ * at or above `CONVECTIVE_CAPE_MIN`, or the thunderstorm code on the rare
+ * occasion a model does emit it.
  */
 
 import { isThunderstormCode } from './wmo'
-import type { GroupedMembers, StormProbability } from '../types/weather'
+import type { GroupedMembers, MemberSeries, StormProbability } from '../types/weather'
 
 /** Below this share of members reporting, an hour yields null instead of 0. */
 const MIN_DATA_RATIO = 0.5
@@ -16,8 +28,25 @@ const MIN_DATA_RATIO = 0.5
 /** Per-model spread above this many points is flagged as disagreement. */
 export const DISAGREEMENT_THRESHOLD = 30
 
-const MEMBER_KEY = /^weather_code_member\d+_(.+)$/
-const CONTROL_KEY = /^weather_code_(.+)$/
+/**
+ * Convective energy, J/kg, at or above which a raining member is counted.
+ *
+ * Deliberately low: the precipitation in the same member is the evidence that
+ * something triggered, so this only has to rule out rain falling from a column
+ * with no energy to convect. Measured against three days of live members, it
+ * separates the cases it should: frontal rain over Bergen with every member wet
+ * scored 0, while the Pesaro afternoon that prompted this scored 74.
+ */
+export const CONVECTIVE_CAPE_MIN = 500
+
+/** Hourly precipitation, mm, at or above which a member counts as raining. */
+export const CONVECTIVE_PRECIPITATION_MIN = 0.2
+
+/** Hourly precipitation, mm, at or above which a member counts for the rain share. */
+export const MEMBER_RAIN_MIN = 0.1
+
+const MEMBER_KEY = /^(weather_code|cape|precipitation)_member(\d+)_(.+)$/
+const CONTROL_KEY = /^(weather_code|cape|precipitation)_(.+)$/
 
 export const MODEL_LABELS: Record<string, string> = {
   ecmwf_ifs025_ensemble: 'ECMWF',
@@ -29,53 +58,116 @@ export function labelForModel(modelId: string): string {
   return MODEL_LABELS[modelId] ?? modelId
 }
 
+const VARIABLE_FIELD = {
+  weather_code: 'weatherCode',
+  cape: 'cape',
+  precipitation: 'precipitation',
+} as const
+
+function emptyMember(): MemberSeries {
+  return { weatherCode: [], cape: [], precipitation: [] }
+}
+
 /**
  * Split the flat ensemble response into member series grouped by model.
  *
- * Keys arrive as `weather_code_member01_ecmwf_ifs025_ensemble`, and the model
- * suffix is not always the id that was requested (`gfs025` comes back as
- * `ncep_gefs025`), so grouping reads whatever follows `memberNN_` rather than
- * matching against the requested names.
+ * Keys arrive as `cape_member01_ecmwf_ifs025_ensemble`, and the model suffix is
+ * not always the id that was requested (`gfs025` comes back as `ncep_gefs025`),
+ * so grouping reads whatever follows `memberNN_` rather than matching against
+ * the requested names. The three variables of one member are joined on that
+ * member number, which is why members are collected in a map before being
+ * flattened into a list.
  *
- * The unsuffixed control run `weather_code_<model>` counts as a member. A bare
- * `weather_code` key, present only in single-model responses, is skipped so it
+ * The unsuffixed control run `<variable>_<model>` counts as a member. A bare
+ * `weather_code`, `cape` or `precipitation` key, present only in single-model
+ * responses, matches neither pattern — both require a model suffix — so it
  * cannot double-count the control.
  */
-export function groupMembers(
-  hourly: Record<string, unknown>,
-): GroupedMembers {
-  const grouped: GroupedMembers = {}
+export function groupMembers(hourly: Record<string, unknown>): GroupedMembers {
+  const byModel: Record<string, Map<string, MemberSeries>> = {}
 
   for (const [key, series] of Object.entries(hourly)) {
-    if (key === 'time' || key === 'weather_code' || !Array.isArray(series)) continue
+    if (key === 'time' || !Array.isArray(series)) continue
 
     const member = MEMBER_KEY.exec(key)
-    const model = member ? member[1] : CONTROL_KEY.exec(key)?.[1]
-    if (!model) continue
+    const control = member ? null : CONTROL_KEY.exec(key)
+    const match = member ?? control
+    if (!match) continue
 
-    ;(grouped[model] ??= []).push(series as (number | null)[])
+    const variable = match[1] as keyof typeof VARIABLE_FIELD
+    const model = member ? member[3] : control![2]
+
+    const members = (byModel[model] ??= new Map())
+    const id = member ? member[2] : 'control'
+    const entry = members.get(id) ?? emptyMember()
+    entry[VARIABLE_FIELD[variable]] = series as (number | null)[]
+    members.set(id, entry)
   }
 
+  const grouped: GroupedMembers = {}
+  for (const [model, members] of Object.entries(byModel)) grouped[model] = [...members.values()]
   return grouped
 }
 
-function probabilityForHour(members: (number | null)[][], hour: number): number | null {
+/**
+ * Share of members meeting `counts`, over the members `evaluable` accepts.
+ *
+ * A member that cannot be judged is left out of both the numerator and the
+ * denominator, and a model where too few members can be judged yields null
+ * rather than a zero it has not earned. That is what keeps ICON global EPS,
+ * which serves no CAPE, out of the convective mean instead of dragging it
+ * down: none of its members are evaluable, so the model reports nothing.
+ */
+function shareForHour(
+  members: MemberSeries[],
+  hour: number,
+  evaluable: (member: MemberSeries, hour: number) => boolean,
+  counts: (member: MemberSeries, hour: number) => boolean,
+): number | null {
   let withData = 0
-  let stormy = 0
+  let hits = 0
 
-  for (const series of members) {
-    const code = series[hour]
-    if (code === null || code === undefined) continue
+  for (const member of members) {
+    if (!evaluable(member, hour)) continue
     withData += 1
-    if (isThunderstormCode(code)) stormy += 1
+    if (counts(member, hour)) hits += 1
   }
 
   if (members.length === 0 || withData < members.length * MIN_DATA_RATIO) return null
-  return Math.round((stormy / withData) * 100)
+  return Math.round((hits / withData) * 100)
+}
+
+function hasConvectiveInputs(member: MemberSeries, hour: number): boolean {
+  const cape = member.cape[hour]
+  const precipitation = member.precipitation[hour]
+  return cape !== null && cape !== undefined && precipitation !== null && precipitation !== undefined
+}
+
+function isConvective(member: MemberSeries, hour: number): boolean {
+  const cape = member.cape[hour] ?? 0
+  const precipitation = member.precipitation[hour] ?? 0
+  const wetEnough = precipitation >= CONVECTIVE_PRECIPITATION_MIN
+  const energetic = cape >= CONVECTIVE_CAPE_MIN
+  return (wetEnough && energetic) || isThunderstormCode(member.weatherCode[hour])
+}
+
+function hasPrecipitation(member: MemberSeries, hour: number): boolean {
+  const precipitation = member.precipitation[hour]
+  return precipitation !== null && precipitation !== undefined
+}
+
+function isWet(member: MemberSeries, hour: number): boolean {
+  return (member.precipitation[hour] ?? 0) >= MEMBER_RAIN_MIN
+}
+
+function mean(values: number[]): number | null {
+  if (values.length === 0) return null
+  return Math.round(values.reduce((sum, value) => sum + value, 0) / values.length)
 }
 
 /**
- * Combined and per-model thunderstorm probability, 0-100, one value per hour.
+ * Combined and per-model convective-storm probability, 0-100, one per hour,
+ * with the share of members forecasting any precipitation alongside.
  *
  * Each model carries equal weight: the headline is the mean of the per-model
  * probabilities, not a count over the pooled membership. Counting members
@@ -84,9 +176,10 @@ function probabilityForHour(members: (number | null)[][], hour: number): number 
  * about the weather.
  *
  * Models with no usable data for an hour drop out of that hour's mean instead
- * of counting as zero.
+ * of counting as zero, so the storm mean runs over the models that publish
+ * CAPE while the rain share keeps all three.
  */
-export function thunderstormProbability(
+export function convectiveProbability(
   grouped: GroupedMembers,
   hourCount: number,
 ): StormProbability {
@@ -95,26 +188,29 @@ export function thunderstormProbability(
   const combined: (number | null)[] = []
   const perModel: Record<string, (number | null)[]> = {}
   const spread: (number | null)[] = []
+  const rain: (number | null)[] = []
 
   for (const model of models) perModel[model] = []
 
   for (let hour = 0; hour < hourCount; hour += 1) {
     const values: number[] = []
+    const wet: number[] = []
+
     for (const model of models) {
-      const value = probabilityForHour(grouped[model], hour)
+      const value = shareForHour(grouped[model], hour, hasConvectiveInputs, isConvective)
       perModel[model].push(value)
       if (value !== null) values.push(value)
+
+      const wetShare = shareForHour(grouped[model], hour, hasPrecipitation, isWet)
+      if (wetShare !== null) wet.push(wetShare)
     }
 
-    combined.push(
-      values.length === 0
-        ? null
-        : Math.round(values.reduce((sum, value) => sum + value, 0) / values.length),
-    )
+    combined.push(mean(values))
     spread.push(values.length < 2 ? null : Math.max(...values) - Math.min(...values))
+    rain.push(mean(wet))
   }
 
-  return { combined, perModel, spread }
+  return { combined, perModel, spread, rain }
 }
 
 export function modelsDisagree(spread: number | null): boolean {

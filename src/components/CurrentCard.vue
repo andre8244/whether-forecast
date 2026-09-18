@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { describeCode, iconFor } from '../lib/wmo'
+import { describeCode, iconFor, isWetCode } from '../lib/wmo'
 import { hourLabel, percent, speed, temperature, windDirection } from '../lib/format'
-import type { CurrentConditions, GeoLocation } from '../types/weather'
+import type { CurrentConditions, GeoLocation, HourPoint } from '../types/weather'
 
 const props = defineProps<{
   current: CurrentConditions
@@ -10,7 +10,12 @@ const props = defineProps<{
   elevation: number
   sunrise: string
   sunset: string
+  /** The hour in progress, for the ensemble cross-check. Null while degraded. */
+  hour: HourPoint | null
 }>()
+
+/** Below this share of members, the ensemble is not contradicting anything. */
+const RAIN_MAJORITY = 60
 
 const condition = computed(() => describeCode(props.current.weatherCode))
 const glyph = computed(() => iconFor(props.current.weatherCode, props.current.isDay))
@@ -32,6 +37,22 @@ const feelsNote = computed(() => {
   if (delta <= -2) return 'più freddo del reale'
   return null
 })
+
+/**
+ * The headline condition comes from one deterministic model. When that model
+ * says dry and most ensemble members say wet, the reader deserves to know
+ * before the sky tells them: this card once read "Nuvoloso" during a
+ * thunderstorm while 82% of the members it had already downloaded were wet.
+ *
+ * Silent whenever the model agrees, so the line only appears where it settles
+ * something.
+ */
+const rainDisagreement = computed(() => {
+  const share = props.hour?.rainProbability ?? null
+  if (share === null || share < RAIN_MAJORITY) return null
+  if (isWetCode(props.current.weatherCode) || props.current.precipitation > 0) return null
+  return share
+})
 </script>
 
 <template>
@@ -46,6 +67,10 @@ const feelsNote = computed(() => {
       <span class="temp numeric">{{ temperature(current.temperature) }}</span>
       <span class="condition">{{ condition.label }}</span>
     </div>
+
+    <p v-if="rainDisagreement !== null" class="disagreement">
+      💧 Pioggia nel {{ percent(rainDisagreement) }} degli scenari d’insieme in quest’ora.
+    </p>
 
     <p class="feels">
       Percepita <strong class="numeric">{{ temperature(current.apparentTemperature) }}</strong>
@@ -120,6 +145,15 @@ const feelsNote = computed(() => {
 .condition {
   font-size: 1.05rem;
   color: var(--text-muted);
+}
+
+.disagreement {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background: var(--bg-sunken);
+  border-radius: var(--radius-sm);
 }
 
 .feels {
