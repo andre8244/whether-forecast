@@ -59,7 +59,7 @@ const degradedStorm = computed(
 
       <DailyList class="span-2" :days="model.daily" />
 
-      <DetailsGrid :current="model.current" :hour="model.hourly[0] ?? null" />
+      <DetailsGrid :hours="model.hourly" />
 
       <AirQualityCard :air="model.airQuality" />
     </main>

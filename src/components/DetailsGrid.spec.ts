@@ -1,22 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DetailsGrid from './DetailsGrid.vue'
-import type { CurrentConditions, HourPoint } from '../types/weather'
-
-const CURRENT: CurrentConditions = {
-  time: '2026-09-16T12:00',
-  temperature: 24,
-  apparentTemperature: 25,
-  humidity: 60,
-  precipitation: 0,
-  weatherCode: 3,
-  cloudCover: 80,
-  pressure: 1012,
-  windSpeed: 9,
-  windGusts: 21,
-  windDirection: 200,
-  isDay: true,
-}
+import type { HourPoint } from '../types/weather'
 
 function hour(overrides: Partial<HourPoint> = {}): HourPoint {
   return {
@@ -49,8 +34,8 @@ function hour(overrides: Partial<HourPoint> = {}): HourPoint {
   }
 }
 
-function mountGrid(hourPoint: HourPoint | null = hour()) {
-  return mount(DetailsGrid, { props: { current: CURRENT, hour: hourPoint } })
+function mountGrid(hourPoint: HourPoint | null = hour(), rest: HourPoint[] = []) {
+  return mount(DetailsGrid, { props: { hours: hourPoint ? [hourPoint, ...rest] : [] } })
 }
 
 /** The value rendered under a given label. */
@@ -62,9 +47,29 @@ function valueFor(wrapper: ReturnType<typeof mountGrid>, label: string): string 
 describe('DetailsGrid', () => {
   it('does not repeat what the current card already shows', () => {
     const wrapper = mountGrid()
-    for (const label of ['Vento', 'Raffiche', 'Umidità', 'Nuvolosità']) {
+    for (const label of ['Vento', 'Raffiche', 'Umidità', 'Nuvolosità', 'Pressione']) {
       expect(valueFor(wrapper, label)).toBeNull()
     }
+  })
+
+  it('reports the coming UV peak rather than the current hour', () => {
+    // 5 now, 8 in two hours: the number worth planning around is the 8.
+    const now = hour({ uvIndex: 5, time: '2026-09-16T12:00' })
+    const later = [
+      hour({ uvIndex: 7, time: '2026-09-16T13:00' }),
+      hour({ uvIndex: 8, time: '2026-09-16T14:00' }),
+    ]
+    const wrapper = mountGrid(now, later)
+
+    const value = valueFor(wrapper, 'UV massimo')
+    expect(value).toContain('8')
+    expect(value).toContain('molto alto')
+    expect(value).toContain('14:00')
+  })
+
+  it('drops the UV tile through a night with no sun in the window', () => {
+    const night = hour({ uvIndex: 0, time: '2026-09-16T23:00' })
+    expect(valueFor(mountGrid(night), 'UV massimo')).toBeNull()
   })
 
   it('reports visibility in kilometres when the air is clear', () => {
@@ -93,12 +98,9 @@ describe('DetailsGrid', () => {
     expect(valueFor(wrapper, 'Visibilità')).toBe('24 km')
   })
 
-  it('drops all three optional tiles without any hourly data', () => {
+  it('renders nothing but its heading without any hourly data', () => {
     const wrapper = mountGrid(null)
-    expect(valueFor(wrapper, 'Visibilità')).toBeNull()
-    expect(valueFor(wrapper, 'Zero termico')).toBeNull()
-    expect(valueFor(wrapper, 'Neve')).toBeNull()
-    // The current-conditions tiles are unaffected.
-    expect(valueFor(wrapper, 'Pressione')).toBe('1012 hPa')
+    expect(wrapper.findAll('dl > div')).toHaveLength(0)
+    expect(wrapper.find('h2').text()).toBe('Dettagli')
   })
 })

@@ -1,11 +1,24 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { altitude, centimetres, distance, index, pressure, uvLabel } from '../lib/format'
-import type { CurrentConditions, HourPoint } from '../types/weather'
+import {
+  altitude,
+  centimetres,
+  distance,
+  hourLabel,
+  index,
+  relativeDayLabel,
+  uvLabel,
+} from '../lib/format'
+import { peakUv } from '../lib/uv'
+import type { HourPoint } from '../types/weather'
 
-const props = defineProps<{ current: CurrentConditions; hour: HourPoint | null }>()
+const props = defineProps<{ hours: HourPoint[] }>()
 
-const uv = computed(() => props.hour?.uvIndex ?? null)
+/** The hour in progress, which the tiles below read their values from. */
+const hour = computed<HourPoint | null>(() => props.hours[0] ?? null)
+
+/** Not the current hour's UV, which is 0 all night; see `peakUv`. */
+const uv = computed(() => peakUv(props.hours))
 
 /*
  * The last three tiles appear only when they have something to say.
@@ -15,11 +28,11 @@ const uv = computed(() => props.hour?.uvIndex ?? null)
  * places. A tile that is permanently a dash is the same dead weight as an
  * hourly UV index at midnight.
  */
-const visibility = computed(() => props.hour?.visibility ?? null)
-const freezingLevel = computed(() => props.hour?.freezingLevel ?? null)
+const visibility = computed(() => hour.value?.visibility ?? null)
+const freezingLevel = computed(() => hour.value?.freezingLevel ?? null)
 
 const snowfall = computed(() => {
-  const value = props.hour?.snowfall ?? null
+  const value = hour.value?.snowfall ?? null
   return value !== null && value > 0 ? value : null
 })
 </script>
@@ -33,15 +46,14 @@ const snowfall = computed(() => {
       not repeated here: this grid is for what that card does not already say.
     -->
     <dl>
-      <div>
-        <dt>Pressione</dt>
-        <dd class="numeric">{{ pressure(current.pressure) }}</dd>
-      </div>
-      <div>
-        <dt>Indice UV</dt>
+      <div v-if="uv">
+        <dt>UV massimo</dt>
         <dd class="numeric">
-          {{ index(uv, 0) }}
-          <span class="dir">{{ uvLabel(uv) }}</span>
+          {{ index(uv.value, 0) }}
+          <span class="dir">{{ uvLabel(uv.value) }}</span>
+          <span class="when">
+            {{ relativeDayLabel(uv.time) }} alle {{ hourLabel(uv.time) }}
+          </span>
         </dd>
       </div>
       <div v-if="visibility !== null">
@@ -103,5 +115,12 @@ dd {
   font-size: 0.78rem;
   color: var(--text-muted);
   margin-left: 4px;
+}
+
+.when {
+  display: block;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 </style>
