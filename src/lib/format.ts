@@ -82,8 +82,24 @@ export function concentration(value: number | null | undefined): string {
   return nullable(value, (v) => `${v.toFixed(1)} µg/m³`)
 }
 
-const COMPASS = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
-                 'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO']
+const COMPASS = [
+  'N',
+  'NNE',
+  'NE',
+  'ENE',
+  'E',
+  'ESE',
+  'SE',
+  'SSE',
+  'S',
+  'SSO',
+  'SO',
+  'OSO',
+  'O',
+  'ONO',
+  'NO',
+  'NNO',
+]
 
 /** Degrees to a 16-point Italian compass label. */
 export function windDirection(degrees: number | null | undefined): string {
@@ -122,8 +138,9 @@ export function instantOf(value: string, utcOffsetSeconds: number): number {
 }
 
 export function hourLabel(value: string): string {
-  return new Intl.DateTimeFormat(LOCALE, { hour: '2-digit', minute: '2-digit' })
-    .format(parseApiTime(value))
+  return new Intl.DateTimeFormat(LOCALE, { hour: '2-digit', minute: '2-digit' }).format(
+    parseApiTime(value),
+  )
 }
 
 export function weekdayLabel(value: string): string {
@@ -131,8 +148,9 @@ export function weekdayLabel(value: string): string {
 }
 
 export function dayLabel(value: string): string {
-  return new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' })
-    .format(parseApiTime(value))
+  return new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' }).format(
+    parseApiTime(value),
+  )
 }
 
 export function dayHourLabel(value: string): string {
@@ -195,9 +213,11 @@ export function sameDay(a: string, b: string): boolean {
 
 export function isToday(value: string, now = new Date()): boolean {
   const date = parseApiTime(value)
-  return date.getFullYear() === now.getFullYear()
-    && date.getMonth() === now.getMonth()
-    && date.getDate() === now.getDate()
+  return (
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  )
 }
 
 /** UV index to an Italian risk label, WHO bands. */

@@ -2,7 +2,16 @@
 import { computed } from 'vue'
 import { describeCode, iconFor } from '../lib/wmo'
 import { probabilityToken } from '../lib/stormRisk'
-import { dayLabel, hourLabel, isToday, millimetres, percent, speed, temperature, weekdayLabel } from '../lib/format'
+import {
+  dayLabel,
+  hourLabel,
+  isToday,
+  millimetres,
+  percent,
+  speed,
+  temperature,
+  weekdayLabel,
+} from '../lib/format'
 import type { DayPoint } from '../types/weather'
 
 const props = defineProps<{ days: DayPoint[] }>()
@@ -53,12 +62,14 @@ function barStyle(day: DayPoint) {
           <span class="perceived">
             perc. {{ temperature(day.apparentMin) }} / {{ temperature(day.apparentMax) }}
           </span>
-          <span>💧 {{ percent(day.precipitationProbabilityMax) }} · {{ millimetres(day.precipitationSum) }}</span>
-          <span>💨 {{ speed(day.windGustsMax) }}</span>
           <span
-            class="storm"
-            :style="{ color: probabilityToken(day.stormProbabilityMax) }"
-          >⛈ {{ percent(day.stormProbabilityMax) }}</span>
+            >💧 {{ percent(day.precipitationProbabilityMax) }} ·
+            {{ millimetres(day.precipitationSum) }}</span
+          >
+          <span>💨 {{ speed(day.windGustsMax) }}</span>
+          <span class="storm" :style="{ color: probabilityToken(day.stormProbabilityMax) }"
+            >⛈ {{ percent(day.stormProbabilityMax) }}</span
+          >
           <span class="sun">🌅 {{ hourLabel(day.sunrise) }} · 🌇 {{ hourLabel(day.sunset) }}</span>
         </div>
       </li>

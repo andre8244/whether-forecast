@@ -1,0 +1,9 @@
+dist
+node_modules
+pnpm-lock.yaml
+
+# Prose, not code: the README's line breaks are deliberate.
+*.md
+
+# A trimmed capture of a live API response, kept as it was served.
+src/lib/__fixtures__

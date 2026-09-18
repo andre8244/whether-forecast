@@ -1,28 +1,26 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { storeToRefs } from "pinia";
-import LocationBar from "./components/LocationBar.vue";
-import CurrentCard from "./components/CurrentCard.vue";
-import StormPanel from "./components/StormPanel.vue";
-import HourlyStrip from "./components/HourlyStrip.vue";
-import DailyList from "./components/DailyList.vue";
-import DetailsGrid from "./components/DetailsGrid.vue";
-import AirQualityCard from "./components/AirQualityCard.vue";
-import { useForecast } from "./composables/useForecast";
-import { useAutoRefresh } from "./composables/useAutoRefresh";
-import { useLocationStore } from "./stores/location";
-import { fullTimeLabel, fullTimeLabelIn } from "./lib/format";
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import LocationBar from './components/LocationBar.vue'
+import CurrentCard from './components/CurrentCard.vue'
+import StormPanel from './components/StormPanel.vue'
+import HourlyStrip from './components/HourlyStrip.vue'
+import DailyList from './components/DailyList.vue'
+import DetailsGrid from './components/DetailsGrid.vue'
+import AirQualityCard from './components/AirQualityCard.vue'
+import { useForecast } from './composables/useForecast'
+import { useAutoRefresh } from './composables/useAutoRefresh'
+import { useLocationStore } from './stores/location'
+import { fullTimeLabel, fullTimeLabelIn } from './lib/format'
 
-const locationStore = useLocationStore();
-const { current: location } = storeToRefs(locationStore);
-const { model, loading, error, stale, refresh } = useForecast(location);
+const locationStore = useLocationStore()
+const { current: location } = storeToRefs(locationStore)
+const { model, loading, error, stale, refresh } = useForecast(location)
 
 // Silent background refresh; the visible data is replaced only on success.
-useAutoRefresh(() => void refresh(true));
+useAutoRefresh(() => void refresh(true))
 
-const degradedStorm = computed(
-  () => model.value?.degraded.includes("ensemble") ?? false,
-);
+const degradedStorm = computed(() => model.value?.degraded.includes('ensemble') ?? false)
 </script>
 
 <template>
@@ -31,8 +29,7 @@ const degradedStorm = computed(
 
     <p v-if="stale && model" class="banner stale">
       Dati non aggiornati: previsione delle
-      {{ fullTimeLabelIn(model.observedAt, model.timezone) }} ora locale.
-      Probabilmente sei offline.
+      {{ fullTimeLabelIn(model.observedAt, model.timezone) }} ora locale. Probabilmente sei offline.
     </p>
     <p v-else-if="error" class="banner error">{{ error }}</p>
 
@@ -49,11 +46,7 @@ const degradedStorm = computed(
         :hours="model.hourly"
       />
 
-      <StormPanel
-        class="span-2"
-        :hours="model.hourly"
-        :degraded="degradedStorm"
-      />
+      <StormPanel class="span-2" :hours="model.hourly" :degraded="degradedStorm" />
 
       <HourlyStrip class="span-2" :hours="model.hourly" />
 
@@ -67,18 +60,12 @@ const degradedStorm = computed(
     <footer>
       <p>
         Dati meteo
-        <a
-          href="https://open-meteo.com/"
-          rel="noreferrer noopener"
-          target="_blank"
-          >Open-Meteo</a
-        >
+        <a href="https://open-meteo.com/" rel="noreferrer noopener" target="_blank">Open-Meteo</a>
         (CC BY 4.0) da ECMWF, DWD ICON e NOAA GFS. Unità metriche.
       </p>
       <p v-if="model" class="updated">
         Previsione delle
-        {{ fullTimeLabelIn(model.observedAt, model.timezone) }} ora locale,
-        scaricata alle
+        {{ fullTimeLabelIn(model.observedAt, model.timezone) }} ora locale, scaricata alle
         {{ fullTimeLabel(model.fetchedAt) }}
       </p>
     </footer>

@@ -143,31 +143,23 @@ describe('convectiveProbability', () => {
   })
 
   it('reports the member share within a single model', () => {
-    const grouped = groupMembers(
-      flatten({ m: [[CONVECTIVE], [CONVECTIVE], [FRONTAL], [FRONTAL]] }),
-    )
+    const grouped = groupMembers(flatten({ m: [[CONVECTIVE], [CONVECTIVE], [FRONTAL], [FRONTAL]] }))
     expect(convectiveProbability(grouped, 1).combined).toEqual([50])
   })
 
   it('excludes members without CAPE from both numerator and denominator', () => {
     // 2 of the 3 judgeable members are convective: 67%, not 50% of all four.
-    const grouped = groupMembers(
-      flatten({ m: [[CONVECTIVE], [CONVECTIVE], [FRONTAL], [NO_CAPE]] }),
-    )
+    const grouped = groupMembers(flatten({ m: [[CONVECTIVE], [CONVECTIVE], [FRONTAL], [NO_CAPE]] }))
     expect(convectiveProbability(grouped, 1).combined).toEqual([67])
   })
 
   it('yields null when fewer than half the members can be judged', () => {
-    const grouped = groupMembers(
-      flatten({ m: [[CONVECTIVE], [NO_CAPE], [NO_CAPE], [NO_CAPE]] }),
-    )
+    const grouped = groupMembers(flatten({ m: [[CONVECTIVE], [NO_CAPE], [NO_CAPE], [NO_CAPE]] }))
     expect(convectiveProbability(grouped, 1).combined).toEqual([null])
   })
 
   it('keeps the hour when exactly half the members can be judged', () => {
-    const grouped = groupMembers(
-      flatten({ m: [[CONVECTIVE], [FRONTAL], [NO_CAPE], [NO_CAPE]] }),
-    )
+    const grouped = groupMembers(flatten({ m: [[CONVECTIVE], [FRONTAL], [NO_CAPE], [NO_CAPE]] }))
     expect(convectiveProbability(grouped, 1).combined).toEqual([50])
   })
 

@@ -238,7 +238,6 @@ describe('locate', () => {
     expect(store.current.timezone).toBe('')
     expect(store.locationError).toBeNull()
     expect(store.locating).toBe(false)
-
   })
 
   it('reports a denied permission', async () => {
@@ -249,12 +248,10 @@ describe('locate', () => {
       },
     })
 
-
     const store = useLocationStore()
     await store.locate()
 
     expect(store.locationError).toMatch(/Permesso negato/)
     expect(store.locating).toBe(false)
-
   })
 })

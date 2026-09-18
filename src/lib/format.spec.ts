@@ -109,8 +109,7 @@ describe('instantOf', () => {
 
   it('does not depend on the browser timezone', () => {
     // Both strings name the same moment, from two different places.
-    expect(instantOf('2026-09-16T15:30', -4 * 3600))
-      .toBe(instantOf('2026-09-16T21:30', 2 * 3600))
+    expect(instantOf('2026-09-16T15:30', -4 * 3600)).toBe(instantOf('2026-09-16T21:30', 2 * 3600))
   })
 
   it('accepts a date-only string', () => {

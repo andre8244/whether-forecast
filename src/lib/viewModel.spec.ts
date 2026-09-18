@@ -146,8 +146,7 @@ function airQualityStub(hours: number): AirQualityResponse {
 /** ECMWF and GFS see rain on the first day; ICON never does. */
 function comparisonStub(hours: number): MultiModelResponse {
   const time = hourTimes(hours)
-  const firstDay = (value: number) =>
-    time.map((t) => (t.startsWith('2026-09-16') ? value : 0))
+  const firstDay = (value: number) => time.map((t) => (t.startsWith('2026-09-16') ? value : 0))
 
   return {
     hourly: {

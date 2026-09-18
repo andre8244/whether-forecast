@@ -177,9 +177,7 @@ describe('getJson cancellation', () => {
 
   it('aborts the request when its timeout fires', async () => {
     const timeoutController = new AbortController()
-    const timeout = vi
-      .spyOn(AbortSignal, 'timeout')
-      .mockReturnValue(timeoutController.signal)
+    const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(timeoutController.signal)
     fetchMock.mockResolvedValue(jsonResponse({}))
 
     await getJson(BASE, {})

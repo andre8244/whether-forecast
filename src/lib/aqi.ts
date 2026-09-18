@@ -11,9 +11,24 @@ export interface AqiDescription {
 const BANDS: { max: number; band: AqiBand; token: string; advice: string }[] = [
   { max: 20, band: 'buona', token: 'var(--aqi-1)', advice: 'Aria pulita, nessuna precauzione.' },
   { max: 40, band: 'discreta', token: 'var(--aqi-2)', advice: 'Qualità accettabile per tutti.' },
-  { max: 60, band: 'moderata', token: 'var(--aqi-3)', advice: 'I soggetti sensibili riducano gli sforzi prolungati all’aperto.' },
-  { max: 80, band: 'scarsa', token: 'var(--aqi-4)', advice: 'Limitare l’attività fisica intensa all’aperto.' },
-  { max: 100, band: 'molto scarsa', token: 'var(--aqi-5)', advice: 'Evitare l’attività fisica all’aperto.' },
+  {
+    max: 60,
+    band: 'moderata',
+    token: 'var(--aqi-3)',
+    advice: 'I soggetti sensibili riducano gli sforzi prolungati all’aperto.',
+  },
+  {
+    max: 80,
+    band: 'scarsa',
+    token: 'var(--aqi-4)',
+    advice: 'Limitare l’attività fisica intensa all’aperto.',
+  },
+  {
+    max: 100,
+    band: 'molto scarsa',
+    token: 'var(--aqi-5)',
+    advice: 'Evitare l’attività fisica all’aperto.',
+  },
 ]
 
 const WORST = {

@@ -28,7 +28,12 @@ const bars = computed(() =>
 
 <template>
   <div class="bars" :style="{ height: `${height}px` }" role="img" :aria-label="label">
-    <div v-for="(bar, i) in bars" :key="i" class="slot" :class="{ dim: highlight >= 0 && i !== highlight }">
+    <div
+      v-for="(bar, i) in bars"
+      :key="i"
+      class="slot"
+      :class="{ dim: highlight >= 0 && i !== highlight }"
+    >
       <div
         v-if="bar.value !== null"
         class="bar"
@@ -68,10 +73,6 @@ const bars = computed(() =>
   width: 100%;
   margin: 0 1px;
   height: 2px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--border-strong) 0 2px,
-    transparent 2px 4px
-  );
+  background: repeating-linear-gradient(90deg, var(--border-strong) 0 2px, transparent 2px 4px);
 }
 </style>

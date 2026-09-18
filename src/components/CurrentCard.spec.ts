@@ -1,12 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import CurrentCard from './CurrentCard.vue'
-import type {
-  CurrentConditions,
-  GeoLocation,
-  HourPoint,
-  ModelConsensus,
-} from '../types/weather'
+import type { CurrentConditions, GeoLocation, HourPoint, ModelConsensus } from '../types/weather'
 
 const TWO_MODELS_WET: ModelConsensus = { wet: ['ECMWF', 'GFS'], dry: ['ICON'] }
 
@@ -181,7 +176,11 @@ describe('CurrentCard', () => {
 
   it('keeps quiet without cross-check data at all', () => {
     expect(mountCard(24, 25, { hour: null }).find('.disagreement').exists()).toBe(false)
-    expect(mountCard(24, 25, { hour: hour(null) }).find('.disagreement').exists()).toBe(false)
+    expect(
+      mountCard(24, 25, { hour: hour(null) })
+        .find('.disagreement')
+        .exists(),
+    ).toBe(false)
   })
 
   it('says when rain is next expected', () => {
@@ -207,7 +206,11 @@ describe('CurrentCard', () => {
 
   it('says nothing about rain ahead across a dry window', () => {
     const dry = hour(null, null, { precipitation: 0 })
-    expect(mountCard(24, 25, { hours: [dry, dry, dry] }).find('.next-rain').exists()).toBe(false)
+    expect(
+      mountCard(24, 25, { hours: [dry, dry, dry] })
+        .find('.next-rain')
+        .exists(),
+    ).toBe(false)
   })
 
   it('keeps quiet when the models dissent but there is no share to quote', () => {

@@ -166,7 +166,6 @@ describe('StormPanel', () => {
   })
 })
 
-
 describe('StormPanel hourly readout', () => {
   const SERIES = Array.from({ length: 48 }, (_, i) =>
     hour({

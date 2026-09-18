@@ -7,7 +7,17 @@ const WIDTH = 480
 function plotElement(): HTMLElement {
   const element = document.createElement('div')
   element.getBoundingClientRect = () =>
-    ({ left: 0, top: 0, width: WIDTH, height: 90, right: WIDTH, bottom: 90, x: 0, y: 0, toJSON: () => ({}) }) as DOMRect
+    ({
+      left: 0,
+      top: 0,
+      width: WIDTH,
+      height: 90,
+      right: WIDTH,
+      bottom: 90,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    }) as DOMRect
   return element
 }
 

@@ -67,20 +67,22 @@ function mountChart(hours = HOURS) {
  * set them. Real events carry the properties through their constructor.
  */
 function pointer(wrapper: ReturnType<typeof mountChart>, type: string, clientX = 0) {
-  wrapper.find('.plot').element
-    .dispatchEvent(new MouseEvent(type, { clientX, bubbles: true }))
+  wrapper.find('.plot').element.dispatchEvent(new MouseEvent(type, { clientX, bubbles: true }))
   return nextTick()
 }
 
 function press(wrapper: ReturnType<typeof mountChart>, key: string) {
-  wrapper.find('.plot').element
-    .dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
+  wrapper
+    .find('.plot')
+    .element.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
   return nextTick()
 }
 
 describe('HourlyChart', () => {
   it('labels the time axis from the first hour to the last', () => {
-    const labels = mountChart().findAll('.axis span').map((s) => s.text())
+    const labels = mountChart()
+      .findAll('.axis span')
+      .map((s) => s.text())
 
     expect(labels.length).toBeGreaterThan(1)
     expect(labels.length).toBeLessThanOrEqual(5)
@@ -114,7 +116,9 @@ describe('HourlyChart', () => {
   })
 
   it('names the day whenever the axis crosses midnight', () => {
-    const labels = mountChart().findAll('.axis span').map((s) => s.text())
+    const labels = mountChart()
+      .findAll('.axis span')
+      .map((s) => s.text())
 
     // The span runs 12:00 Wednesday to 11:00 Friday, so a bare "12:00" would
     // appear twice for different days.
@@ -163,8 +167,7 @@ describe('HourlyChart', () => {
     const wrapper = mountChart()
 
     await pointer(wrapper, 'pointermove', PLOT_WIDTH - 1)
-    expect(wrapper.find('.tooltip').attributes('style'))
-      .toContain('translateX(calc(-100% - 12px))')
+    expect(wrapper.find('.tooltip').attributes('style')).toContain('translateX(calc(-100% - 12px))')
   })
 
   it('walks the hours with the arrow keys', async () => {

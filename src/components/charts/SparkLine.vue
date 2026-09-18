@@ -30,8 +30,9 @@ const props = withDefaults(
 const PAD_Y = 6
 
 const bounds = computed(() => {
-  const all = [...props.values, ...(props.secondary ?? [])]
-    .filter((value): value is number => value !== null)
+  const all = [...props.values, ...(props.secondary ?? [])].filter(
+    (value): value is number => value !== null,
+  )
   if (!all.length) return null
 
   const min = Math.min(...all)

@@ -40,10 +40,16 @@ function dayBreak(hour: HourPoint, i: number): boolean {
         <span class="when numeric">
           {{ i === 0 ? 'Ora' : hourLabel(hour.time) }}
           <em v-if="dayBreak(hour, i) || (i === 0 && !isToday(hour.time))">
-            {{ new Intl.DateTimeFormat('it-IT', { weekday: 'short' }).format(new Date(hour.timestamp)) }}
+            {{
+              new Intl.DateTimeFormat('it-IT', { weekday: 'short' }).format(
+                new Date(hour.timestamp),
+              )
+            }}
           </em>
         </span>
-        <span class="glyph" aria-hidden="true">{{ iconFor(hour.weatherCode, !isNight(hour)) }}</span>
+        <span class="glyph" aria-hidden="true">{{
+          iconFor(hour.weatherCode, !isNight(hour))
+        }}</span>
         <span class="temp numeric">{{ temperature(hour.temperature) }}</span>
         <span class="apparent numeric">perc. {{ temperature(hour.apparentTemperature) }}</span>
         <!-- Matches the droplet the daily rows already use for this value. -->
@@ -112,10 +118,18 @@ h2 {
   display: inline-block;
 }
 
-.swatch.temp { background: var(--temp-line); }
-.swatch.apparent { background: var(--temp-line-apparent); }
-.swatch.precip { background: var(--precip-bar); }
-.swatch:not(:first-child) { margin-left: 8px; }
+.swatch.temp {
+  background: var(--temp-line);
+}
+.swatch.apparent {
+  background: var(--temp-line-apparent);
+}
+.swatch.precip {
+  background: var(--precip-bar);
+}
+.swatch:not(:first-child) {
+  margin-left: 8px;
+}
 
 .strip {
   list-style: none;

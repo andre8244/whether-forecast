@@ -77,8 +77,18 @@ const modelRows = computed(() => {
 const indices = computed(() => {
   const hour = now.value
   return [
-    { key: 'cape', name: 'CAPE', value: energy(hour?.cape), reading: capeReading(hour?.cape ?? null) },
-    { key: 'li', name: 'Lifted index', value: index(hour?.liftedIndex), reading: liftedIndexReading(hour?.liftedIndex ?? null) },
+    {
+      key: 'cape',
+      name: 'CAPE',
+      value: energy(hour?.cape),
+      reading: capeReading(hour?.cape ?? null),
+    },
+    {
+      key: 'li',
+      name: 'Lifted index',
+      value: index(hour?.liftedIndex),
+      reading: liftedIndexReading(hour?.liftedIndex ?? null),
+    },
     { key: 'cin', name: 'CIN', value: energy(hour?.cin), reading: cinReading(hour?.cin ?? null) },
   ]
 })
@@ -158,7 +168,10 @@ const axis = computed(() => {
           <strong class="when">
             {{ relativeDayLabel(hovered.time) }} {{ hourLabel(hovered.time) }}
           </strong>
-          <p class="tip-value numeric" :style="{ color: probabilityToken(hovered.stormProbability) }">
+          <p
+            class="tip-value numeric"
+            :style="{ color: probabilityToken(hovered.stormProbability) }"
+          >
             {{ percent(hovered.stormProbability) }}
           </p>
           <dl class="numeric">
@@ -212,8 +225,8 @@ const axis = computed(() => {
         <h3>Indici convettivi ora</h3>
         <p class="hint">
           Dal modello deterministico, per il punto e non per gli scenari. Ogni indice ha la sua
-          scala: descrivono quanta energia ha l’atmosfera e se può liberarla, non quanto è
-          probabile che lo faccia. La probabilità resta quella dell’ensemble qui sopra.
+          scala: descrivono quanta energia ha l’atmosfera e se può liberarla, non quanto è probabile
+          che lo faccia. La probabilità resta quella dell’ensemble qui sopra.
         </p>
         <dl class="indices">
           <div v-for="item in indices" :key="item.key">

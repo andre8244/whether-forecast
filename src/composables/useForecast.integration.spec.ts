@@ -18,7 +18,9 @@ vi.mock('../api/forecast', () => ({
   fetchModelComparison: (...a: unknown[]) => fetchModelComparison(...a),
 }))
 vi.mock('../api/ensemble', () => ({ fetchEnsemble: (...a: unknown[]) => fetchEnsemble(...a) }))
-vi.mock('../api/airQuality', () => ({ fetchAirQuality: (...a: unknown[]) => fetchAirQuality(...a) }))
+vi.mock('../api/airQuality', () => ({
+  fetchAirQuality: (...a: unknown[]) => fetchAirQuality(...a),
+}))
 
 const { useForecast } = await import('./useForecast')
 

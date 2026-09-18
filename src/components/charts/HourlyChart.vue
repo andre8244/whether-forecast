@@ -41,9 +41,7 @@ onMounted(() => {
 onBeforeUnmount(() => sizeObserver?.disconnect())
 
 // Zero means "not measured yet", which keeps the roomier default.
-const maxTicks = computed(() =>
-  plotWidth.value > 0 && plotWidth.value < NARROW_PLOT_PX ? 3 : 5,
-)
+const maxTicks = computed(() => (plotWidth.value > 0 && plotWidth.value < NARROW_PLOT_PX ? 3 : 5))
 
 const temperatures = computed(() => props.hours.map((hour) => hour.temperature))
 const apparent = computed(() => props.hours.map((hour) => hour.apparentTemperature))

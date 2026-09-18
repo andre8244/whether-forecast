@@ -140,7 +140,9 @@ function shareForHour(
 function hasConvectiveInputs(member: MemberSeries, hour: number): boolean {
   const cape = member.cape[hour]
   const precipitation = member.precipitation[hour]
-  return cape !== null && cape !== undefined && precipitation !== null && precipitation !== undefined
+  return (
+    cape !== null && cape !== undefined && precipitation !== null && precipitation !== undefined
+  )
 }
 
 function isConvective(member: MemberSeries, hour: number): boolean {
@@ -247,11 +249,31 @@ export interface IndexReading {
  */
 export function capeReading(cape: number | null): IndexReading | null {
   if (cape === null) return null
-  if (cape < 300) return { label: 'trascurabile', detail: 'Energia insufficiente per la convezione.', token: 'var(--risk-none)' }
-  if (cape < 1000) return { label: 'debole', detail: 'Convezione possibile solo con forte innesco.', token: 'var(--risk-low)' }
-  if (cape < 2500) return { label: 'moderata', detail: 'Energia sufficiente per temporali organizzati.', token: 'var(--risk-moderate)' }
-  if (cape < 4000) return { label: 'elevata', detail: 'Energia da temporali forti.', token: 'var(--risk-high)' }
-  return { label: 'estrema', detail: 'Energia da temporali violenti.', token: 'var(--risk-extreme)' }
+  if (cape < 300)
+    return {
+      label: 'trascurabile',
+      detail: 'Energia insufficiente per la convezione.',
+      token: 'var(--risk-none)',
+    }
+  if (cape < 1000)
+    return {
+      label: 'debole',
+      detail: 'Convezione possibile solo con forte innesco.',
+      token: 'var(--risk-low)',
+    }
+  if (cape < 2500)
+    return {
+      label: 'moderata',
+      detail: 'Energia sufficiente per temporali organizzati.',
+      token: 'var(--risk-moderate)',
+    }
+  if (cape < 4000)
+    return { label: 'elevata', detail: 'Energia da temporali forti.', token: 'var(--risk-high)' }
+  return {
+    label: 'estrema',
+    detail: 'Energia da temporali violenti.',
+    token: 'var(--risk-extreme)',
+  }
 }
 
 /**
@@ -262,11 +284,35 @@ export function capeReading(cape: number | null): IndexReading | null {
  */
 export function liftedIndexReading(liftedIndex: number | null): IndexReading | null {
   if (liftedIndex === null) return null
-  if (liftedIndex > 0) return { label: 'stabile', detail: 'L’aria sollevata resta più fredda dell’ambiente.', token: 'var(--risk-none)' }
-  if (liftedIndex > -3) return { label: 'poco instabile', detail: 'Temporali sparsi possibili.', token: 'var(--risk-low)' }
-  if (liftedIndex > -6) return { label: 'moderatamente instabile', detail: 'Temporali probabili, qualcuno forte.', token: 'var(--risk-moderate)' }
-  if (liftedIndex > -9) return { label: 'molto instabile', detail: 'Fenomeni severi probabili.', token: 'var(--risk-high)' }
-  return { label: 'estremamente instabile', detail: 'Condizioni da temporali pericolosi.', token: 'var(--risk-extreme)' }
+  if (liftedIndex > 0)
+    return {
+      label: 'stabile',
+      detail: 'L’aria sollevata resta più fredda dell’ambiente.',
+      token: 'var(--risk-none)',
+    }
+  if (liftedIndex > -3)
+    return {
+      label: 'poco instabile',
+      detail: 'Temporali sparsi possibili.',
+      token: 'var(--risk-low)',
+    }
+  if (liftedIndex > -6)
+    return {
+      label: 'moderatamente instabile',
+      detail: 'Temporali probabili, qualcuno forte.',
+      token: 'var(--risk-moderate)',
+    }
+  if (liftedIndex > -9)
+    return {
+      label: 'molto instabile',
+      detail: 'Fenomeni severi probabili.',
+      token: 'var(--risk-high)',
+    }
+  return {
+    label: 'estremamente instabile',
+    detail: 'Condizioni da temporali pericolosi.',
+    token: 'var(--risk-extreme)',
+  }
 }
 
 /**
@@ -284,9 +330,16 @@ export function cinReading(cin: number | null): IndexReading | null {
   if (cin === null) return null
   const magnitude = Math.abs(cin)
   const token = 'var(--text)'
-  if (magnitude < 25) return { label: 'debole', detail: 'Nessun freno: la convezione parte facilmente.', token }
-  if (magnitude < 50) return { label: 'moderata', detail: 'Serve un po’ di riscaldamento per innescare.', token }
-  if (magnitude <= 200) return { label: 'significativa', detail: 'Serve un innesco deciso per rompere il tappo.', token }
+  if (magnitude < 25)
+    return { label: 'debole', detail: 'Nessun freno: la convezione parte facilmente.', token }
+  if (magnitude < 50)
+    return { label: 'moderata', detail: 'Serve un po’ di riscaldamento per innescare.', token }
+  if (magnitude <= 200)
+    return {
+      label: 'significativa',
+      detail: 'Serve un innesco deciso per rompere il tappo.',
+      token,
+    }
   return { label: 'forte', detail: 'Tappo robusto: sviluppo temporalesco ostacolato.', token }
 }
 

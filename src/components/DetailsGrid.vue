@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue'
 import {
   altitude,
   centimetres,
@@ -8,17 +8,17 @@ import {
   index,
   relativeDayLabel,
   uvLabel,
-} from "../lib/format";
-import { peakUv } from "../lib/uv";
-import type { HourPoint } from "../types/weather";
+} from '../lib/format'
+import { peakUv } from '../lib/uv'
+import type { HourPoint } from '../types/weather'
 
-const props = defineProps<{ hours: HourPoint[] }>();
+const props = defineProps<{ hours: HourPoint[] }>()
 
 /** The hour in progress, which the tiles below read their values from. */
-const hour = computed<HourPoint | null>(() => props.hours[0] ?? null);
+const hour = computed<HourPoint | null>(() => props.hours[0] ?? null)
 
 /** Not the current hour's UV, which is 0 all night; see `peakUv`. */
-const uv = computed(() => peakUv(props.hours));
+const uv = computed(() => peakUv(props.hours))
 
 /*
  * The last three tiles appear only when they have something to say.
@@ -28,13 +28,13 @@ const uv = computed(() => peakUv(props.hours));
  * places. A tile that is permanently a dash is the same dead weight as an
  * hourly UV index at midnight.
  */
-const visibility = computed(() => hour.value?.visibility ?? null);
-const freezingLevel = computed(() => hour.value?.freezingLevel ?? null);
+const visibility = computed(() => hour.value?.visibility ?? null)
+const freezingLevel = computed(() => hour.value?.freezingLevel ?? null)
 
 const snowfall = computed(() => {
-  const value = hour.value?.snowfall ?? null;
-  return value !== null && value > 0 ? value : null;
-});
+  const value = hour.value?.snowfall ?? null
+  return value !== null && value > 0 ? value : null
+})
 </script>
 
 <template>
@@ -63,9 +63,7 @@ const snowfall = computed(() => {
         <dd class="numeric">
           {{ index(uv.value, 0) }}
           <span class="dir">{{ uvLabel(uv.value) }}</span>
-          <span class="when">
-            {{ relativeDayLabel(uv.time) }} alle {{ hourLabel(uv.time) }}
-          </span>
+          <span class="when"> {{ relativeDayLabel(uv.time) }} alle {{ hourLabel(uv.time) }} </span>
         </dd>
       </div>
     </dl>

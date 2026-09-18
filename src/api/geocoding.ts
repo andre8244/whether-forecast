@@ -3,7 +3,6 @@ import type { GeocodingResponse, GeoLocation } from '../types/weather'
 
 const ENDPOINT = 'https://geocoding-api.open-meteo.com/v1/search'
 
-
 export function locationId(latitude: number, longitude: number): string {
   return `${latitude.toFixed(4)},${longitude.toFixed(4)}`
 }
@@ -17,10 +16,7 @@ export function locationId(latitude: number, longitude: number): string {
  */
 export const UNNAMED_POSITION = 'Posizione attuale'
 
-export async function searchLocations(
-  query: string,
-  signal?: AbortSignal,
-): Promise<GeoLocation[]> {
+export async function searchLocations(query: string, signal?: AbortSignal): Promise<GeoLocation[]> {
   const trimmed = query.trim()
   if (trimmed.length < 2) return []
 

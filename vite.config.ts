@@ -41,7 +41,8 @@ export default defineConfig({
         runtimeCaching: [
           {
             // A live network wins; a dead one falls back to the cached response.
-            urlPattern: /^https:\/\/(api|ensemble-api|air-quality-api|geocoding-api)\.open-meteo\.com\//,
+            urlPattern:
+              /^https:\/\/(api|ensemble-api|air-quality-api|geocoding-api)\.open-meteo\.com\//,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'open-meteo',

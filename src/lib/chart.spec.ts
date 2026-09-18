@@ -72,12 +72,7 @@ describe('axisLabels', () => {
   const weekday = (t: string) => (t.slice(8, 10) === '16' ? 'mer' : 'gio')
   const sameDay = (a: string, b: string) => a.slice(0, 10) === b.slice(0, 10)
 
-  const times = [
-    '2026-09-16T16:00',
-    '2026-09-16T20:00',
-    '2026-09-17T04:00',
-    '2026-09-17T16:00',
-  ]
+  const times = ['2026-09-16T16:00', '2026-09-16T20:00', '2026-09-17T04:00', '2026-09-17T16:00']
 
   it('prefixes the weekday on the first tick', () => {
     expect(axisLabels([0], times, hour, weekday, sameDay)).toEqual(['mer 16:00'])
@@ -88,8 +83,12 @@ describe('axisLabels', () => {
   })
 
   it('brings the weekday back when the day changes', () => {
-    expect(axisLabels([0, 1, 2, 3], times, hour, weekday, sameDay))
-      .toEqual(['mer 16:00', '20:00', 'gio 04:00', '16:00'])
+    expect(axisLabels([0, 1, 2, 3], times, hour, weekday, sameDay)).toEqual([
+      'mer 16:00',
+      '20:00',
+      'gio 04:00',
+      '16:00',
+    ])
   })
 
   it('handles an empty tick list', () => {
