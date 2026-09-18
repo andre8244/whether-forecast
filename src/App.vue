@@ -85,8 +85,8 @@ const degradedStorm = computed(
         La probabilità di pioggia e i millimetri vengono entrambi dalla
         previsione deterministica, ma sono prodotti in modo diverso: per questo
         un’ora può avere alta probabilità e nessun accumulo. Quando quella
-        previsione dà asciutto mentre la maggioranza degli scenari ensemble
-        prevede pioggia, la scheda in alto lo segnala.
+        previsione dà asciutto mentre altri modelli globali o la maggioranza
+        degli scenari ensemble prevedono pioggia, la scheda in alto lo segnala.
       </p>
       <p v-if="model" class="updated">
         Previsione delle

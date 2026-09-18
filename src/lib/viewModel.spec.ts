@@ -6,6 +6,7 @@ import type {
   EnsembleResponse,
   ForecastResponse,
   GeoLocation,
+  MultiModelResponse,
 } from '../types/weather'
 
 const LOCATION: GeoLocation = {
@@ -140,6 +141,25 @@ function airQualityStub(hours: number): AirQualityResponse {
   }
 }
 
+/** ECMWF and GFS see rain on the first day; ICON never does. */
+function comparisonStub(hours: number): MultiModelResponse {
+  const time = hourTimes(hours)
+  const firstDay = (value: number) =>
+    time.map((t) => (t.startsWith('2026-09-16') ? value : 0))
+
+  return {
+    hourly: {
+      time,
+      precipitation_icon_global: time.map(() => 0),
+      weather_code_icon_global: time.map(() => 3),
+      precipitation_ecmwf_ifs025: firstDay(1.2),
+      weather_code_ecmwf_ifs025: time.map((t) => (t.startsWith('2026-09-16') ? 61 : 3)),
+      precipitation_gfs_global: firstDay(0.8),
+      weather_code_gfs_global: time.map((t) => (t.startsWith('2026-09-16') ? 61 : 3)),
+    },
+  }
+}
+
 /** 12:30 local to the stub, which sits at UTC+2. */
 const NOON = instantOf('2026-09-16T12:30', 2 * 3600)
 
@@ -149,6 +169,7 @@ function build(overrides: Partial<Parameters<typeof buildViewModel>[0]> = {}) {
     location: LOCATION,
     forecast: forecastStub(hours),
     ensemble: ensembleStub(hours),
+    comparison: comparisonStub(hours),
     airQuality: airQualityStub(hours),
     degraded: [],
     now: NOON,
@@ -185,6 +206,20 @@ describe('buildViewModel', () => {
     const first = build().hourly[0]
     // Only the ECMWF control run is wet: 50% of that model, 0% of ICON.
     expect(first.rainProbability).toBe(25)
+  })
+
+  it('attaches how the separate global models split on rain', () => {
+    const model = build()
+    expect(model.hourly[0].modelConsensus).toEqual({ wet: ['ECMWF', 'GFS'], dry: ['ICON'] })
+    // The second day is dry in the stub for all three.
+    const later = model.hourly.find((hour) => hour.time.startsWith('2026-09-17'))
+    expect(later?.modelConsensus).toEqual({ wet: [], dry: ['ICON', 'ECMWF', 'GFS'] })
+  })
+
+  it('leaves the split null when the comparison call failed', () => {
+    const model = build({ comparison: null, degraded: ['confronto'] })
+    expect(model.hourly[0].modelConsensus).toBeNull()
+    expect(model.degraded).toEqual(['confronto'])
   })
 
   it('derives the daily storm peak from that day’s hours', () => {
@@ -235,6 +270,7 @@ describe('buildViewModel', () => {
       location: LOCATION,
       forecast: forecastStub(hours),
       ensemble: ensembleStub(hours),
+      comparison: comparisonStub(hours),
       airQuality: null,
       degraded: [],
       now: NOON,
@@ -260,6 +296,7 @@ describe('buildViewModel', () => {
       location: LOCATION,
       forecast: miami,
       ensemble: null,
+      comparison: null,
       airQuality: null,
       degraded: [],
       now: Date.parse('2026-09-16T16:30:00Z'),
@@ -281,6 +318,7 @@ describe('buildViewModel', () => {
       location: LOCATION,
       forecast: forecastStub(hours),
       ensemble: null,
+      comparison: null,
       airQuality: null,
       degraded: [],
       now: instantOf('2027-01-01T00:00', 2 * 3600),

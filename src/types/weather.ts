@@ -97,6 +97,24 @@ export interface ForecastResponse {
   daily: ForecastDaily
 }
 
+/* ------------------------------------------------------- model comparison */
+
+/** Flat response: `time` plus one series per variable, key-suffixed by model. */
+export interface MultiModelResponse {
+  hourly: { time: string[] } & Record<string, (number | null)[] | string[]>
+}
+
+/**
+ * Which deterministic models forecast precipitation in one hour, by label.
+ *
+ * A model that reported nothing for the hour appears in neither list, so
+ * `wet.length + dry.length` is how many actually answered.
+ */
+export interface ModelConsensus {
+  wet: string[]
+  dry: string[]
+}
+
 /* ---------------------------------------------------------------- ensemble */
 
 /** Flat response: `time` plus one series per member, key-suffixed by model. */
@@ -190,6 +208,8 @@ export interface HourPoint {
    * deterministic model: the two disagreeing is the interesting case.
    */
   rainProbability: number | null
+  /** How the three global models split on rain this hour. Null when degraded. */
+  modelConsensus: ModelConsensus | null
 }
 
 export interface DayPoint {

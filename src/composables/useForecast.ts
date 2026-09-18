@@ -1,7 +1,7 @@
 import { ref, shallowRef, watch, type Ref } from 'vue'
 import { fetchAirQuality } from '../api/airQuality'
 import { fetchEnsemble } from '../api/ensemble'
-import { fetchForecast } from '../api/forecast'
+import { fetchForecast, fetchModelComparison } from '../api/forecast'
 import { buildViewModel } from '../lib/viewModel'
 import { readJson, writeJson } from '../lib/storage'
 import type {
@@ -10,6 +10,7 @@ import type {
   ForecastResponse,
   ForecastViewModel,
   GeoLocation,
+  MultiModelResponse,
 } from '../types/weather'
 
 const CACHE_KEY = 'meteo:last-forecast'
@@ -31,6 +32,7 @@ interface CachedPayload {
   location: GeoLocation
   forecast: ForecastResponse
   ensemble: EnsembleResponse | null
+  comparison: MultiModelResponse | null
   airQuality: AirQualityResponse | null
   degraded: string[]
   fetchedAt: number
@@ -67,11 +69,13 @@ export function useForecast(location: Ref<GeoLocation>) {
       renderCached(target)
     }
 
-    const [forecastResult, ensembleResult, airQualityResult] = await Promise.allSettled([
-      fetchForecast(target.latitude, target.longitude, active.signal),
-      fetchEnsemble(target.latitude, target.longitude, active.signal),
-      fetchAirQuality(target.latitude, target.longitude, active.signal),
-    ])
+    const [forecastResult, ensembleResult, comparisonResult, airQualityResult] =
+      await Promise.allSettled([
+        fetchForecast(target.latitude, target.longitude, active.signal),
+        fetchEnsemble(target.latitude, target.longitude, active.signal),
+        fetchModelComparison(target.latitude, target.longitude, active.signal),
+        fetchAirQuality(target.latitude, target.longitude, active.signal),
+      ])
 
     if (active.signal.aborted) return
 
@@ -89,8 +93,10 @@ export function useForecast(location: Ref<GeoLocation>) {
 
     const degraded: string[] = []
     const ensemble = ensembleResult.status === 'fulfilled' ? ensembleResult.value : null
+    const comparison = comparisonResult.status === 'fulfilled' ? comparisonResult.value : null
     const airQuality = airQualityResult.status === 'fulfilled' ? airQualityResult.value : null
     if (!ensemble) degraded.push('ensemble')
+    if (!comparison) degraded.push('confronto')
     if (!airQuality) degraded.push('aria')
 
     const fetchedAt = Date.now()
@@ -98,6 +104,7 @@ export function useForecast(location: Ref<GeoLocation>) {
       location: target,
       forecast: forecastResult.value,
       ensemble,
+      comparison,
       airQuality,
       degraded,
       fetchedAt,

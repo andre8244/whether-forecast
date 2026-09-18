@@ -1,12 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { effectScope, nextTick, ref } from 'vue'
-import type { AirQualityResponse, EnsembleResponse, ForecastResponse, GeoLocation } from '../types/weather'
+import type {
+  AirQualityResponse,
+  EnsembleResponse,
+  ForecastResponse,
+  GeoLocation,
+  MultiModelResponse,
+} from '../types/weather'
 
 const fetchForecast = vi.fn()
+const fetchModelComparison = vi.fn()
 const fetchEnsemble = vi.fn()
 const fetchAirQuality = vi.fn()
 
-vi.mock('../api/forecast', () => ({ fetchForecast: (...a: unknown[]) => fetchForecast(...a) }))
+vi.mock('../api/forecast', () => ({
+  fetchForecast: (...a: unknown[]) => fetchForecast(...a),
+  fetchModelComparison: (...a: unknown[]) => fetchModelComparison(...a),
+}))
 vi.mock('../api/ensemble', () => ({ fetchEnsemble: (...a: unknown[]) => fetchEnsemble(...a) }))
 vi.mock('../api/airQuality', () => ({ fetchAirQuality: (...a: unknown[]) => fetchAirQuality(...a) }))
 
@@ -114,6 +124,22 @@ function ensemble(): EnsembleResponse {
   }
 }
 
+/** ECMWF and GFS see rain in every hour; ICON does not. */
+function comparison(): MultiModelResponse {
+  const time = forecast().hourly.time
+  return {
+    hourly: {
+      time,
+      precipitation_icon_global: time.map(() => 0),
+      weather_code_icon_global: time.map(() => 3),
+      precipitation_ecmwf_ifs025: time.map(() => 1.2),
+      weather_code_ecmwf_ifs025: time.map(() => 61),
+      precipitation_gfs_global: time.map(() => 0.8),
+      weather_code_gfs_global: time.map(() => 61),
+    },
+  }
+}
+
 function airQuality(): AirQualityResponse {
   const time = forecast().hourly.time
   return {
@@ -133,7 +159,7 @@ async function run() {
   const scope = effectScope()
   const location = ref(LOCATION)
   const api = scope.run(() => useForecast(location))!
-  // Let the immediate watcher fire and its three requests settle.
+  // Let the immediate watcher fire and its four requests settle.
   await nextTick()
   await new Promise((resolve) => setTimeout(resolve, 0))
   await nextTick()
@@ -144,15 +170,17 @@ describe('useForecast', () => {
   beforeEach(() => {
     localStorage.clear()
     fetchForecast.mockReset()
+    fetchModelComparison.mockReset()
     fetchEnsemble.mockReset()
     fetchAirQuality.mockReset()
   })
 
   afterEach(() => localStorage.clear())
 
-  it('merges all three responses on success', async () => {
+  it('merges all four responses on success', async () => {
     fetchForecast.mockResolvedValue(forecast())
     fetchEnsemble.mockResolvedValue(ensemble())
+    fetchModelComparison.mockResolvedValue(comparison())
     fetchAirQuality.mockResolvedValue(airQuality())
 
     const { model, error, stale, loading, dispose } = await run()
@@ -162,14 +190,35 @@ describe('useForecast', () => {
     expect(stale.value).toBe(false)
     expect(model.value?.current.temperature).toBe(22)
     expect(model.value?.hourly[0].stormProbability).toBe(50)
+    expect(model.value?.hourly[0].modelConsensus).toEqual({
+      wet: ['ECMWF', 'GFS'],
+      dry: ['ICON'],
+    })
     expect(model.value?.airQuality?.europeanAqi).toBe(35)
     expect(model.value?.degraded).toEqual([])
+    dispose()
+  })
+
+  it('renders without the model split when only that call fails', async () => {
+    fetchForecast.mockResolvedValue(forecast())
+    fetchEnsemble.mockResolvedValue(ensemble())
+    fetchModelComparison.mockRejectedValue(new Error('boom'))
+    fetchAirQuality.mockResolvedValue(airQuality())
+
+    const { model, error, dispose } = await run()
+
+    expect(error.value).toBeNull()
+    expect(model.value?.hourly[0].modelConsensus).toBeNull()
+    // Everything else still renders.
+    expect(model.value?.hourly[0].stormProbability).toBe(50)
+    expect(model.value?.degraded).toEqual(['confronto'])
     dispose()
   })
 
   it('renders without storm data when only the ensemble fails', async () => {
     fetchForecast.mockResolvedValue(forecast())
     fetchEnsemble.mockRejectedValue(new Error('boom'))
+    fetchModelComparison.mockResolvedValue(comparison())
     fetchAirQuality.mockResolvedValue(airQuality())
 
     const { model, error, dispose } = await run()
@@ -184,6 +233,7 @@ describe('useForecast', () => {
   it('renders without air quality when only that call fails', async () => {
     fetchForecast.mockResolvedValue(forecast())
     fetchEnsemble.mockResolvedValue(ensemble())
+    fetchModelComparison.mockResolvedValue(comparison())
     fetchAirQuality.mockRejectedValue(new Error('boom'))
 
     const { model, error, dispose } = await run()
@@ -197,6 +247,7 @@ describe('useForecast', () => {
   it('caches a successful payload for the next load', async () => {
     fetchForecast.mockResolvedValue(forecast())
     fetchEnsemble.mockResolvedValue(ensemble())
+    fetchModelComparison.mockResolvedValue(comparison())
     fetchAirQuality.mockResolvedValue(airQuality())
 
     const first = await run()
@@ -206,6 +257,7 @@ describe('useForecast', () => {
     // Second load, network down: the cached payload carries the page.
     fetchForecast.mockRejectedValue(new Error('Rete non raggiungibile'))
     fetchEnsemble.mockRejectedValue(new Error('Rete non raggiungibile'))
+    fetchModelComparison.mockRejectedValue(new Error('Rete non raggiungibile'))
     fetchAirQuality.mockRejectedValue(new Error('Rete non raggiungibile'))
 
     const { model, error, stale, dispose } = await run()
@@ -219,6 +271,7 @@ describe('useForecast', () => {
   it('reports an error when the forecast fails with nothing cached', async () => {
     fetchForecast.mockRejectedValue(new Error('Rete non raggiungibile'))
     fetchEnsemble.mockRejectedValue(new Error('Rete non raggiungibile'))
+    fetchModelComparison.mockRejectedValue(new Error('Rete non raggiungibile'))
     fetchAirQuality.mockRejectedValue(new Error('Rete non raggiungibile'))
 
     const { model, error, loading, dispose } = await run()
@@ -234,6 +287,7 @@ describe('useForecast', () => {
     // that is hours old.
     fetchForecast.mockResolvedValue(forecast(6))
     fetchEnsemble.mockResolvedValue(ensemble())
+    fetchModelComparison.mockResolvedValue(comparison())
     fetchAirQuality.mockResolvedValue(airQuality())
 
     const { stale, error, model, dispose } = await run()

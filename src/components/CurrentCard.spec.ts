@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import CurrentCard from './CurrentCard.vue'
-import type { CurrentConditions, GeoLocation, HourPoint } from '../types/weather'
+import type {
+  CurrentConditions,
+  GeoLocation,
+  HourPoint,
+  ModelConsensus,
+} from '../types/weather'
+
+const TWO_MODELS_WET: ModelConsensus = { wet: ['ECMWF', 'GFS'], dry: ['ICON'] }
 
 const LOCATION: GeoLocation = {
   id: '45.0705,7.6868',
@@ -30,7 +37,10 @@ function conditions(temperature: number, apparentTemperature: number): CurrentCo
   }
 }
 
-function hour(rainProbability: number | null): HourPoint {
+function hour(
+  rainProbability: number | null,
+  modelConsensus: ModelConsensus | null = null,
+): HourPoint {
   return {
     time: '2026-09-16T12:00',
     timestamp: Date.parse('2026-09-16T12:00:00'),
@@ -54,6 +64,7 @@ function hour(rainProbability: number | null): HourPoint {
     stormPerModel: {},
     stormSpread: null,
     rainProbability,
+    modelConsensus,
   }
 }
 
@@ -102,27 +113,60 @@ describe('CurrentCard', () => {
     expect(wrapper.find('.place').text()).toContain('239 m')
   })
 
-  it('says so when the models disagree with the dry headline', () => {
-    // The case that prompted this: overcast and 0 mm from one model while the
-    // ensemble it was fetched with had most members raining.
-    const wrapper = mountCard(24, 25, { current: { weatherCode: 3 }, hour: hour(82) })
-    expect(wrapper.find('.disagreement').text()).toContain('82%')
+  it('names the models that disagree with the dry headline', () => {
+    // The case that prompted this: overcast and 0 mm from the model behind the
+    // headline while two separate global models had rain in the same hour.
+    const wrapper = mountCard(24, 25, {
+      current: { weatherCode: 3 },
+      hour: hour(82, TWO_MODELS_WET),
+    })
+    const text = wrapper.find('.disagreement').text()
+
+    expect(text).toContain('ECMWF e GFS')
+    expect(text).toContain('non per ICON')
+    expect(text).toContain('82%')
+  })
+
+  it('reports the ensemble share on its own when the models agree on dry', () => {
+    const wrapper = mountCard(24, 25, {
+      current: { weatherCode: 3 },
+      hour: hour(82, { wet: ['ECMWF'], dry: ['ICON', 'GFS'] }),
+    })
+    const text = wrapper.find('.disagreement').text()
+
+    // One dissenting model is ordinary spread, so it is not named.
+    expect(text).not.toContain('ECMWF')
+    expect(text).toContain('82%')
+  })
+
+  it('reports the models on their own when the ensemble is not a majority', () => {
+    const wrapper = mountCard(24, 25, {
+      current: { weatherCode: 3 },
+      hour: hour(35, TWO_MODELS_WET),
+    })
+    const text = wrapper.find('.disagreement').text()
+
+    expect(text).toContain('ECMWF e GFS')
+    expect(text).not.toContain('35%')
   })
 
   it('keeps quiet when the headline already says it is raining', () => {
     const wrapper = mountCard(24, 25, {
       current: { weatherCode: 61, precipitation: 0.4 },
-      hour: hour(82),
+      hour: hour(82, TWO_MODELS_WET),
     })
     expect(wrapper.find('.disagreement').exists()).toBe(false)
   })
 
-  it('keeps quiet when the ensemble is no wetter than a minority', () => {
-    const wrapper = mountCard(24, 25, { current: { weatherCode: 3 }, hour: hour(35) })
+  it('keeps quiet when neither cross-check contradicts the headline', () => {
+    const wrapper = mountCard(24, 25, {
+      current: { weatherCode: 3 },
+      hour: hour(35, { wet: [], dry: ['ICON', 'ECMWF', 'GFS'] }),
+    })
     expect(wrapper.find('.disagreement').exists()).toBe(false)
   })
 
-  it('keeps quiet without ensemble data at all', () => {
+  it('keeps quiet without cross-check data at all', () => {
     expect(mountCard(24, 25, { hour: null }).find('.disagreement').exists()).toBe(false)
     expect(mountCard(24, 25, { hour: hour(null) }).find('.disagreement').exists()).toBe(false)
   })

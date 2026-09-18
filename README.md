@@ -86,11 +86,28 @@ Italy is ICON-D2. On the Pesaro afternoon it reported overcast and 0.0 mm for ev
 rained; ICON-EU, ECMWF and GFS all had 0.1–1.1 mm, and 82% of the ensemble members the app had
 already downloaded were wet.
 
-The app now computes that member share separately (precipitation >= 0.1 mm, all three models, equal
-weight) and the current card says so when the deterministic label is dry — no precipitation code, no
-accumulation — while at least 60% of members are wet. It stays silent whenever the two agree, so the
-line only appears where it settles something. It is a disagreement between models, not an
-observation: the app has no radar and does not pretend to.
+Two cross-checks now run against that headline, and they are not the same claim.
+
+**Other global models.** A fourth request asks ICON global, ECMWF IFS 0.25° and GFS global for the
+same hours — two variables, about 1 kB gzipped. These are deterministic runs like the headline, so a
+disagreement is like compared with like. They are deliberately *not* `icon_seamless`, which over
+Italy resolves to the same ICON-D2 the headline already uses. Two of the three must see rain before
+the card says anything: one dissenting model is ordinary spread.
+
+**The ensemble share.** The member share with precipitation >= 0.1 mm, all three ensembles, equal
+weight, reported when it reaches 60%.
+
+The card shows a line only when the headline is dry — no precipitation code, no accumulation — and at
+least one cross-check contradicts it, naming the models that disagree and the share of scenarios. It
+stays silent whenever they agree.
+
+The ensemble is reported but does not drive the label, and measurement is the reason. Over 168 hours
+at Pesaro the deterministic run called 12 hours wet and the ensemble majority called 8 wet, and the
+two sets **did not overlap on a single hour**: 25 km members disagree with a 2 km run about *when*
+rain falls even when both expect it. Milano agreed on 4 hours of about 19. A label driven by member
+share would therefore contradict the hourly strip below it, which is deterministic throughout, and
+would turn a probability into a state that hides how uncertain it was. It is a disagreement between
+models either way, not an observation: the app has no radar and does not pretend to.
 
 ### Convective indices
 
@@ -203,6 +220,9 @@ tests.
   was measured and discarded, as described above.
 - **Two models carry the storm number.** ICON global EPS serves no CAPE, so the mean runs over ECMWF
   and GFS. The per-model breakdown shows ICON as no data rather than hiding it.
+- **The model cross-check is coarser than the headline.** ICON global, IFS 0.25° and GFS global run
+  at 13-25 km against the headline's 2 km over Italy. They can be right about rain arriving and wrong
+  about the hour, which is why they only ever add a line rather than change the condition.
 - **No nowcast.** Below about two hours, radar nowcasting beats any global model. The app has no
   radar layer, so the next 90 minutes — when people actually check — are covered only by model
   output.

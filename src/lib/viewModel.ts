@@ -1,6 +1,7 @@
 /** Pure merge of the three API responses into one hour-keyed view model. */
 
 import { convectiveProbability, groupMembers } from './stormRisk'
+import { consensusFor } from './modelConsensus'
 import { instantOf, timestampOf } from './format'
 import type {
   AirQualityPoint,
@@ -11,6 +12,7 @@ import type {
   ForecastViewModel,
   GeoLocation,
   HourPoint,
+  MultiModelResponse,
 } from '../types/weather'
 
 /** How many hours of the hourly strip are shown. */
@@ -20,6 +22,7 @@ export interface MergeInput {
   location: GeoLocation
   forecast: ForecastResponse
   ensemble: EnsembleResponse | null
+  comparison: MultiModelResponse | null
   airQuality: AirQualityResponse | null
   degraded: string[]
   now?: number
@@ -40,7 +43,7 @@ function startIndex(times: string[], now: number, utcOffsetSeconds: number): num
 }
 
 export function buildViewModel(input: MergeInput): ForecastViewModel {
-  const { location, forecast, ensemble, airQuality, degraded } = input
+  const { location, forecast, ensemble, comparison, airQuality, degraded } = input
   const now = input.now ?? Date.now()
   const fetchedAt = input.fetchedAt ?? now
 
@@ -51,6 +54,8 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
   const storm = ensemble
     ? convectiveProbability(groupMembers(ensemble.hourly), hours)
     : { combined: [], perModel: {}, spread: [], rain: [] }
+
+  const consensus = comparison ? consensusFor(comparison, hours) : []
 
   const models = Object.keys(storm.perModel)
 
@@ -85,6 +90,7 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
       stormPerModel,
       stormSpread: storm.spread[i] ?? null,
       rainProbability: storm.rain[i] ?? null,
+      modelConsensus: consensus[i] ?? null,
     }
   })
 

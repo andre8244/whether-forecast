@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { describeCode, iconFor, isWetCode } from '../lib/wmo'
+import { modelsSeeRain } from '../lib/modelConsensus'
 import { hourLabel, percent, speed, temperature, windDirection } from '../lib/format'
 import type { CurrentConditions, GeoLocation, HourPoint } from '../types/weather'
 
@@ -10,7 +11,7 @@ const props = defineProps<{
   elevation: number
   sunrise: string
   sunset: string
-  /** The hour in progress, for the ensemble cross-check. Null while degraded. */
+  /** The hour in progress, for the cross-checks. Null while degraded. */
   hour: HourPoint | null
 }>()
 
@@ -38,20 +39,36 @@ const feelsNote = computed(() => {
   return null
 })
 
+/** True when the model behind the headline has nothing falling this hour. */
+const headlineIsDry = computed(
+  () => !isWetCode(props.current.weatherCode) && props.current.precipitation === 0,
+)
+
 /**
- * The headline condition comes from one deterministic model. When that model
- * says dry and most ensemble members say wet, the reader deserves to know
- * before the sky tells them: this card once read "Nuvoloso" during a
- * thunderstorm while 82% of the members it had already downloaded were wet.
+ * The headline condition comes from one deterministic model, and this card
+ * once read "Nuvoloso" during a thunderstorm because that model had 0.0 mm for
+ * every hour of the day.
  *
- * Silent whenever the model agrees, so the line only appears where it settles
- * something.
+ * Two separate cross-checks can contradict it, and they are not the same
+ * claim. Other global models forecasting rain is a disagreement between runs
+ * of the same kind — the strong signal, and the one that would have caught
+ * that afternoon, when ECMWF and GFS both had rain. The ensemble share is a
+ * probability rather than a state: worth reporting alongside, not on its own
+ * terms.
+ *
+ * Silent whenever the headline already says rain, so the line only appears
+ * where it settles something.
  */
-const rainDisagreement = computed(() => {
+const disagreement = computed(() => {
+  if (!headlineIsDry.value) return null
+
+  const consensus = props.hour?.modelConsensus ?? null
   const share = props.hour?.rainProbability ?? null
-  if (share === null || share < RAIN_MAJORITY) return null
-  if (isWetCode(props.current.weatherCode) || props.current.precipitation > 0) return null
-  return share
+  const models = modelsSeeRain(consensus) ? consensus : null
+  const scenarios = share !== null && share >= RAIN_MAJORITY ? share : null
+  if (!models && scenarios === null) return null
+
+  return { models, scenarios }
 })
 </script>
 
@@ -68,8 +85,17 @@ const rainDisagreement = computed(() => {
       <span class="condition">{{ condition.label }}</span>
     </div>
 
-    <p v-if="rainDisagreement !== null" class="disagreement">
-      💧 Pioggia nel {{ percent(rainDisagreement) }} degli scenari d’insieme in quest’ora.
+    <p v-if="disagreement" class="disagreement">
+      💧
+      <template v-if="disagreement.models">
+        Pioggia in quest’ora per {{ disagreement.models.wet.join(' e ') }}<template
+          v-if="disagreement.models.dry.length"
+        >, non per {{ disagreement.models.dry.join(' e ') }}</template
+        >.
+      </template>
+      <template v-if="disagreement.scenarios !== null">
+        Pioggia nel {{ percent(disagreement.scenarios) }} degli scenari d’insieme.
+      </template>
     </p>
 
     <p class="feels">

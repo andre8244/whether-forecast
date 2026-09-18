@@ -56,6 +56,7 @@ function hour(overrides: Partial<HourPoint> = {}): HourPoint {
     stormPerModel: {},
     stormSpread: null,
     rainProbability: null,
+    modelConsensus: null,
     ...overrides,
   }
 }
