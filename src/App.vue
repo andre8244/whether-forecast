@@ -7,7 +7,6 @@ import StormPanel from './components/StormPanel.vue'
 import HourlyStrip from './components/HourlyStrip.vue'
 import DailyList from './components/DailyList.vue'
 import DetailsGrid from './components/DetailsGrid.vue'
-import AirQualityCard from './components/AirQualityCard.vue'
 import { useForecast } from './composables/useForecast'
 import { useAutoRefresh } from './composables/useAutoRefresh'
 import { useLocationStore } from './stores/location'
@@ -41,8 +40,7 @@ const degradedStorm = computed(() => model.value?.degraded.includes('ensemble') 
         :current="model.current"
         :location="model.location"
         :elevation="model.elevation"
-        :sunrise="model.sunrise"
-        :sunset="model.sunset"
+        :today="model.daily[0] ?? null"
         :hours="model.hourly"
       />
 
@@ -52,9 +50,14 @@ const degradedStorm = computed(() => model.value?.degraded.includes('ensemble') 
 
       <DailyList class="span-2" :days="model.daily" />
 
-      <DetailsGrid :hours="model.hourly" />
-
-      <AirQualityCard :air="model.airQuality" />
+      <DetailsGrid
+        class="span-2"
+        :current="model.current"
+        :sunrise="model.sunrise"
+        :sunset="model.sunset"
+        :hours="model.hourly"
+        :air="model.airQuality"
+      />
     </main>
 
     <footer>

@@ -3,15 +3,15 @@ import { computed } from 'vue'
 import { describeCode, iconFor, isWetCode } from '../lib/wmo'
 import { modelsSeeRain } from '../lib/modelConsensus'
 import { nextRain, rainingNow } from '../lib/nextRain'
-import { hourLabel, percent, speed, temperature, windDirection } from '../lib/format'
-import type { CurrentConditions, GeoLocation, HourPoint } from '../types/weather'
+import { hourLabel, percent, temperature } from '../lib/format'
+import type { CurrentConditions, DayPoint, GeoLocation, HourPoint } from '../types/weather'
 
 const props = defineProps<{
   current: CurrentConditions
   location: GeoLocation
   elevation: number
-  sunrise: string
-  sunset: string
+  /** Today's entry of the daily list, for the day's low and high. */
+  today: DayPoint | null
   /** The 48-hour window, for the cross-checks and the next-rain line. */
   hours: HourPoint[]
 }>()
@@ -131,30 +131,14 @@ const modelDetail = computed(() => {
       <span v-if="feelsNote" class="feels-note">— {{ feelsNote }}</span>
     </p>
 
-    <ul class="quick numeric">
+    <ul v-if="today" class="range numeric">
       <li>
-        <span>Vento</span>
-        <strong>{{ speed(current.windSpeed) }} {{ windDirection(current.windDirection) }}</strong>
+        <span>Minima</span>
+        <strong>{{ temperature(today.tempMin) }}</strong>
       </li>
       <li>
-        <span>Raffiche</span>
-        <strong>{{ speed(current.windGusts) }}</strong>
-      </li>
-      <li>
-        <span>Umidità</span>
-        <strong>{{ percent(current.humidity) }}</strong>
-      </li>
-      <li>
-        <span>Nuvolosità</span>
-        <strong>{{ percent(current.cloudCover) }}</strong>
-      </li>
-      <li>
-        <span>Alba</span>
-        <strong>{{ hourLabel(sunrise) }}</strong>
-      </li>
-      <li>
-        <span>Tramonto</span>
-        <strong>{{ hourLabel(sunset) }}</strong>
+        <span>Massima</span>
+        <strong>{{ temperature(today.tempMax) }}</strong>
       </li>
     </ul>
 
@@ -210,9 +194,9 @@ const modelDetail = computed(() => {
   color: var(--text-muted);
 }
 
-/* Follows the readings row, where the sun times now sit. */
+/* Follows the day's range. */
 .next-rain {
-  margin: 6px 0 0;
+  margin: 16px 0 0;
   font-size: 0.85rem;
   color: var(--text-muted);
   display: flex;
@@ -243,28 +227,27 @@ const modelDetail = computed(() => {
   font-size: 0.85rem;
 }
 
-.quick {
+.range {
   list-style: none;
   margin: 24px 0 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 12px;
+  display: flex;
+  gap: 32px;
 }
 
-.quick li {
+.range li {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.quick span {
+.range span {
   font-size: 0.75rem;
   color: var(--text-muted);
 }
 
-.quick strong {
-  font-size: 1rem;
+.range strong {
+  font-size: 1.25rem;
   font-weight: 600;
 }
 </style>

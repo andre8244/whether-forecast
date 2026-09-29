@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import CurrentCard from './CurrentCard.vue'
-import type { CurrentConditions, GeoLocation, HourPoint, ModelConsensus } from '../types/weather'
+import type {
+  CurrentConditions,
+  DayPoint,
+  GeoLocation,
+  HourPoint,
+  ModelConsensus,
+} from '../types/weather'
 
 const TWO_MODELS_WET: ModelConsensus = { wet: ['ECMWF', 'GFS'], dry: ['ICON'] }
 
@@ -67,6 +73,24 @@ function hour(
   }
 }
 
+const TODAY: DayPoint = {
+  date: '2026-09-16',
+  timestamp: Date.parse('2026-09-16T00:00:00'),
+  weatherCode: 2,
+  tempMax: 26.4,
+  tempMin: 14.2,
+  apparentMax: 27,
+  apparentMin: 13,
+  precipitationSum: 0,
+  precipitationProbabilityMax: 10,
+  uvIndexMax: 6,
+  windSpeedMax: 14,
+  windGustsMax: 30,
+  sunrise: '2026-09-16T07:08',
+  sunset: '2026-09-16T19:38',
+  stormProbabilityMax: 5,
+}
+
 function mountCard(
   temperature: number,
   apparent: number,
@@ -74,6 +98,7 @@ function mountCard(
     current?: Partial<CurrentConditions>
     hour?: HourPoint | null
     hours?: HourPoint[]
+    today?: DayPoint | null
   } = {},
 ) {
   const first = options.hour === undefined ? null : options.hour
@@ -84,8 +109,7 @@ function mountCard(
       current: { ...conditions(temperature, apparent), ...options.current },
       location: LOCATION,
       elevation: 239,
-      sunrise: '2026-09-16T07:08',
-      sunset: '2026-09-16T19:38',
+      today: options.today === undefined ? TODAY : options.today,
       hours,
     },
   })
@@ -111,6 +135,25 @@ describe('CurrentCard', () => {
 
   it('qualifies a perceived temperature that runs colder', () => {
     expect(mountCard(21, 19).find('.feels-note').text()).toContain('più freddo')
+  })
+
+  it("shows today's low and high", () => {
+    const range = mountCard(21, 21).find('.range').text()
+    expect(range).toContain('Minima')
+    expect(range).toContain('14°')
+    expect(range).toContain('Massima')
+    expect(range).toContain('26°')
+  })
+
+  it('leaves the readings to the details card', () => {
+    const text = mountCard(21, 21).text()
+    for (const label of ['Vento', 'Raffiche', 'Umidità', 'Nuvolosità', 'Alba', 'Tramonto']) {
+      expect(text).not.toContain(label)
+    }
+  })
+
+  it('drops the range without a daily entry', () => {
+    expect(mountCard(21, 21, { today: null }).find('.range').exists()).toBe(false)
   })
 
   it('names the place and its elevation', () => {

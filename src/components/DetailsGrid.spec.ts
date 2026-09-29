@@ -1,7 +1,30 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DetailsGrid from './DetailsGrid.vue'
-import type { HourPoint } from '../types/weather'
+import type { AirQualityPoint, CurrentConditions, HourPoint } from '../types/weather'
+
+const CURRENT: CurrentConditions = {
+  time: '2026-09-16T12:00',
+  temperature: 24,
+  apparentTemperature: 25,
+  humidity: 58,
+  precipitation: 0,
+  weatherCode: 2,
+  cloudCover: 40,
+  pressure: 1012,
+  windSpeed: 9,
+  windGusts: 21,
+  windDirection: 200,
+  isDay: true,
+}
+
+const AIR: AirQualityPoint = {
+  europeanAqi: 32,
+  pm2_5: 8,
+  pm10: 14,
+  ozone: 60,
+  nitrogenDioxide: 12,
+}
 
 function hour(overrides: Partial<HourPoint> = {}): HourPoint {
   return {
@@ -34,8 +57,20 @@ function hour(overrides: Partial<HourPoint> = {}): HourPoint {
   }
 }
 
-function mountGrid(hourPoint: HourPoint | null = hour(), rest: HourPoint[] = []) {
-  return mount(DetailsGrid, { props: { hours: hourPoint ? [hourPoint, ...rest] : [] } })
+function mountGrid(
+  hourPoint: HourPoint | null = hour(),
+  rest: HourPoint[] = [],
+  air: AirQualityPoint | null = AIR,
+) {
+  return mount(DetailsGrid, {
+    props: {
+      current: CURRENT,
+      sunrise: '2026-09-16T07:08',
+      sunset: '2026-09-16T19:38',
+      hours: hourPoint ? [hourPoint, ...rest] : [],
+      air,
+    },
+  })
 }
 
 /** The value rendered under a given label. */
@@ -45,11 +80,37 @@ function valueFor(wrapper: ReturnType<typeof mountGrid>, label: string): string 
 }
 
 describe('DetailsGrid', () => {
-  it('does not repeat what the current card already shows', () => {
+  it('reads wind, humidity and cloud cover from the current conditions', () => {
+    // The hour in progress says 60% humidity and 80% cloud; the observation wins.
     const wrapper = mountGrid()
-    for (const label of ['Vento', 'Raffiche', 'Umidità', 'Nuvolosità', 'Pressione']) {
-      expect(valueFor(wrapper, label)).toBeNull()
-    }
+    expect(valueFor(wrapper, 'Vento')).toBe('9 km/h SSO')
+    expect(valueFor(wrapper, 'Raffiche')).toBe('21 km/h')
+    expect(valueFor(wrapper, 'Umidità')).toBe('58%')
+    expect(valueFor(wrapper, 'Nuvolosità')).toBe('40%')
+  })
+
+  it('reports sunrise and sunset', () => {
+    const wrapper = mountGrid()
+    expect(valueFor(wrapper, 'Alba')).toBe('07:08')
+    expect(valueFor(wrapper, 'Tramonto')).toBe('19:38')
+  })
+
+  it('reports the air quality index with its band and advice', () => {
+    const value = valueFor(mountGrid(), 'Qualità dell’aria')
+    expect(value).toContain('32')
+    expect(value).toContain('discreta')
+    expect(value).toContain('accettabile')
+  })
+
+  it('drops the air quality tile without data for the place', () => {
+    expect(valueFor(mountGrid(hour(), [], null), 'Qualità dell’aria')).toBeNull()
+    expect(
+      valueFor(mountGrid(hour(), [], { ...AIR, europeanAqi: null }), 'Qualità dell’aria'),
+    ).toBeNull()
+  })
+
+  it('leaves pressure out', () => {
+    expect(valueFor(mountGrid(), 'Pressione')).toBeNull()
   })
 
   it('reports the coming UV peak rather than the current hour', () => {
@@ -98,9 +159,11 @@ describe('DetailsGrid', () => {
     expect(valueFor(wrapper, 'Visibilità')).toBe('24 km')
   })
 
-  it('renders nothing but its heading without any hourly data', () => {
-    const wrapper = mountGrid(null)
-    expect(wrapper.findAll('dl > div')).toHaveLength(0)
+  it('keeps the current readings without any hourly data', () => {
+    const wrapper = mountGrid(null, [], null)
     expect(wrapper.find('h2').text()).toBe('Dettagli')
+    expect(valueFor(wrapper, 'Vento')).not.toBeNull()
+    expect(valueFor(wrapper, 'Visibilità')).toBeNull()
+    expect(valueFor(wrapper, 'UV massimo')).toBeNull()
   })
 })
