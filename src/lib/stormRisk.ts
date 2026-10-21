@@ -215,6 +215,45 @@ export function convectiveProbability(
   return { combined, perModel, spread, rain }
 }
 
+/** Daily depth, mm, at or above which a member counts as a rainy day. */
+export const MEMBER_DAILY_RAIN_MIN = 1
+
+/**
+ * Share of members, 0-100, with at least `MEMBER_DAILY_RAIN_MIN` over the
+ * given hours, models weighted equally as in the hourly shares.
+ *
+ * Not the peak of the hourly shares: those count members wet in one hour, and
+ * members that rain at different hours each count in only one of them, so a
+ * day where every member rains at some point could peak at 30%. One millimetre
+ * is the WMO rain-day threshold, which also keeps a member drizzling 0.1 mm
+ * for a single hour from counting the whole day as wet.
+ *
+ * A member is judged only when it reports every one of the hours.
+ */
+export function dailyRainShare(grouped: GroupedMembers, hours: number[]): number | null {
+  if (hours.length === 0) return null
+
+  const shares: number[] = []
+  for (const members of Object.values(grouped)) {
+    let withData = 0
+    let hits = 0
+
+    for (const member of members) {
+      const values = hours.map((hour) => member.precipitation[hour])
+      if (values.some((value) => value === null || value === undefined)) continue
+      withData += 1
+      const total = (values as number[]).reduce((sum, value) => sum + value, 0)
+      if (total >= MEMBER_DAILY_RAIN_MIN) hits += 1
+    }
+
+    if (members.length > 0 && withData >= members.length * MIN_DATA_RATIO) {
+      shares.push(Math.round((hits / withData) * 100))
+    }
+  }
+
+  return mean(shares)
+}
+
 export function modelsDisagree(spread: number | null): boolean {
   return spread !== null && spread > DISAGREEMENT_THRESHOLD
 }

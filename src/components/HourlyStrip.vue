@@ -1,15 +1,33 @@
 <script setup lang="ts">
 import HourlyChart from './charts/HourlyChart.vue'
-import { iconFor } from '../lib/wmo'
+import { conditionFor, hourRainChance } from '../lib/rainOutlook'
 import { probabilityToken } from '../lib/stormRisk'
 import { hourLabel, isToday, millimetres, percent, temperature } from '../lib/format'
-import type { HourPoint } from '../types/weather'
+import type { CurrentConditions, HourPoint } from '../types/weather'
 
-defineProps<{ hours: HourPoint[] }>()
+const props = defineProps<{
+  hours: HourPoint[]
+  /** The current card's reading, which the first cell repeats rather than re-deriving. */
+  current?: CurrentConditions
+}>()
 
 function isNight(hour: HourPoint): boolean {
   const at = new Date(hour.timestamp).getHours()
   return at < 6 || at >= 20
+}
+
+/**
+ * The condition for one cell, by the same rule as the current card.
+ *
+ * The first cell is the hour in progress, which the card above names from the
+ * model's 15-minute reading rather than the hourly one; it uses that reading,
+ * and the card's dry test, so the two cannot disagree.
+ */
+function conditionAt(hour: HourPoint, i: number) {
+  const now = i === 0 ? props.current : undefined
+  if (!now) return conditionFor(hour.weatherCode, hour.rainProbability, !isNight(hour))
+  const dry = now.precipitation === 0
+  return conditionFor(now.weatherCode, dry ? hour.rainProbability : null, now.isDay)
 }
 
 function dayBreak(hour: HourPoint, i: number): boolean {
@@ -47,14 +65,14 @@ function dayBreak(hour: HourPoint, i: number): boolean {
             }}
           </em>
         </span>
-        <span class="glyph" aria-hidden="true">{{
-          iconFor(hour.weatherCode, !isNight(hour))
+        <span class="glyph" :title="conditionAt(hour, i).label" aria-hidden="true">{{
+          conditionAt(hour, i).icon
         }}</span>
         <span class="temp numeric">{{ temperature(hour.temperature) }}</span>
         <span class="apparent numeric">perc. {{ temperature(hour.apparentTemperature) }}</span>
         <!-- Matches the droplet the daily rows already use for this value. -->
         <span class="precip numeric" title="Probabilità di pioggia">
-          <span aria-hidden="true">💧</span>{{ percent(hour.precipitationProbability) }}
+          <span aria-hidden="true">💧</span>{{ percent(hourRainChance(hour)) }}
         </span>
         <!--
           Only shown when there is something to show. The probability comes

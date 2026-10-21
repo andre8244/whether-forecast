@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { describeCode, iconFor, isWetCode } from '../lib/wmo'
-import { modelsSeeRain } from '../lib/modelConsensus'
+import { isWetCode } from '../lib/wmo'
+import { conditionFor } from '../lib/rainOutlook'
 import { nextRain, rainingNow } from '../lib/nextRain'
 import { hourLabel, percent, temperature } from '../lib/format'
 import type { CurrentConditions, DayPoint, GeoLocation, HourPoint } from '../types/weather'
@@ -16,14 +16,8 @@ const props = defineProps<{
   hours: HourPoint[]
 }>()
 
-/** Below this share of members, the ensemble is not contradicting anything. */
-const RAIN_MAJORITY = 60
-
 /** The hour in progress; the window's first entry, empty while degraded. */
 const hour = computed<HourPoint | null>(() => props.hours[0] ?? null)
-
-const condition = computed(() => describeCode(props.current.weatherCode))
-const glyph = computed(() => iconFor(props.current.weatherCode, props.current.isDay))
 
 const place = computed(() => {
   const { name, admin1, country } = props.location
@@ -51,33 +45,35 @@ const headlineIsDry = computed(
 /**
  * The headline condition comes from one deterministic model, and this card
  * once read "Nuvoloso" during a thunderstorm because that model had 0.0 mm for
- * every hour of the day.
+ * every hour of the day, and "Coperto" through a night of rain over Pesaro.
  *
- * Two cross-checks can contradict it. Other global models forecasting rain is
- * the stronger one — runs of the same kind as the headline, and what would
- * have caught that afternoon, when ECMWF and GFS both had rain. The ensemble
- * share is a probability rather than a state, and either one is enough to
- * raise the line.
+ * Where the model is dry, the ensemble share for the hour in progress can
+ * overrule it by the same rule as the hourly strip and the daily list, so the
+ * card and the strip's first cell cannot name the same hour differently. The
+ * model's own condition stays in the title. Silent whenever the model already
+ * has something falling, including a trace under a dry code.
+ */
+const condition = computed(() => {
+  const share = headlineIsDry.value ? (hour.value?.rainProbability ?? null) : null
+  return conditionFor(props.current.weatherCode, share, props.current.isDay)
+})
+
+const conditionTitle = computed(() =>
+  condition.value.modelLabel ? `Modello principale: ${condition.value.modelLabel}` : undefined,
+)
+
+/**
+ * The share behind an overruled condition, on its own line.
  *
- * What the line *says* is always the ensemble share, because one number the
- * reader can weigh beats a count of model names they would have to look up.
- * The names go in the title for anyone who wants them. Measured over seven
- * days, the models raise the line without an ensemble majority in a third to a
- * half of the hours, so that number is often modest; it is still the honest
- * one, and the alternative was a sentence about models nobody has heard of.
- *
- * Silent whenever the headline already says rain, and silent without an
- * ensemble share to quote.
+ * What the line says is the ensemble share, because one number the reader can
+ * weigh beats a count of model names they would have to look up. How the three
+ * global models split goes in the title for anyone who wants it.
  */
 const disagreement = computed(() => {
-  if (!headlineIsDry.value) return null
-
-  const consensus = hour.value?.modelConsensus ?? null
   const share = hour.value?.rainProbability ?? null
-  if (share === null) return null
-  if (!modelsSeeRain(consensus) && share < RAIN_MAJORITY) return null
+  if (!condition.value.modelLabel || share === null) return null
 
-  return { share, consensus }
+  return { share, consensus: hour.value?.modelConsensus ?? null }
 })
 
 /**
@@ -117,9 +113,9 @@ const modelDetail = computed(() => {
     </p>
 
     <div class="reading">
-      <span class="glyph" aria-hidden="true">{{ glyph }}</span>
+      <span class="glyph" aria-hidden="true">{{ condition.icon }}</span>
       <span class="temp numeric">{{ temperature(current.temperature) }}</span>
-      <span class="condition">{{ condition.label }}</span>
+      <span class="condition" :title="conditionTitle">{{ condition.label }}</span>
     </div>
 
     <p v-if="disagreement" class="disagreement" :title="modelDetail">
@@ -143,9 +139,9 @@ const modelDetail = computed(() => {
     </ul>
 
     <p v-if="rainAhead" class="next-rain">
-      <span aria-hidden="true">🌧</span> Pioggia prevista tra {{ rainAhead.inHours }} h ({{
-        hourLabel(rainAhead.hour.time)
-      }})
+      <span aria-hidden="true">🌧</span>
+      {{ rainAhead.source === 'model' ? 'Pioggia prevista' : 'Pioggia probabile' }} tra
+      {{ rainAhead.inHours }} h ({{ hourLabel(rainAhead.hour.time) }})
     </p>
   </section>
 </template>

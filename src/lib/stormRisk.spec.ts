@@ -4,10 +4,12 @@ import {
   CONVECTIVE_CAPE_MIN,
   CONVECTIVE_PRECIPITATION_MIN,
   DISAGREEMENT_THRESHOLD,
+  MEMBER_DAILY_RAIN_MIN,
   MEMBER_RAIN_MIN,
   capeReading,
   cinReading,
   convectiveProbability,
+  dailyRainShare,
   groupMembers,
   labelForModel,
   liftedIndexReading,
@@ -256,6 +258,52 @@ describe('convectiveProbability', () => {
     }
     // ICON publishes no CAPE, so it reports nothing for any hour of the capture.
     expect(result.perModel.icon_global_eps.every((value) => value === null)).toBe(true)
+  })
+})
+
+describe('dailyRainShare', () => {
+  const day = [0, 1, 2, 3]
+  const hours = (...rain: (number | null)[]): MemberHour[] => rain.map((value) => ({ rain: value }))
+
+  it('counts a member wet on the day total, not on any single hour', () => {
+    // Each member rains in a different hour; every one of them is a wet day.
+    const grouped = groupMembers(
+      flatten({
+        a: [hours(1, 0, 0, 0), hours(0, 1, 0, 0), hours(0, 0, 0.5, 0.5), hours(0, 0, 0, 1)],
+      }),
+    )
+    expect(dailyRainShare(grouped, day)).toBe(100)
+  })
+
+  it('leaves out a member that only drizzles', () => {
+    const drizzle = MEMBER_DAILY_RAIN_MIN / 2
+    const grouped = groupMembers(flatten({ a: [hours(drizzle, 0, 0, 0), hours(1, 1, 1, 1)] }))
+    expect(dailyRainShare(grouped, day)).toBe(50)
+  })
+
+  it('weights models equally whatever their member count', () => {
+    const grouped = groupMembers(
+      flatten({
+        big: [hours(2, 0, 0, 0), hours(0, 0, 0, 0), hours(0, 0, 0, 0), hours(0, 0, 0, 0)],
+        small: [hours(2, 0, 0, 0)],
+      }),
+    )
+    expect(dailyRainShare(grouped, day)).toBe(63)
+  })
+
+  it('skips members missing an hour and models missing most of them', () => {
+    const grouped = groupMembers(
+      flatten({
+        partial: [hours(2, 0, 0, null), hours(2, 0, 0, 0), hours(0, 0, 0, 0)],
+        empty: [hours(null, null, null, null), hours(null, null, null, null)],
+      }),
+    )
+    expect(dailyRainShare(grouped, day)).toBe(50)
+  })
+
+  it('is null without hours or data', () => {
+    expect(dailyRainShare(groupMembers(flatten({ a: [hours(2, 2, 2, 2)] })), [])).toBeNull()
+    expect(dailyRainShare({}, day)).toBeNull()
   })
 })
 

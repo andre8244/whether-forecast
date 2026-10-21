@@ -11,6 +11,11 @@
  * expect it, so their timing mismatch is not evidence of an error. These are
  * deterministic runs like the headline, from the three centres that publish
  * one globally, so a disagreement here is like compared with like.
+ *
+ * It no longer decides anything. Two of three models seeing rain used to
+ * overrule a dry headline on its own, but they are the control runs of the
+ * ensembles behind the rain share and almost never disagree with it, so the
+ * share decides alone (see `rainOutlook`) and the split is shown as detail.
  */
 
 import { isWetCode } from './wmo'
@@ -18,15 +23,6 @@ import type { ModelConsensus, MultiModelResponse } from '../types/weather'
 
 /** Hourly precipitation, mm, at or above which a model is forecasting rain. */
 export const MODEL_RAIN_MIN = 0.1
-
-/**
- * How many models must see rain before the headline is worth questioning.
- *
- * Two of three: a single dissenting model is ordinary spread, and waiting for
- * all three would silence the case this exists for — ECMWF and GFS both had
- * 0.3-1.1 mm over Pesaro while ICON global had nothing.
- */
-export const MIN_DISSENTING_MODELS = 2
 
 const LABELS: Record<string, string> = {
   icon_global: 'ICON',
@@ -109,11 +105,6 @@ export function modelConsensus(
   }
 
   return consensus
-}
-
-/** True when enough separate models see rain to doubt a dry headline. */
-export function modelsSeeRain(consensus: ModelConsensus | null): boolean {
-  return consensus !== null && consensus.wet.length >= MIN_DISSENTING_MODELS
 }
 
 /** Convenience for the one call site that has the raw response. */

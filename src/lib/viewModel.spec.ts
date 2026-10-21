@@ -255,6 +255,32 @@ describe('buildViewModel', () => {
     expect(model.daily[1].stormProbabilityMax).toBe(0)
   })
 
+  it('carries the daily ensemble rain share', () => {
+    // The ECMWF control rains all day and its other member never does; both
+    // ICON members stay dry. Equal model weight: (50 + 0) / 2.
+    const model = build()
+    expect(model.daily[0].rainProbability).toBe(25)
+    expect(model.daily[1].rainProbability).toBe(25)
+  })
+
+  it("leaves today's past hours out of its rain share", () => {
+    // Every member rains through the morning only. Read at 12:30, today has
+    // nothing left to fall; tomorrow's morning still counts.
+    const time = hourTimes(72)
+    const morning = time.map((t) => (Number(t.slice(11, 13)) < 12 ? 1 : 0))
+    const ensemble: EnsembleResponse = {
+      hourly: {
+        time,
+        precipitation_ecmwf_ifs025_ensemble: morning,
+        precipitation_member01_ecmwf_ifs025_ensemble: morning,
+      },
+    }
+    const model = build({ ensemble })
+
+    expect(model.daily[0].rainProbability).toBe(0)
+    expect(model.daily[1].rainProbability).toBe(100)
+  })
+
   it('passes the raw convective indices through without deriving a score', () => {
     const first = build().hourly[0]
     expect(first.cape).toBe(1200)
@@ -268,6 +294,7 @@ describe('buildViewModel', () => {
     expect(model.hourly[0].stormPerModel).toEqual({})
     expect(model.hourly[0].rainProbability).toBeNull()
     expect(model.daily[0].stormProbabilityMax).toBeNull()
+    expect(model.daily[0].rainProbability).toBeNull()
     expect(model.degraded).toEqual(['ensemble'])
     // Everything else still renders.
     expect(model.current.temperature).toBe(24.1)

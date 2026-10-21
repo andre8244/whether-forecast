@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { RAIN_MIN, nextRain, rainingNow } from './nextRain'
+import { RAIN_LIKELY } from './rainOutlook'
 import type { HourPoint } from '../types/weather'
 
 function hour(overrides: Partial<HourPoint> = {}): HourPoint {
@@ -77,12 +78,41 @@ describe('nextRain', () => {
   it('returns null for an empty window', () => {
     expect(nextRain([])).toBeNull()
   })
+
+  it('names the model as the source when it has the rain', () => {
+    expect(nextRain(window([0, 0.5]))?.source).toBe('model')
+  })
+
+  it('takes an ensemble majority over a dry model hour', () => {
+    const hours = [hour(), hour(), hour({ rainProbability: RAIN_LIKELY })]
+    const found = nextRain(hours)
+    expect(found?.inHours).toBe(2)
+    expect(found?.source).toBe('ensemble')
+  })
+
+  it('leaves a share below the majority to the strip', () => {
+    expect(nextRain([hour(), hour({ rainProbability: RAIN_LIKELY - 1 })])).toBeNull()
+  })
+
+  it('prefers the model when both see rain in the same hour', () => {
+    const hours = [hour(), hour({ precipitation: 0.6, rainProbability: 90 })]
+    expect(nextRain(hours)?.source).toBe('model')
+  })
+
+  it('returns whichever comes first', () => {
+    const hours = [hour(), hour(), hour({ rainProbability: 75 }), hour({ precipitation: 1 })]
+    expect(nextRain(hours)).toMatchObject({ inHours: 2, source: 'ensemble' })
+  })
 })
 
 describe('rainingNow', () => {
   it('reads the hour in progress only', () => {
     expect(rainingNow(window([0.4, 0]))).toBe(true)
     expect(rainingNow(window([0, 5]))).toBe(false)
+  })
+
+  it('ignores an ensemble majority in the hour in progress', () => {
+    expect(rainingNow([hour({ rainProbability: 90 })])).toBe(false)
   })
 
   it('is false without any hours', () => {

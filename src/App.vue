@@ -46,7 +46,7 @@ const degradedStorm = computed(() => model.value?.degraded.includes('ensemble') 
 
       <StormPanel class="span-2" :hours="model.hourly" :degraded="degradedStorm" />
 
-      <HourlyStrip class="span-2" :hours="model.hourly" />
+      <HourlyStrip class="span-2" :hours="model.hourly" :current="model.current" />
 
       <DailyList class="span-2" :days="model.daily" />
 

@@ -1,12 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
-  MIN_DISSENTING_MODELS,
   MODEL_RAIN_MIN,
   consensusFor,
   groupModels,
   labelForComparisonModel,
   modelConsensus,
-  modelsSeeRain,
 } from './modelConsensus'
 
 /** Builds the flat shape the forecast endpoint returns for several models. */
@@ -92,18 +90,6 @@ describe('modelConsensus', () => {
   it('pads hours the response did not reach', () => {
     const models = groupModels(flatten({ icon_global: { rain: [1] } }))
     expect(modelConsensus(models, 3)).toEqual([{ wet: ['ICON'], dry: [] }, null, null])
-  })
-})
-
-describe('modelsSeeRain', () => {
-  it('needs more than one model before doubting the headline', () => {
-    expect(modelsSeeRain({ wet: ['ECMWF'], dry: ['ICON', 'GFS'] })).toBe(false)
-    expect(modelsSeeRain({ wet: ['ECMWF', 'GFS'], dry: ['ICON'] })).toBe(true)
-    expect(MIN_DISSENTING_MODELS).toBe(2)
-  })
-
-  it('is false without a split at all', () => {
-    expect(modelsSeeRain(null)).toBe(false)
   })
 })
 

@@ -1,6 +1,6 @@
 /** Pure merge of the three API responses into one hour-keyed view model. */
 
-import { convectiveProbability, groupMembers } from './stormRisk'
+import { convectiveProbability, dailyRainShare, groupMembers } from './stormRisk'
 import { consensusFor } from './modelConsensus'
 import { instantOf, timestampOf } from './format'
 import type {
@@ -63,8 +63,9 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
   const hours = hourly.time.length
   const utcOffset = forecast.utc_offset_seconds
 
-  const storm = ensemble
-    ? convectiveProbability(groupMembers(ensemble.hourly), hours)
+  const members = ensemble ? groupMembers(ensemble.hourly) : null
+  const storm = members
+    ? convectiveProbability(members, hours)
     : { combined: [], perModel: {}, spread: [], rain: [] }
 
   const consensus = comparison ? consensusFor(comparison, hours) : []
@@ -114,6 +115,11 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
   const days: DayPoint[] = daily.time.map((date, i) => {
     // No daily ensemble field exists, so the day's peak is taken from its hours.
     const dayHours = allHours.filter((hour) => hour.time.startsWith(date))
+    // From the hour in progress on: rain that already fell this morning is no
+    // reason to show today as wet for the hours that are left.
+    const dayIndices = hourly.time.flatMap((time, index) =>
+      time.startsWith(date) && index >= from ? [index] : [],
+    )
     const probabilities = dayHours
       .map((hour) => hour.stormProbability)
       .filter((value): value is number => value !== null)
@@ -134,6 +140,7 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
       sunrise: at(daily.sunrise, i) ?? '',
       sunset: at(daily.sunset, i) ?? '',
       stormProbabilityMax: probabilities.length ? Math.max(...probabilities) : null,
+      rainProbability: members ? dailyRainShare(members, dayIndices) : null,
     }
   })
 

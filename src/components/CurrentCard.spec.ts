@@ -89,6 +89,7 @@ const TODAY: DayPoint = {
   sunrise: '2026-09-16T07:08',
   sunset: '2026-09-16T19:38',
   stormProbabilityMax: 5,
+  rainProbability: 10,
 }
 
 function mountCard(
@@ -183,22 +184,23 @@ describe('CurrentCard', () => {
     expect(line.attributes('title')).toBe('Pioggia per ECMWF e GFS; ICON no')
   })
 
-  it('speaks for a share below the majority when the models raise it', () => {
-    // Two separate models seeing rain is the stronger signal; the share is
-    // still what gets quoted, modest as it is.
-    const wrapper = mountCard(24, 25, {
-      current: { weatherCode: 3 },
-      hour: hour(35, TWO_MODELS_WET),
-    })
-    expect(wrapper.find('.disagreement').text()).toContain('35%')
-  })
-
-  it('stays quiet for a low share when only one model dissents', () => {
+  it('quotes a share in the possible band', () => {
     const wrapper = mountCard(24, 25, {
       current: { weatherCode: 3 },
       hour: hour(35, { wet: ['ECMWF'], dry: ['ICON', 'GFS'] }),
     })
+    expect(wrapper.find('.disagreement').text()).toContain('35%')
+  })
+
+  it('stays quiet below the possible band, whatever the models say', () => {
+    // Two models wet with the share under 30% happened in 15 of 1655 dry hours
+    // measured; the share alone decides, so icon and percentage always agree.
+    const wrapper = mountCard(24, 25, {
+      current: { weatherCode: 3 },
+      hour: hour(25, TWO_MODELS_WET),
+    })
     expect(wrapper.find('.disagreement').exists()).toBe(false)
+    expect(wrapper.find('.condition').text()).toBe('Coperto')
   })
 
   it('keeps quiet when the headline already says it is raining', () => {
@@ -212,7 +214,7 @@ describe('CurrentCard', () => {
   it('keeps quiet when neither cross-check contradicts the headline', () => {
     const wrapper = mountCard(24, 25, {
       current: { weatherCode: 3 },
-      hour: hour(35, { wet: [], dry: ['ICON', 'ECMWF', 'GFS'] }),
+      hour: hour(20, { wet: [], dry: ['ICON', 'ECMWF', 'GFS'] }),
     })
     expect(wrapper.find('.disagreement').exists()).toBe(false)
   })
@@ -231,8 +233,17 @@ describe('CurrentCard', () => {
     const wet = hour(null, null, { precipitation: 0.8, time: '2026-09-16T16:00' })
     const wrapper = mountCard(24, 25, { hours: [dry, dry, wet] })
 
-    expect(wrapper.find('.next-rain').text()).toContain('tra 2 h')
+    expect(wrapper.find('.next-rain').text()).toContain('Pioggia prevista tra 2 h')
     expect(wrapper.find('.next-rain').text()).toContain('16:00')
+  })
+
+  it('calls rain ahead probable when only the ensemble has it', () => {
+    const dry = hour(null, null, { precipitation: 0 })
+    const likely = hour(75, null, { precipitation: 0, time: '2026-09-16T15:00' })
+    const wrapper = mountCard(24, 25, { hours: [dry, dry, likely] })
+
+    expect(wrapper.find('.next-rain').text()).toContain('Pioggia probabile tra 2 h')
+    expect(wrapper.find('.next-rain').text()).toContain('15:00')
   })
 
   it('says nothing about rain ahead while it is already raining', () => {
@@ -254,6 +265,64 @@ describe('CurrentCard', () => {
         .find('.next-rain')
         .exists(),
     ).toBe(false)
+  })
+
+  it('reads as probable rain when most of the ensemble is wet over a dry model', () => {
+    // The night that prompted this: ICON-D2 overcast and 0 mm over Pesaro at
+    // 03:00 while 65% of the three ensembles had rain, and it rained.
+    const wrapper = mountCard(14, 13, {
+      current: { weatherCode: 3 },
+      hour: hour(65, TWO_MODELS_WET),
+    })
+    const condition = wrapper.find('.condition')
+
+    expect(condition.text()).toBe('Pioggia probabile')
+    expect(condition.attributes('title')).toBe('Modello principale: Coperto')
+    expect(wrapper.find('.glyph').text()).toBe('🌧️')
+  })
+
+  it('reads as possible rain in the 30-60% band', () => {
+    const wrapper = mountCard(14, 13, {
+      current: { weatherCode: 3 },
+      hour: hour(40, null),
+    })
+    expect(wrapper.find('.condition').text()).toBe('Possibile pioggia')
+    expect(wrapper.find('.glyph').text()).toBe('🌦️')
+  })
+
+  it("keeps the model's condition without an ensemble, whatever the models say", () => {
+    const wrapper = mountCard(14, 13, {
+      current: { weatherCode: 3 },
+      hour: hour(null, TWO_MODELS_WET),
+    })
+    expect(wrapper.find('.condition').text()).toBe('Coperto')
+  })
+
+  it("keeps the model's condition when a trace is falling under a dry code", () => {
+    const wrapper = mountCard(14, 13, {
+      current: { weatherCode: 3, precipitation: 0.1 },
+      hour: hour(90, TWO_MODELS_WET),
+    })
+    expect(wrapper.find('.condition').text()).toBe('Coperto')
+  })
+
+  it("keeps the model's condition when nothing contradicts it", () => {
+    const wrapper = mountCard(14, 13, {
+      current: { weatherCode: 3 },
+      hour: hour(29, { wet: ['ECMWF'], dry: ['ICON', 'GFS'] }),
+    })
+    const condition = wrapper.find('.condition')
+
+    expect(condition.text()).toBe('Coperto')
+    expect(condition.attributes('title')).toBeUndefined()
+  })
+
+  it("keeps the model's condition when it already says rain", () => {
+    const wrapper = mountCard(14, 13, {
+      current: { weatherCode: 61, precipitation: 0.4 },
+      hour: hour(82, TWO_MODELS_WET),
+    })
+    expect(wrapper.find('.condition').text()).toBe('Pioggia debole')
   })
 
   it('keeps quiet when the models dissent but there is no share to quote', () => {

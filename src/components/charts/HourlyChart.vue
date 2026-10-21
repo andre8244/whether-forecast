@@ -13,7 +13,7 @@ import {
   temperature,
   weekdayLabel,
 } from '../../lib/format'
-import { describeCode } from '../../lib/wmo'
+import { conditionFor, hourRainChance } from '../../lib/rainOutlook'
 import type { HourPoint } from '../../types/weather'
 
 const props = defineProps<{ hours: HourPoint[] }>()
@@ -45,7 +45,7 @@ const maxTicks = computed(() => (plotWidth.value > 0 && plotWidth.value < NARROW
 
 const temperatures = computed(() => props.hours.map((hour) => hour.temperature))
 const apparent = computed(() => props.hours.map((hour) => hour.apparentTemperature))
-const precipitation = computed(() => props.hours.map((hour) => hour.precipitationProbability))
+const precipitation = computed(() => props.hours.map(hourRainChance))
 
 const ticks = computed(() => {
   const times = props.hours.map((hour) => hour.time)
@@ -71,7 +71,7 @@ const hovered = computed(() => (isActive.value ? props.hours[active.value] : nul
       role="application"
       :aria-label="
         hovered
-          ? `${dayHourLabel(hovered.time)}: ${temperature(hovered.temperature)}, percepita ${temperature(hovered.apparentTemperature)}, pioggia ${percent(hovered.precipitationProbability)}`
+          ? `${dayHourLabel(hovered.time)}: ${temperature(hovered.temperature)}, percepita ${temperature(hovered.apparentTemperature)}, pioggia ${percent(hourRainChance(hovered))}`
           : 'Grafico orario. Usa le frecce per scorrere le ore.'
       "
       @pointermove="onPointer"
@@ -102,7 +102,9 @@ const hovered = computed(() => (isActive.value ? props.hours[active.value] : nul
 
       <div v-if="hovered" class="tooltip" :style="tooltipStyle" aria-hidden="true">
         <strong class="when">{{ dayHourLabel(hovered.time) }}</strong>
-        <span class="condition">{{ describeCode(hovered.weatherCode).label }}</span>
+        <span class="condition">{{
+          conditionFor(hovered.weatherCode, hovered.rainProbability).label
+        }}</span>
         <dl class="numeric">
           <div>
             <dt>Reale</dt>
@@ -117,14 +119,14 @@ const hovered = computed(() => (isActive.value ? props.hours[active.value] : nul
           <div>
             <dt>Pioggia</dt>
             <dd :style="{ color: 'var(--precip-bar)' }">
-              {{ percent(hovered.precipitationProbability) }}
+              {{ percent(hourRainChance(hovered)) }}
             </dd>
           </div>
           <div v-if="hovered.precipitation">
             <dt>Accumulo</dt>
             <dd>{{ millimetres(hovered.precipitation) }}</dd>
           </div>
-          <div v-else-if="(hovered.precipitationProbability ?? 0) >= 50" class="note">
+          <div v-else-if="(hourRainChance(hovered) ?? 0) >= 50" class="note">
             <dd>Nessun accumulo nella previsione principale</dd>
           </div>
           <div v-if="hovered.stormProbability !== null && hovered.stormProbability >= 5">

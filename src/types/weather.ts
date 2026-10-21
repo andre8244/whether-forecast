@@ -208,10 +208,12 @@ export interface HourPoint {
   /** Disagreement between models, in percentage points. */
   stormSpread: number | null
   /**
-   * Share of ensemble members with any precipitation this hour, 0-100.
+   * Share of ensemble members with at least 0.1 mm this hour, 0-100, models
+   * weighted equally across the three ensembles.
    *
-   * Independent of `precipitationProbability`, which comes from the single
-   * deterministic model: the two disagreeing is the interesting case.
+   * Same threshold as `precipitationProbability`, which Open-Meteo derives
+   * from a single 30-member ensemble; this one is what the app shows, that
+   * one only stands in when the ensemble call fails.
    */
   rainProbability: number | null
   /** How the three global models split on rain this hour. Null when degraded. */
@@ -238,6 +240,11 @@ export interface DayPoint {
    * with one hour at 40% reads 40%.
    */
   stormProbabilityMax: number | null
+  /**
+   * Share of ensemble members with at least 1 mm over the day, 0-100. Today
+   * counts only from the hour in progress.
+   */
+  rainProbability: number | null
 }
 
 export interface AirQualityPoint {

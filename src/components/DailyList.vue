@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { describeCode, iconFor } from '../lib/wmo'
 import { probabilityToken } from '../lib/stormRisk'
+import { conditionFor } from '../lib/rainOutlook'
 import {
   dayLabel,
   hourLabel,
@@ -48,8 +48,12 @@ function barStyle(day: DayPoint) {
           <span>{{ dayLabel(day.date) }}</span>
         </div>
 
-        <span class="glyph" :title="describeCode(day.weatherCode).label" aria-hidden="true">
-          {{ iconFor(day.weatherCode) }}
+        <span
+          class="glyph"
+          :title="conditionFor(day.weatherCode, day.rainProbability).label"
+          aria-hidden="true"
+        >
+          {{ conditionFor(day.weatherCode, day.rainProbability).icon }}
         </span>
 
         <div class="range">
@@ -62,9 +66,17 @@ function barStyle(day: DayPoint) {
           <span class="perceived">
             perc. {{ temperature(day.apparentMin) }} / {{ temperature(day.apparentMax) }}
           </span>
+          <!--
+            The share the icon is read from, so the two agree; Open-Meteo's
+            figure only without the ensemble. The depth is the deterministic
+            run's and shown only when it has some: "0 mm" beside a rain icon
+            the ensemble raised reads as a contradiction.
+          -->
           <span
-            >💧 {{ percent(day.precipitationProbabilityMax) }} ·
-            {{ millimetres(day.precipitationSum) }}</span
+            >💧 {{ percent(day.rainProbability ?? day.precipitationProbabilityMax)
+            }}<template v-if="day.precipitationSum">
+              · {{ millimetres(day.precipitationSum) }}</template
+            ></span
           >
           <span>💨 {{ speed(day.windGustsMax) }}</span>
           <span class="storm" :style="{ color: probabilityToken(day.stormProbabilityMax) }"
