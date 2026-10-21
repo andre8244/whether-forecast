@@ -281,6 +281,14 @@ describe('buildViewModel', () => {
     expect(model.daily[1].rainProbability).toBe(100)
   })
 
+  it("averages the day's temperature over the hours its rain share covers", () => {
+    // The stub's temperature is 15 + hour % 12. Read at 12:30, today runs from
+    // 12:00 to 23:00, one cycle of 15..26: a mean of 20.5. Tomorrow is two.
+    const model = build()
+    expect(model.daily[0].temperatureAhead).toBe(20.5)
+    expect(model.daily[1].temperatureAhead).toBe(20.5)
+  })
+
   it('passes the raw convective indices through without deriving a score', () => {
     const first = build().hourly[0]
     expect(first.cape).toBe(1200)

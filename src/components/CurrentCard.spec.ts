@@ -90,6 +90,7 @@ const TODAY: DayPoint = {
   sunset: '2026-09-16T19:38',
   stormProbabilityMax: 5,
   rainProbability: 10,
+  temperatureAhead: 20,
 }
 
 function mountCard(
@@ -315,6 +316,33 @@ describe('CurrentCard', () => {
 
     expect(condition.text()).toBe('Coperto')
     expect(condition.attributes('title')).toBeUndefined()
+  })
+
+  it('names snow on a cold card, in the label and the line', () => {
+    const wrapper = mountCard(0, -3, {
+      current: { weatherCode: 3 },
+      hour: hour(70, TWO_MODELS_WET),
+    })
+    expect(wrapper.find('.condition').text()).toBe('Neve probabile')
+    expect(wrapper.find('.disagreement').text()).toContain('Neve nel 70% degli scenari')
+    expect(wrapper.find('.disagreement').attributes('title')).toBe('Neve per ECMWF e GFS; ICON no')
+  })
+
+  it('names snow ahead, from the model code or the ensemble', () => {
+    const dry = hour(null, null, { precipitation: 0 })
+    const snow = hour(null, null, { precipitation: 0.4, weatherCode: 71 })
+    expect(
+      mountCard(0, -3, { hours: [dry, snow] })
+        .find('.next-rain')
+        .text(),
+    ).toContain('Neve prevista tra 1 h')
+
+    const cold = hour(80, null, { precipitation: 0, temperature: 0 })
+    expect(
+      mountCard(0, -3, { hours: [dry, cold] })
+        .find('.next-rain')
+        .text(),
+    ).toContain('Neve probabile tra 1 h')
   })
 
   it("keeps the model's condition when it already says rain", () => {

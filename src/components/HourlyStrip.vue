@@ -25,9 +25,16 @@ function isNight(hour: HourPoint): boolean {
  */
 function conditionAt(hour: HourPoint, i: number) {
   const now = i === 0 ? props.current : undefined
-  if (!now) return conditionFor(hour.weatherCode, hour.rainProbability, !isNight(hour))
+  if (!now) {
+    return conditionFor(hour.weatherCode, hour.rainProbability, !isNight(hour), hour.temperature)
+  }
   const dry = now.precipitation === 0
-  return conditionFor(now.weatherCode, dry ? hour.rainProbability : null, now.isDay)
+  return conditionFor(
+    now.weatherCode,
+    dry ? hour.rainProbability : null,
+    now.isDay,
+    now.temperature,
+  )
 }
 
 function dayBreak(hour: HourPoint, i: number): boolean {

@@ -141,6 +141,7 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
       sunset: at(daily.sunset, i) ?? '',
       stormProbabilityMax: probabilities.length ? Math.max(...probabilities) : null,
       rainProbability: members ? dailyRainShare(members, dayIndices) : null,
+      temperatureAhead: meanOf(dayIndices.map((index) => at(hourly.temperature_2m, index))),
     }
   })
 
@@ -171,6 +172,13 @@ export function buildViewModel(input: MergeInput): ForecastViewModel {
     observedAt: instantOf(current.time, utcOffset),
     degraded,
   }
+}
+
+/** Mean of the values present, or null when there are none. */
+function meanOf(values: (number | null)[]): number | null {
+  const present = values.filter((value): value is number => value !== null)
+  if (present.length === 0) return null
+  return present.reduce((sum, value) => sum + value, 0) / present.length
 }
 
 /** Air quality for the hour closest to now, or null when unavailable. */

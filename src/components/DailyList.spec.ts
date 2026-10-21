@@ -3,7 +3,12 @@ import { mount } from '@vue/test-utils'
 import DailyList from './DailyList.vue'
 import type { DayPoint } from '../types/weather'
 
-function day(weatherCode: number, rainProbability: number | null, precipitationSum = 0): DayPoint {
+function day(
+  weatherCode: number,
+  rainProbability: number | null,
+  precipitationSum = 0,
+  temperatureAhead: number | null = 15,
+): DayPoint {
   return {
     date: '2026-10-24',
     timestamp: Date.parse('2026-10-24T00:00:00'),
@@ -21,6 +26,7 @@ function day(weatherCode: number, rainProbability: number | null, precipitationS
     sunset: '2026-10-24T17:58',
     stormProbabilityMax: 0,
     rainProbability,
+    temperatureAhead,
   }
 }
 
@@ -62,6 +68,12 @@ describe('DailyList', () => {
         .find('.meta')
         .text(),
     ).toContain('💧 84% · 4.2 mm')
+  })
+
+  it('calls a cold day snow', () => {
+    const icon = glyph(day(3, 70, 0, 0.5))
+    expect(icon.text()).toBe('🌨️')
+    expect(icon.attributes('title')).toBe('Neve probabile')
   })
 
   it('keeps a wet model icon whatever the share', () => {

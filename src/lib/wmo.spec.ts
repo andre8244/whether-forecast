@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { describeCode, iconFor, isThunderstormCode } from './wmo'
+import { describeCode, iconFor, isSnowCode, isThunderstormCode } from './wmo'
 
 describe('isThunderstormCode', () => {
   it('accepts the three thunderstorm codes', () => {
@@ -17,6 +17,16 @@ describe('isThunderstormCode', () => {
   it('rejects missing values', () => {
     expect(isThunderstormCode(null)).toBe(false)
     expect(isThunderstormCode(undefined)).toBe(false)
+  })
+})
+
+describe('isSnowCode', () => {
+  it('accepts snow, snow grains and snow showers', () => {
+    for (const code of [71, 73, 75, 77, 85, 86]) expect(isSnowCode(code)).toBe(true)
+  })
+
+  it('rejects rain, freezing rain and missing codes', () => {
+    for (const code of [61, 66, 67, 80, 95, null, undefined]) expect(isSnowCode(code)).toBe(false)
   })
 })
 

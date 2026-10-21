@@ -245,6 +245,11 @@ export interface DayPoint {
    * counts only from the hour in progress.
    */
   rainProbability: number | null
+  /**
+   * Mean 2 m temperature over the same hours as `rainProbability`, for
+   * telling rain from snow. The low would call a day snow over one cold dawn.
+   */
+  temperatureAhead: number | null
 }
 
 export interface AirQualityPoint {

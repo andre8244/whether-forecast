@@ -50,10 +50,12 @@ function barStyle(day: DayPoint) {
 
         <span
           class="glyph"
-          :title="conditionFor(day.weatherCode, day.rainProbability).label"
+          :title="
+            conditionFor(day.weatherCode, day.rainProbability, true, day.temperatureAhead).label
+          "
           aria-hidden="true"
         >
-          {{ conditionFor(day.weatherCode, day.rainProbability).icon }}
+          {{ conditionFor(day.weatherCode, day.rainProbability, true, day.temperatureAhead).icon }}
         </span>
 
         <div class="range">

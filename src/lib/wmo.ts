@@ -53,6 +53,12 @@ export function isWetCode(code: number | null | undefined): boolean {
   return code !== null && code !== undefined && code >= 51
 }
 
+/** Snow, snow grains and snow showers: 71-77, 85 and 86. */
+export function isSnowCode(code: number | null | undefined): boolean {
+  if (code === null || code === undefined) return false
+  return (code >= 71 && code <= 77) || code === 85 || code === 86
+}
+
 export function describeCode(code: number | null | undefined): WeatherCondition {
   if (code === null || code === undefined) {
     return { label: 'Dato non disponibile', icon: 'unknown', isThunderstorm: false }

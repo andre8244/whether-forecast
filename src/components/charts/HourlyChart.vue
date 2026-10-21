@@ -103,7 +103,8 @@ const hovered = computed(() => (isActive.value ? props.hours[active.value] : nul
       <div v-if="hovered" class="tooltip" :style="tooltipStyle" aria-hidden="true">
         <strong class="when">{{ dayHourLabel(hovered.time) }}</strong>
         <span class="condition">{{
-          conditionFor(hovered.weatherCode, hovered.rainProbability).label
+          conditionFor(hovered.weatherCode, hovered.rainProbability, true, hovered.temperature)
+            .label
         }}</span>
         <dl class="numeric">
           <div>

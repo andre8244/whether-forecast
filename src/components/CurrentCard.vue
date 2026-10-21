@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { isWetCode } from '../lib/wmo'
-import { conditionFor } from '../lib/rainOutlook'
+import { isSnowCode, isWetCode } from '../lib/wmo'
+import { PRECIPITATION_NOUN, conditionFor, precipitationKind } from '../lib/rainOutlook'
 import { nextRain, rainingNow } from '../lib/nextRain'
 import { hourLabel, percent, temperature } from '../lib/format'
 import type { CurrentConditions, DayPoint, GeoLocation, HourPoint } from '../types/weather'
@@ -55,7 +55,12 @@ const headlineIsDry = computed(
  */
 const condition = computed(() => {
   const share = headlineIsDry.value ? (hour.value?.rainProbability ?? null) : null
-  return conditionFor(props.current.weatherCode, share, props.current.isDay)
+  return conditionFor(
+    props.current.weatherCode,
+    share,
+    props.current.isDay,
+    props.current.temperature,
+  )
 })
 
 const conditionTitle = computed(() =>
@@ -73,7 +78,11 @@ const disagreement = computed(() => {
   const share = hour.value?.rainProbability ?? null
   if (!condition.value.modelLabel || share === null) return null
 
-  return { share, consensus: hour.value?.modelConsensus ?? null }
+  return {
+    share,
+    consensus: hour.value?.modelConsensus ?? null,
+    noun: PRECIPITATION_NOUN[precipitationKind(props.current.temperature)],
+  }
 })
 
 /**
@@ -89,6 +98,21 @@ const rainAhead = computed(() => {
   return nextRain(props.hours)
 })
 
+/**
+ * Named by what falls. A model hour carries its own code, so snow is read from
+ * that; an ensemble hour has only a share, and its label comes from the same
+ * rule as the strip's icon for that hour.
+ */
+const rainAheadLabel = computed(() => {
+  const ahead = rainAhead.value
+  if (!ahead) return ''
+  const { hour: at } = ahead
+  if (ahead.source === 'model') {
+    return isSnowCode(at.weatherCode) ? 'Neve prevista' : 'Pioggia prevista'
+  }
+  return conditionFor(at.weatherCode, at.rainProbability, true, at.temperature).label
+})
+
 /** Italian list: "ECMWF e GFS", "ICON, ECMWF e GFS". */
 function nameList(models: string[]): string {
   if (models.length <= 1) return models.join('')
@@ -100,7 +124,7 @@ const modelDetail = computed(() => {
   const consensus = disagreement.value?.consensus
   if (!consensus || consensus.wet.length === 0) return undefined
 
-  const wet = `Pioggia per ${nameList(consensus.wet)}`
+  const wet = `${disagreement.value?.noun} per ${nameList(consensus.wet)}`
   return consensus.dry.length ? `${wet}; ${nameList(consensus.dry)} no` : wet
 })
 </script>
@@ -119,7 +143,7 @@ const modelDetail = computed(() => {
     </div>
 
     <p v-if="disagreement" class="disagreement" :title="modelDetail">
-      💧 Pioggia nel {{ percent(disagreement.share) }} degli scenari.
+      💧 {{ disagreement.noun }} nel {{ percent(disagreement.share) }} degli scenari.
     </p>
 
     <p class="feels">
@@ -140,8 +164,7 @@ const modelDetail = computed(() => {
 
     <p v-if="rainAhead" class="next-rain">
       <span aria-hidden="true">🌧</span>
-      {{ rainAhead.source === 'model' ? 'Pioggia prevista' : 'Pioggia probabile' }} tra
-      {{ rainAhead.inHours }} h ({{ hourLabel(rainAhead.hour.time) }})
+      {{ rainAheadLabel }} tra {{ rainAhead.inHours }} h ({{ hourLabel(rainAhead.hour.time) }})
     </p>
   </section>
 </template>
