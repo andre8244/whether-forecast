@@ -2,242 +2,133 @@
 
 **[andre8244.github.io/whether-forecast](https://andre8244.github.io/whether-forecast/)**
 
-Most forecasts tell you *what* the weather will be. This one tells you **whether** — a real
-probability, counted from 119 ensemble members across three models, instead of a storm icon that
-means whatever you want it to.
+Most forecasts tell you *what* the weather will be. This one tells you **whether**: a probability
+counted from 119 ensemble members across three models, instead of an icon that means whatever you
+want it to.
 
-A static, installable weather app in Italian, metric throughout. Perceived ("feels-like")
-temperature is a first-class value, not a footnote.
+A static, installable weather app in Italian, metric throughout, with perceived temperature as a
+first-class value. No API key, no backend, no account.
 
-No API key, no backend, no account. It builds to static files and runs anywhere.
+## Ensembles
 
-## Why the thunderstorm number is different
+One request to Open-Meteo's Ensemble API fetches three models, about 18 kB gzipped:
 
-Open-Meteo accepts an `hourly=thunderstorm_probability` parameter, but it returns `null` for most
-models and locations, so it is not usable as a primary metric.
+| Model | Members |
+|---|---|
+| ECMWF IFS 0.25° | 50 + control |
+| DWD ICON global | 39 + control |
+| NOAA GEFS 0.25° | 30 + control |
 
-Instead, the app calls the **Ensemble API** with three models in one request and counts members
-within each model, then averages the models with equal weight:
+Every figure below is a share of members, computed per model and then averaged with **equal
+weight**. Pooling the members would let ECMWF decide 41% of the answer only because it runs more
+of them. A model with no usable data for an hour drops out of that hour instead of voting zero.
+
+### Thunderstorms
 
 ```
-convective   = precipitation >= 0.2 mm AND CAPE >= 500 J/kg, or WMO code >= 95
+convective    = precipitation >= 0.2 mm AND CAPE >= 500 J/kg, or WMO code >= 95
 P_model(hour) = convective members / members with both values
-P(hour)       = mean over the models that reported
 ```
 
-Each ensemble member is a full model run from slightly perturbed initial conditions, so the share of
-members producing convective rain *is* the forecast probability.
+Open-Meteo's `thunderstorm_probability` returns `null` for most models, and counting WMO
+thunderstorm codes does not work either: global ensembles almost never emit them (0 of 6720
+member-hours for ICON, 0 of 5208 for GFS, 14 of 8568 for ECMWF, and zero over the Amazon and
+Singapore). Requiring rain *and* the energy behind it separates the cases. Measured live: a Pesaro
+thunderstorm afternoon reads 74%, Singapore 66%, frontal rain over Bergen with every member wet 0%.
 
-**Why not just count thunderstorm codes.** That is what this app did until it called a September
-afternoon over Pesaro "temporali poco probabili" through a thunderstorm. WMO codes 95, 96 and 99 are
-almost never emitted by global ensembles: over seven days at that point, ICON global EPS produced
-one in **0 of 6720** member-hours, GFS025 in **0 of 5208**, ECMWF in 14 of 8568 (0.16%). The same
-count over the Amazon and over Singapore, where storms come most afternoons, returned zero from all
-three models across ~20 000 member-hours each. Global models do not resolve convection, so the code
-does not survive their post-processing, and the metric read "unlikely" everywhere and always.
+ICON global EPS serves no CAPE, so the storm figure runs over ECMWF and GFS. Per-model figures are
+shown, with a warning when they spread by more than 30 points.
 
-Requiring rain *and* the energy behind it separates the cases the old rule could not. Measured live
-on 18 September 2026: the Pesaro afternoon reads 74%, Singapore 66%, Milano 3%, and frontal rain
-over Bergen with **every** member wet reads 0% — rain, but not a storm.
+### Rain and snow
 
-**ICON global EPS publishes no CAPE at all.** Its members cannot be judged, so it drops out of the
-storm mean rather than voting zero, exactly as any model with missing data does. It still counts
-towards the rain share below, which needs no CAPE.
+The headline condition comes from one deterministic run, Open-Meteo's `best_match` (ICON-D2 over
+Italy). It has read "Coperto" through rain more than once, so where that run is dry the ensemble
+can overrule it:
 
-| Model | Members | Coverage |
-|---|---|---|
-| ECMWF IFS 0.25° | 50 + control | global |
-| DWD ICON global | 39 + control | global |
-| NOAA GEFS 0.25° | 30 + control | global |
+| Members with >= 0.1 mm in the hour | Shown |
+|---|---|
+| 30% or more | 🌦️ *Possibile pioggia* |
+| 60% or more | 🌧️ *Pioggia probabile* |
 
-That is 366 series over 168 hours — weather code, CAPE and precipitation for each member — in a
-single request, about 18 kB gzipped.
+The bands follow NWS ("chance of rain" from 30%, rain from 60%) and Yr (rain once most members
+have it). Days use the share of members with at least 1 mm over the day, the WMO rain-day
+threshold, counting only the hours left for today. Where the model already has precipitation, its
+own code stands, since it carries type and intensity.
 
-Each model carries **equal weight**. Counting members across the pooled membership would let ECMWF
-decide 41% of the answer purely because its centre runs 50 members against GFS's 30 — a fact about
-compute budgets, not about the weather. A model with no usable data for an hour drops out of that
-hour's mean rather than counting as zero.
+The same rule drives the current card, the hourly strip, the chart and the daily list. The 💧
+percentage next to each icon is that same share, so the two cannot disagree. Open-Meteo's own
+`precipitation_probability` comes from a single 30-member ensemble and is used only when the
+ensemble call fails. The *next rain* line names hours that only the ensemble expects as *probabile*
+rather than *prevista*.
 
-**Model disagreement is shown rather than averaged away**: the panel carries a per-model breakdown,
-and warns explicitly when the spread between the highest and lowest model exceeds 30 percentage
-points.
+Without a precipitation code there is no type, so it comes from the 2 m temperature: snow up to
+1 °C, *pioggia o neve* up to 3 °C, rain above. For a day, this uses the mean temperature over the
+same hours as its rain share. These thresholds are a rule of thumb, not a calibration.
 
-### Rain probability and rain depth are different numbers
+Depths stay deterministic and appear only when non-zero. The ensemble's 25 km members often
+disagree with the 2 km run about *when* rain falls, so an icon raised by the ensemble can sit next
+to an hour with no depth.
 
-`precipitation_probability` and `precipitation` both come from the deterministic run, but they are
-produced differently: the probability is post-processed from the model's own spread, the depth is the
-single run's accumulation. So an hour can legitimately read 85% with no accumulation.
+## Convective indices
 
-This is real Open-Meteo output, not a bug. Checked against live data: of Turin's hours above 50%
-probability, 8 of 9 had zero deterministic precipitation; London, 4 of 5. In a wet regime the two
-agree much more often — Bergen, 41 of 62.
-
-The UI stops presenting that as a contradiction. The hourly strip shows a depth only when there is
-one, and the chart tooltip says *nessun accumulo nella previsione principale* for a high-probability
-hour with none.
-
-Depths below 0.05 mm are reported as `< 0.1 mm` rather than rounded to `0.0 mm`, which would read
-as a dry hour when the model forecast a trace.
-
-### When one model says dry and the ensemble says wet
-
-The current conditions come from a single deterministic run — Open-Meteo's `best_match`, which over
-Italy is ICON-D2. On the Pesaro afternoon it reported overcast and 0.0 mm for every hour while it
-rained; ICON-EU, ECMWF and GFS all had 0.1–1.1 mm, and 82% of the ensemble members the app had
-already downloaded were wet.
-
-Two cross-checks now run against that headline, and they are not the same claim.
-
-**Other global models.** A fourth request asks ICON global, ECMWF IFS 0.25° and GFS global for the
-same hours — two variables, about 1 kB gzipped. These are deterministic runs like the headline, so a
-disagreement is like compared with like. They are deliberately *not* `icon_seamless`, which over
-Italy resolves to the same ICON-D2 the headline already uses. Two of the three must see rain before
-the card says anything: one dissenting model is ordinary spread.
-
-**The ensemble share.** The member share with precipitation >= 0.1 mm, all three ensembles, equal
-weight, reported when it reaches 60%.
-
-The card shows a line only when the headline is dry — no precipitation code, no accumulation — and at
-least one cross-check contradicts it. What the line says is always the ensemble share: *pioggia nel
-76% degli scenari*. One number a reader can weigh beats a count of model names they would have to
-look up, so the names go in the hover title instead. Measured over seven days, the models raise the
-line without an ensemble majority in a third to a half of the hours, so the quoted share is often
-modest — it is still the honest number. Without an ensemble share there is nothing to quote and the
-line stays down.
-
-The ensemble is reported but does not drive the label, and measurement is the reason. Over 168 hours
-at Pesaro the deterministic run called 12 hours wet and the ensemble majority called 8 wet, and the
-two sets **did not overlap on a single hour**: 25 km members disagree with a 2 km run about *when*
-rain falls even when both expect it. Milano agreed on 4 hours of about 19. A label driven by member
-share would therefore contradict the hourly strip below it, which is deterministic throughout, and
-would turn a probability into a state that hides how uncertain it was. It is a disagreement between
-models either way, not an observation: the app has no radar and does not pretend to.
-
-### Convective indices
-
-CAPE, lifted index and convective inhibition from the deterministic run appear in the expandable
-detail, each reported **on its own published scale** — the conventional convective-energy table for
-CAPE, the NWS stability bands for the lifted index, and the usual 25 / 50 / 200 J/kg split for CIN.
-
-They are deliberately *not* combined into a single score. An earlier version did exactly that, by
-adding and subtracting steps across the three; the individual thresholds were conventional but the
-composition rule had no source, and it was displayed with the same authority as the measured data.
-
-CIN is shown in neutral colour rather than on the risk ramp: strong inhibition means *fewer* storms,
-so a red badge there would read backwards next to the other two.
-
-These indices describe how much energy the atmosphere holds and whether it can be released, not how
-likely it is that it will be. They are context for the probability, never a replacement for it.
+CAPE, lifted index and CIN from the deterministic run appear in the expandable storm detail, each
+on its own published scale. They are never combined into a score, because no source backs a
+composition rule. CIN is shown in a neutral colour: strong inhibition means *fewer* storms.
 
 ## Data sources
 
-All from [Open-Meteo](https://open-meteo.com/), CC BY 4.0, no key required:
-
-| Purpose | Endpoint |
-|---|---|
-| Forecast | `api.open-meteo.com/v1/forecast` |
-| Ensemble members | `ensemble-api.open-meteo.com/v1/ensemble` |
-| Air quality | `air-quality-api.open-meteo.com/v1/air-quality` |
-| City search | `geocoding-api.open-meteo.com/v1/search` |
-
-Nothing else is contacted. Open-Meteo's geocoding API is forward-only, so a position from the
-browser is labelled *Posizione attuale* rather than sent to a third-party reverse geocoder to be
-named. The keyless providers that offer that are free because a consented GPS fix is worth
-something to them, and a place name is not worth handing the user's coordinates to one more
-company.
+All from [Open-Meteo](https://open-meteo.com/), CC BY 4.0, keyless: `forecast` (deterministic and
+three-model comparison), `ensemble`, `air-quality` and `geocoding`. Nothing else is contacted, so a
+browser position is labelled *Posizione attuale* rather than sent to a reverse geocoder.
 
 ## What it shows
 
-- Current conditions with temperature **and** perceived temperature, wind, gusts, humidity,
-  pressure, cloud cover, UV index, sunrise and sunset
-- Thunderstorm risk: the peak probability with the day and hour it falls on, per-hour bars over 48
-  hours with a hover readout giving that hour's combined and per-model figures, and CAPE / LI / CIN
-  on expand
-- 48 hourly steps: an interactive chart of the temperature and perceived-temperature curves over
-  precipitation-probability bars, with a labelled time axis, a hover tooltip reading out every
-  value for that hour, and arrow-key navigation; below it a scrollable strip with precipitation in
-  millimetres, wind and per-hour storm probability
-- 7 daily rows: temperature range, perceived range, precipitation, gusts, storm peak, sun times
-- Air quality: European AQI band with PM2.5, PM10, ozone and NO₂
+- Current conditions, perceived temperature, wind, gusts, humidity, pressure, cloud cover, UV, sun
+  times
+- Thunderstorm risk: 48-hour bars with per-model readout, CAPE / LI / CIN on expand
+- 48 hours: temperature and perceived curves over rain-probability bars, plus a scrollable strip
+- 7 days: temperature and perceived range, rain probability, gusts, storm peak, sun times
+- Air quality: European AQI with PM2.5, PM10, ozone and NO₂
 
-Locations come from city search, browser geolocation, or saved favourites. Everything persists in
-`localStorage`.
-
-A location's identity is its rounded coordinates, so relabelling one never costs extra forecast
-requests.
+Locations come from search, geolocation or favourites, persisted in `localStorage`.
 
 ## Development
 
-Requires Node 20+ and pnpm.
+Node 20+ and pnpm.
 
 ```bash
 pnpm install
-pnpm dev        # dev server
-pnpm test       # unit tests
-pnpm typecheck  # vue-tsc
-pnpm build      # production build into dist/
-pnpm preview    # serve the production build
+pnpm dev        # http://localhost:5173/whether-forecast/
+pnpm test
+pnpm typecheck
+pnpm build
 ```
 
-The app is served from a subdirectory on GitHub Pages, so Vite's `base` is set to
-`/whether-forecast/` — in development as well as in the build. Running dev at `/` while production
-runs under a prefix is how base-path bugs reach a deploy unnoticed, so `pnpm dev` also serves at
-`http://localhost:5173/whether-forecast/`.
-
-## Colour scheme
-
-Dark only. One token set in `src/styles/theme.css`, applied on `:root`, with no switcher and no
-system-preference branch.
-
-## Deployment
-
-Pushing to `main` runs `.github/workflows/deploy.yml`: typecheck, tests, build, then publish to
-GitHub Pages. A failing typecheck or test stops the deploy.
-
-## Structure
+Vite's `base` is `/whether-forecast/` in development too, so base-path bugs show up before deploy.
+Pushing to `main` runs typecheck, tests and build, then publishes to GitHub Pages.
 
 ```
 src/
-  api/          typed wrappers for the four endpoints
-  lib/          pure logic: storm risk, WMO codes, chart geometry, formatting, AQI, merge
-  stores/       Pinia: selected location with favourites
+  api/          typed wrappers for the endpoints
+  lib/          pure logic: storm risk, rain outlook, WMO codes, charts, formatting, merge
+  stores/       Pinia: selected location and favourites
   composables/  forecast orchestration, chart hover, auto-refresh
-  components/   UI, including hand-rolled SVG charts (no charting dependency)
+  components/   UI, with hand-rolled SVG charts
 ```
 
-The pure logic in `src/lib` has no Vue dependency and carries most of the test suite.
-`src/lib/stormRisk.ts` is the piece worth reading first.
+`src/lib` has no Vue dependency and carries most of the tests. Start with `stormRisk.ts` and
+`rainOutlook.ts`.
 
-App-wide state (which place is selected, and the favourites) lives in Pinia. It was previously held
-in module-level refs inside composables, which made it a global in disguise and leaked between
-tests.
+## Limits
 
-## Notes and limits
-
-- **Resolution.** Open-Meteo serves the *open-data* ECMWF IFS at 0.25° (~25 km), not the 9 km
-  operational grid available to paid licensees. In complex terrain such as the Alps this
-  under-resolves valley-scale convection: treat the numbers as regional, not point forecasts.
-- **Convective proxy, not a thunderstorm detector.** Rain plus CAPE says a member had the energy and
-  something fell; it does not say lightning. The thresholds (0.2 mm, 500 J/kg) are conventional and
-  were checked against live members at five locations, not tuned against observed lightning, which
-  the app has no source for. An earlier version counted WMO thunderstorm codes instead; that rule
-  was measured and discarded, as described above.
-- **Two models carry the storm number.** ICON global EPS serves no CAPE, so the mean runs over ECMWF
-  and GFS. The per-model breakdown shows ICON as no data rather than hiding it.
-- **The model cross-check is coarser than the headline.** ICON global, IFS 0.25° and GFS global run
-  at 13-25 km against the headline's 2 km over Italy. They can be right about rain arriving and wrong
-  about the hour, which is why they only ever add a line rather than change the condition.
-- **No nowcast.** Below about two hours, radar nowcasting beats any global model. The app has no
-  radar layer, so the next 90 minutes — when people actually check — are covered only by model
-  output.
-- **Daily storm figure is a peak**, the highest hourly value in the day, not an average. A day with
-  one hour at 40% and twenty-three at 0% reads 40%.
-- **Licence and rate limits.** The free tier is for non-commercial use, limited to roughly 600 calls
-  per minute and 10 000 per day per IP. Calls are made from the browser, so each user spends their
-  own quota. A commercial deployment needs Open-Meteo's paid tier. Attribution is required under
-  CC BY 4.0 and appears in the app footer.
-- **No SLA.** Open-Meteo is provided as is. The service is open source and self-hostable if that
-  matters for your deployment.
-- **Staleness.** Offline, the service worker replays cached API responses, which would otherwise
-  look like a successful refresh. The app therefore judges freshness on the forecast's own `current`
-  timestamp and shows a banner when it is more than two hours old.
+- **Regional, not point forecasts.** Open-Meteo serves open-data IFS at 0.25° (~25 km), which
+  under-resolves valley-scale convection.
+- **Models, not observations.** There is no radar or station data, so "now" is a forecast too. Over
+  the next two hours, radar nowcasting beats any of this.
+- **Uncalibrated thresholds.** Storm, rain and snow thresholds were checked against live members,
+  not against observed lightning, rain or snow.
+- **Daily storm figure is a peak**, not an average.
+- **Free tier.** Non-commercial use, about 10 000 calls a day per IP, spent from each user's
+  browser. Attribution appears in the footer.
+- **Staleness.** Offline, the service worker replays cached responses, so freshness is judged on
+  the forecast's own timestamp, with a banner after two hours.
